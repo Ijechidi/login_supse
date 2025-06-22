@@ -230,7 +230,7 @@ export default function FAQPage() {
               variant="outline"
               className="border-2"
             >
-              <Link href="/contact">
+              <Link href="/protected/patient/contact">
                 Contactez-nous
               </Link>
             </Button>

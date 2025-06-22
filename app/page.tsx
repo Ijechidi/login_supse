@@ -89,7 +89,7 @@ export default function Home() {
               <Link href="/protected/patient/medecins" className="hover:text-black transition-colors">
                 Nos médecins
               </Link>
-              <Link href="/contact" className="hover:text-black transition-colors">
+              <Link href="/protected/patient/contact" className="hover:text-black transition-colors">
                 Contact
               </Link>
             </div>
