@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { signUpWithEmail } from "@/lib/auth";
+import { signUpMedecin, signUpPatient } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,7 +31,7 @@ export function SignUpForm({
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    const { error } = await signUpWithEmail({ email, password, repeatPassword });
+    const { error } = await signUpMedecin({ email, password, repeatPassword });
     if (!error) {
       router.push("/auth/sign-up-success");
     } else {

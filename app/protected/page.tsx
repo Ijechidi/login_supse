@@ -25,7 +25,7 @@ export default async function ProtectedPage() {
         </div>
         <h1>
          <span className="font-semibold">  Welcome, {data.user.email}</span>
-
+       <span className="font-semibold flex "> fonction :{data.user.user_metadata?.fonction} </span>
        <span className="font-semibold"> your role :{data.user.user_metadata?.role} </span>
 
         </h1>
