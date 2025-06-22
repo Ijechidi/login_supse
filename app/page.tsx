@@ -83,10 +83,10 @@ export default function Home() {
               CareConnect
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/specialites" className="hover:text-black transition-colors">
+              <Link href="/protected/patient/specialites" className="hover:text-black transition-colors">
                 Spécialités
               </Link>
-              <Link href="/medecins" className="hover:text-black transition-colors">
+              <Link href="/protected/patient/medecins" className="hover:text-black transition-colors">
                 Nos médecins
               </Link>
               <Link href="/contact" className="hover:text-black transition-colors">
