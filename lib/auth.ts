@@ -2,7 +2,6 @@
 
 import { createClient } from "./supabase/server";
 
-
 /* implementera mes logique signup et signin plustard */
 export async function signUpWithEmail({ email, password, repeatPassword }: { email: string; password: string; repeatPassword: string; }) {
   if (password !== repeatPassword) {

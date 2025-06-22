@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { signUpWithEmail } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,34 +29,15 @@ export function SignUpForm({
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
     setIsLoading(true);
     setError(null);
-
-    if (password !== repeatPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
-          data:{
-            role:"patient"
-          }
-        },
-      });
-      if (error) throw error;
+    const { error } = await signUpWithEmail({ email, password, repeatPassword });
+    if (!error) {
       router.push("/auth/sign-up-success");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+    } else {
+      setError(error);
     }
+    setIsLoading(false);
   };
 
   return (
