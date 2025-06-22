@@ -13,7 +13,7 @@ export async function signUpPatient({ email, password, repeatPassword }: { email
       email,
       password,
       options: {
-        emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/protected`,
+       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/protected`,
         data:{
           role:"PATIENT",
           fonction: "USER"
@@ -39,7 +39,7 @@ export async function signUpMedecin({ email, password, repeatPassword }: { email
       email,
       password,
       options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/protected`,
                 data:{
           role:"ADMIN",
           fonction:"MEDECIN"
