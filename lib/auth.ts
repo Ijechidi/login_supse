@@ -15,7 +15,8 @@ export async function signUpPatient({ email, password, repeatPassword }: { email
       options: {
         emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/protected`,
         data:{
-          role:"patient"
+          role:"PATIENT",
+          fonction: "USER"
         }
       },
     });
@@ -38,10 +39,10 @@ export async function signUpMedecin({ email, password, repeatPassword }: { email
       email,
       password,
       options: {
-        emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/protected`,
+          emailRedirectTo: `${window.location.origin}/protected`,
                 data:{
-          role:"medecin",
-          fonction:"admin"
+          role:"ADMIN",
+          fonction:"MEDECIN"
         }
       },
     });
