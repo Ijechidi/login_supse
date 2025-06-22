@@ -300,7 +300,7 @@ export default function Home() {
       <footer className="bg-gray-900 text-white py-16 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 px-6">
+      <footer className="bg-gray-900 text-white py-8 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
@@ -318,8 +318,8 @@ export default function Home() {
             <div>
               <h3 className="font-semibold mb-4">Informations</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
-                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+                <li><Link href="/protected/patient/info/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/protected/patient/info/faq" className="hover:text-white transition-colors">FAQ</Link></li>
               </ul>
             </div>
             
@@ -338,7 +338,7 @@ export default function Home() {
             </div>
           </div>
           
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-center items-center">
+        <div className="border-t border-gray-800 pt-8  flex flex-col md:flex-row justify-center items-center">
   <p className="text-gray-400 text-sm">
     © 2025 CareConnect. Tous droits réservés.
   </p>
