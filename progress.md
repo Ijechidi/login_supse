@@ -14,8 +14,8 @@ npx prisma init            # Initialise Prisma
 
 ## 3. Migration et génération du client Prisma
 ```bash
-npx prisma migrate dev     # Crée et applique une migration
-npx prisma generate        # Génère le client Prisma
+npx prisma migrate dev     # Crée et applique une migration sur supabase en ligne
+npx prisma generate        # Génère le client Prisma en local sur le projet
 ```
 
 ## 4. Ajout d'autres dépendances (exemples)
