@@ -7,36 +7,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Patient {
-  id             String   @id @default(uuid())
-  userId         String   @map("user_id")
-  nom            String
-  prenom         String
-  telephone      String
-  dateNaissance  DateTime
-  adresse        String
-  occupation     String?
-  createdAt      DateTime @default(now()) @map("created_at")
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  nom       String
+  prenom    String
+  telephone String
+  dateNaissance DateTime
+  adresse   String
+  createdAt DateTime @default(now()) @map("created_at")
 
-  rendezVous     RendezVous[]
+  // Relations
+  patient   Patient?
+  medecin   Medecin?
+}
+
+model Patient {
+  id         String   @id @default(uuid())
+  userId     String   @unique @map("user_id")
+  occupation String?
   
+  user       User     @relation(fields: [userId], references: [id])
+  rendezVous RendezVous[]
+
   @@map("patients")
 }
 
 model Medecin {
   id             String   @id @default(uuid())
-  userId         String   @map("user_id")
-  nom            String
-  prenom         String
-  telephone      String
-  dateNaissance  DateTime
-  adresse        String
+  userId         String   @unique @map("user_id")
   specialite     String
-  createdAt      DateTime @default(now()) @map("created_at")
 
+  user           User     @relation(fields: [userId], references: [id])
   rendezVous     RendezVous[]
   disponibilites Disponibilite[]
-  
+
   @@map("medecins")
 }
 
