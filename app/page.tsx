@@ -1,6 +1,4 @@
-import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { hasEnvVars } from "@/lib/utils";
+
 import Link from "next/link";
 import { 
   Calendar, 
@@ -16,6 +14,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 
 export default function Home() {
   const features = [
@@ -75,31 +74,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col">
-      <nav className="w-full border-b border-b-foreground/10 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="w-full max-w-7xl mx-auto flex justify-between items-center p-4 px-6">
-          <div className="flex gap-6 items-center">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl text-black">
-              <Heart className="w-8 h-8" />
-              CareConnect
-            </Link>
-            <div className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/protected/patient/specialites" className="hover:text-black transition-colors">
-                Spécialités
-              </Link>
-              <Link href="/protected/patient/medecins" className="hover:text-black transition-colors">
-                Nos médecins
-              </Link>
-              <Link href="/protected/patient/contact" className="hover:text-black transition-colors">
-                Contact
-              </Link>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <ThemeSwitcher />
-            {hasEnvVars && <AuthButton />}
-          </div>
-        </div>
-      </nav>
+   
 
       <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 py-20 px-6">
         <div className="max-w-7xl mx-auto">

@@ -5,15 +5,9 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Calendar, Clock, User, FileText, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar, Clock, FileText, CheckCircle, XCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import SelectMedecin from '@/components/medecin/SelectMedecin';
 
 interface Medecin {
   id: string;
@@ -145,7 +139,7 @@ export default function PriseRendezVousPage() {
 
     try {
       const { medecinId, date, heure, motif } = form;
-      const res = await fetch('/api/rendezvous/create', {
+      const res = await fetch('/api/rendezvous/patient', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ medecinId, date, heure, motif }),
@@ -173,15 +167,10 @@ export default function PriseRendezVousPage() {
     return new Date().toISOString().split('T')[0];
   };
 
-  const getSelectedMedecin = () => {
-    return medecins.find(med => med.id === form.medecinId);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          {/* Header */}
           <div className="bg-gradient-to-r from-black to-gray-800 px-8 py-6">
             <h1 className="text-3xl font-bold text-white text-center flex items-center justify-center gap-3">
               <Calendar className="w-8 h-8" />
@@ -193,7 +182,6 @@ export default function PriseRendezVousPage() {
           </div>
 
           <div className="p-8">
-            {/* Message d'état */}
             {message && (
               <Alert className={`mb-6 ${messageType === 'success' ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
                 <div className="flex items-center gap-2">
@@ -210,48 +198,13 @@ export default function PriseRendezVousPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Médecin *
-                </Label>
-                <Select
-                  value={form.medecinId}
-                  onValueChange={handleSelectChange}
-                  disabled={isLoadingMedecins}
-                >
-                  <SelectTrigger className={`w-full ${errors.medecinId ? 'border-red-300 focus:ring-red-500' : ''}`}>
-                    <SelectValue 
-                      placeholder={isLoadingMedecins ? "Chargement..." : "Choisir un médecin"} 
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {medecins.map((med) => (
-                      <SelectItem key={med.id} value={med.id}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            Dr {med.user.nom} {med.user.prenom}
-                          </span>
-                          <span className="text-sm text-gray-500">{med.specialite}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.medecinId && (
-                  <p className="text-sm text-red-600">{errors.medecinId}</p>
-                )}
-                {getSelectedMedecin() && (
-                  <div className="bg-gray-100 p-3 rounded-lg">
-                    <p className="text-sm text-gray-800">
-                      <strong>Médecin sélectionné:</strong> Dr {getSelectedMedecin()?.user.nom} {getSelectedMedecin()?.user.prenom}
-                    </p>
-                    <p className="text-sm text-gray-700">
-                      Spécialité: {getSelectedMedecin()?.specialite}
-                    </p>
-                  </div>
-                )}
-              </div>
+              <SelectMedecin
+                medecins={medecins}
+                value={form.medecinId}
+                onChange={handleSelectChange}
+                errors={errors.medecinId}
+                isLoading={isLoadingMedecins}
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
