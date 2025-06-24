@@ -9,7 +9,12 @@ const nextConfig: NextConfig = {
         pathname: '/api/portraits/**',
       },
     ],
+    domains: [
+      'images.unsplash.com',
+    ],
   },
 };
 
 export default nextConfig;
+
+
