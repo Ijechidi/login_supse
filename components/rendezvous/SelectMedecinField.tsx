@@ -1,8 +1,9 @@
-import SelectMedecin from '@/components/medecin/SelectMedecin';
+import MedecinSelect from '@/components/selects/MedecinSelect';
 import React from 'react';
 
 /**
  * Champ de sélection de médecin pour le formulaire de rendez-vous.
+ * Utilise le composant MedecinSelect.
  * @param {Object} props
  * @param {Array} props.medecins - Liste des médecins.
  * @param {string} props.value - ID du médecin sélectionné.
@@ -18,13 +19,13 @@ const SelectMedecinField: React.FC<{
   isLoading?: boolean;
 }> = ({ medecins, value, onChange, error, isLoading }) => (
   <div className="mb-4">
-    <SelectMedecin
+    <MedecinSelect
       medecins={medecins}
-      value={value}
       onChange={onChange}
-      errors={error}
-      isLoading={isLoading}
+      defaultValue={value}
+      placeholder={isLoading ? 'Chargement...' : 'Sélectionner un médecin'}
     />
+    {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
   </div>
 );
 
