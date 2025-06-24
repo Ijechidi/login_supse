@@ -12,6 +12,7 @@ model User {
   email     String    @unique
   nom       String
   prenom    String
+  avatarUrl      String? 
   telephone String
   dateNaissance DateTime
   adresse   String
