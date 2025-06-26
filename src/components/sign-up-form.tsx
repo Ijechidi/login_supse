@@ -15,29 +15,21 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSignUp, SignUpMode } from "@/hooks/useSignUp";
 
 export function SignUpForm({
   className,
+  mode = "PATIENT",
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: React.ComponentPropsWithoutRef<"div"> & { mode?: SignUpMode }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const { signUp, error, isLoading } = useSignUp(mode);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-    const { error } = await signUpMedecin({ email, password, repeatPassword });
-    if (!error) {
-      router.push("/auth/sign-up-success");
-    } else {
-      setError(error);
-    }
-    setIsLoading(false);
+    signUp(email, password, repeatPassword);
   };
 
   return (

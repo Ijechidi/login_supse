@@ -23,10 +23,10 @@ const role = userInfo?.role
 const fonction  = userInfo?.function 
 
 if (role === "MEDECIN" && fonction === "ADMIN") {
-  redirect("/protected/dashboard");
+  redirect("/medecin");
 }
 else if (role === "PATIENT") {
-  redirect("/protected/patient");
+  redirect("/patient");
 }
 
 
