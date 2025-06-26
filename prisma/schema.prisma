@@ -7,77 +7,95 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Utilisateur principal du système
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  nom       String
-  prenom    String
-  avatarUrl      String? 
-  telephone String
-  dateNaissance DateTime
-  adresse   String
-  createdAt DateTime @default(now()) @map("created_at")
+  id             String    @id @default(uuid()) // Identifiant unique
+  email          String    @unique              // Email unique
+  nom            String                        // Nom de famille
+  prenom         String                        // Prénom
+  avatarUrl      String?                       // URL de l'avatar (optionnel)
+  telephone      String                        // Numéro de téléphone
+  dateNaissance  DateTime                      // Date de naissance
+  adresse        String                        // Adresse postale
+  role           Role      @default(PATIENT)    // Rôle de l'utilisateur (PATIENT par défaut)
+  meta           Json?                         // Métadonnées additionnelles (optionnel)
+  createdAt      DateTime  @default(now()) @map("created_at") // Date de création
 
-  // Relations
-  patient   Patient?
-  medecin   Medecin?
+  patient        Patient?                      // Lien vers le profil patient (optionnel)
+  medecin        Medecin?                      // Lien vers le profil médecin (optionnel)
 }
 
+// Profil Patient lié à un utilisateur
 model Patient {
-  id         String   @id @default(uuid())
-  userId     String   @unique @map("user_id")
-  occupation String?
-  
-  user       User     @relation(fields: [userId], references: [id])
-  rendezVous RendezVous[]
+  id        String   @id @default(uuid())       // Identifiant unique du patient
+  userId    String   @unique @map("user_id")   // Référence à l'utilisateur
+  meta      Json?                              // Métadonnées patient (optionnel)
 
-  @@map("patients")
+  user      User     @relation(fields: [userId], references: [id]) // Relation avec User
+  rendezVous RendezVous[]                      // Rendez-vous du patient
 }
 
+// Profil Médecin lié à un utilisateur
 model Medecin {
-  id             String   @id @default(uuid())
-  userId         String   @unique @map("user_id")
-  specialite     String
+  id             String    @id @default(uuid()) // Identifiant unique du médecin
+  userId         String    @unique @map("user_id") // Référence à l'utilisateur
+  specialite     String                        // Spécialité médicale
+  description    String?                       // Description du médecin (optionnel)
+  indisponibilites Json?                       // Périodes d'indisponibilité (optionnel)
+  meta           Json?                         // Métadonnées médecin (optionnel)
 
-  user           User     @relation(fields: [userId], references: [id])
-  rendezVous     RendezVous[]
-  disponibilites Disponibilite[]
+  user           User      @relation(fields: [userId], references: [id]) // Relation avec User
+  rendezVous     RendezVous[]                    // Rendez-vous du médecin
+  disponibilites Disponibilite[]                 // Disponibilités du médecin
 
   @@map("medecins")
 }
 
-model RendezVous {
-  id         String   @id @default(uuid())
-  patientId  String   @map("patient_id")
-  medecinId  String   @map("medecin_id")
-  date       DateTime
-  heure      DateTime
-  motif      String
-  statut     Statut   @default(en_attente)
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  patient    Patient  @relation(fields: [patientId], references: [id])
-  medecin    Medecin  @relation(fields: [medecinId], references: [id])
-
-  @@map("rendez_vous")
-}
-
+// Disponibilités d'un médecin
 model Disponibilite {
-  id          String   @id @default(uuid())
-  medecinId   String   @map("medecin_id")
-  jourSemaine Int      @map("jour_semaine") // 0 = dimanche, 6 = samedi
-  heureDebut  DateTime @map("heure_debut")
-  heureFin    DateTime @map("heure_fin")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(uuid())      // Identifiant unique
+  medecinId  String   @map("medecin_id")       // Référence au médecin
+  jour       String                            // Jour de la semaine ou date
+  heureDebut DateTime                          // Heure de début
+  heureFin   DateTime                          // Heure de fin
+  meta       Json?                             // Métadonnées (optionnel)
 
-  medecin     Medecin  @relation(fields: [medecinId], references: [id])
+  medecin    Medecin  @relation(fields: [medecinId], references: [id]) // Relation avec Medecin
 
   @@map("disponibilites")
 }
 
+// Rendez-vous entre patient et médecin
+model RendezVous {
+  id         String   @id @default(uuid())      // Identifiant unique du rendez-vous
+  patientId  String   @map("patient_id")       // Référence au patient
+  medecinId  String   @map("medecin_id")       // Référence au médecin
+  date       DateTime                          // Date du rendez-vous
+  heure      DateTime                          // Heure du rendez-vous
+  motif      String                            // Motif du rendez-vous
+  statut     Statut   @default(en_attente)     // Statut du rendez-vous
+  historique Json?                             // Historique des modifications (optionnel)
+  meta       Json?                             // Métadonnées (optionnel)
+  createdAt  DateTime @default(now()) @map("created_at") // Date de création
+
+  patient    Patient  @relation(fields: [patientId], references: [id]) // Relation avec Patient
+  medecin    Medecin  @relation(fields: [medecinId], references: [id]) // Relation avec Medecin
+
+  @@map("rendez_vous")
+}
+
+// Enumération des rôles utilisateurs
+enum Role {
+  PATIENT    // Utilisateur patient
+  MEDECIN    // Utilisateur médecin
+  ADMIN      // Administrateur
+  SECRETAIRE // Secrétaire
+}
+
+// Enumération des statuts de rendez-vous
 enum Statut {
-  en_attente
-  confirme
-  annule
-  termine
+  en_attente     // Rendez-vous en attente de validation
+  confirme       // Rendez-vous confirmé
+  annule         // Rendez-vous annulé
+  termine        // Rendez-vous terminé
 }
