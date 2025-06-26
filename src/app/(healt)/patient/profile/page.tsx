@@ -1,5 +1,5 @@
 import React from 'react'
-import { WelcomeAnimation } from '@/components/patient/WelcomeAnimation'
+
 
 export default function Page() {
   return (
