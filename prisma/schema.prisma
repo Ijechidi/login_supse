@@ -38,7 +38,7 @@ model Medecin {
   id             String   @id @default(uuid())
   userId         String   @unique @map("user_id")
   specialite     String
-
+  description    String?
   user           User     @relation(fields: [userId], references: [id])
   rendezVous     RendezVous[]
   disponibilites Disponibilite[]
