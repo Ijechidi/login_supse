@@ -16,7 +16,8 @@ model User {
   avatarUrl      String?                       // URL de l'avatar (optionnel)
   telephone      String                        // Numéro de téléphone
   dateNaissance  DateTime                      // Date de naissance
-  adresse        String                        // Adresse postale
+  adresse        String   
+  age            Int?
   role           Role      @default(PATIENT)    // Rôle de l'utilisateur (PATIENT par défaut)
   meta           Json?                         // Métadonnées additionnelles (optionnel)
   createdAt      DateTime  @default(now()) @map("created_at") // Date de création
@@ -28,7 +29,8 @@ model User {
 // Profil Patient lié à un utilisateur
 model Patient {
   id        String   @id @default(uuid())       // Identifiant unique du patient
-  userId    String   @unique @map("user_id")   // Référence à l'utilisateur
+  userId    String   @unique @map("user_id")
+
   meta      Json?                              // Métadonnées patient (optionnel)
 
   user      User     @relation(fields: [userId], references: [id]) // Relation avec User
