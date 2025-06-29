@@ -27,6 +27,11 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        
+        design: {
+  				bg: 'oklch(var(--design-bg))',
+  			},
+        
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
