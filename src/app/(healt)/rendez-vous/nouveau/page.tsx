@@ -1,6 +1,6 @@
 
 import { SpecialiteAccordionCard } from '@/components/ux/SpecialiteAccordionCard'
-import { SpecialiteCard } from '@/components/ux/SpecialiteCard'
+
 import { specialites } from '@/data/mockSpecialites'
 import React from 'react'
 
@@ -13,6 +13,7 @@ export default function page() {
       <h1 className="text-3xl font-bold mb-8 text-center">
         Nos Spécialités Médicales
       </h1>
+      
       
 {/* <h1> avec accordion </h1> */}
 

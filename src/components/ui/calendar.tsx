@@ -1,182 +1,210 @@
-"use client";
+"use client"
 
-import React from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import * as React from "react"
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-react"
+import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
 
-const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+import { cn } from "@/lib/utils"
+import { Button, buttonVariants } from "@/components/ui/button"
 
-const CalendarDay: React.FC<{ day: number | string; isHeader?: boolean }> = ({
-  day,
-  isHeader,
-}) => {
-  const randomBgWhite =
-    !isHeader && Math.random() < 0.3
-      ? "bg-indigo-500 text-white "
-      : "text-text-tertiary";
-
-  return (
-    <div
-      className={`col-span-1 row-span-1 flex h-8 w-8 items-center justify-center ${
-        isHeader ? "" : "rounded-xl"
-      } ${randomBgWhite}`}
-    >
-      <span className={`font-medium ${isHeader ? "text-xs" : "text-sm"}`}>
-        {day}
-      </span>
-    </div>
-  );
-};
-
-export function Calendar() {
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString("default", { month: "long" });
-  const currentYear = currentDate.getFullYear();
-  const firstDayOfMonth = new Date(currentYear, currentDate.getMonth(), 1);
-  const firstDayOfWeek = firstDayOfMonth.getDay();
-  const daysInMonth = new Date(
-    currentYear,
-    currentDate.getMonth() + 1,
-    0
-  ).getDate();
-
-  const bookingLink = `https://cal.com/aliimam/designali`;
-
-  const renderCalendarDays = () => {
-    let days: React.ReactNode[] = [
-      ...dayNames.map((day, i) => (
-        <CalendarDay key={`header-${day}`} day={day} isHeader />
-      )),
-      ...Array(firstDayOfWeek).map((_, i) => (
-        <div
-          key={`empty-start-${i}`}
-          className="col-span-1 row-span-1 h-8 w-8"
-        />
-      )),
-      ...Array(daysInMonth)
-        .fill(null)
-        .map((_, i) => <CalendarDay key={`date-${i + 1}`} day={i + 1} />),
-    ];
-
-    return days;
-  };
+function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  captionLayout = "label",
+  buttonVariant = "ghost",
+  formatters,
+  components,
+  ...props
+}: React.ComponentProps<typeof DayPicker> & {
+  buttonVariant?: React.ComponentProps<typeof Button>["variant"]
+}) {
+  const defaultClassNames = getDefaultClassNames()
 
   return (
-    <BentoCard height="h-auto" linkTo={bookingLink}>
-      <div className=" grid h-full  gap-5">
-        <div className="">
-          <h2 className="mb-4 text-lg md:text-3xl font-semibold">
-            Any questions about Design?
-          </h2>
-          <p className="mb-2 text-xs md:text-md text-text-secondary">
-            Feel free to reach out to me!
-          </p>
-          <Button className="mt-3 rounded-2xl">Book Now</Button>
-        </div>
-        <div className=" transition-all duration-500 ease-out md:group-hover:-right-12 md:group-hover:top-5">
-          <div>
-            <div className="h-full w-[550px] rounded-[24px] border border-border-primary p-2 transition-colors duration-100 group-hover:border-indigo-400">
-              <div
-                className="h-full rounded-2xl border-2 border-[#A5AEB81F]/10  p-3"
-                style={{ boxShadow: "0px 2px 1.5px 0px #A5AEB852 inset" }}
-              >
-                <div className="flex items-center space-x-2">
-                  <p className="text-sm ">
-                    <span className="font-medium">
-                      {currentMonth}, {currentYear}
-                    </span>
-                  </p>
-                  <span className="h-1 w-1 rounded-full ">&nbsp;</span>
-                  <p className="text-xs text-text-tertiary">30 min call</p>
-                </div>
-                <div className="mt-4 grid grid-cols-7 grid-rows-5 gap-2 px-4">
-                  {renderCalendarDays()}
-                </div>
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn(
+        "bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
+        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        className
+      )}
+      captionLayout={captionLayout}
+      formatters={{
+        formatMonthDropdown: (date) =>
+          date.toLocaleString("default", { month: "short" }),
+        ...formatters,
+      }}
+      classNames={{
+        root: cn("w-fit", defaultClassNames.root),
+        months: cn(
+          "flex gap-4 flex-col md:flex-row relative",
+          defaultClassNames.months
+        ),
+        month: cn("flex flex-col w-full gap-4", defaultClassNames.month),
+        nav: cn(
+          "flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
+          defaultClassNames.nav
+        ),
+        button_previous: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+          defaultClassNames.button_previous
+        ),
+        button_next: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+          defaultClassNames.button_next
+        ),
+        month_caption: cn(
+          "flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)",
+          defaultClassNames.month_caption
+        ),
+        dropdowns: cn(
+          "w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5",
+          defaultClassNames.dropdowns
+        ),
+        dropdown_root: cn(
+          "relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md",
+          defaultClassNames.dropdown_root
+        ),
+        dropdown: cn("absolute inset-0 opacity-0", defaultClassNames.dropdown),
+        caption_label: cn(
+          "select-none font-medium",
+          captionLayout === "label"
+            ? "text-sm"
+            : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5",
+          defaultClassNames.caption_label
+        ),
+        table: "w-full border-collapse",
+        weekdays: cn("flex", defaultClassNames.weekdays),
+        weekday: cn(
+          "text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none",
+          defaultClassNames.weekday
+        ),
+        week: cn("flex w-full mt-2", defaultClassNames.week),
+        week_number_header: cn(
+          "select-none w-(--cell-size)",
+          defaultClassNames.week_number_header
+        ),
+        week_number: cn(
+          "text-[0.8rem] select-none text-muted-foreground",
+          defaultClassNames.week_number
+        ),
+        day: cn(
+          "relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
+          defaultClassNames.day
+        ),
+        range_start: cn(
+          "rounded-l-md bg-accent",
+          defaultClassNames.range_start
+        ),
+        range_middle: cn("rounded-none", defaultClassNames.range_middle),
+        range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
+        today: cn(
+          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          defaultClassNames.today
+        ),
+        outside: cn(
+          "text-muted-foreground aria-selected:text-muted-foreground",
+          defaultClassNames.outside
+        ),
+        disabled: cn(
+          "text-muted-foreground opacity-50",
+          defaultClassNames.disabled
+        ),
+        hidden: cn("invisible", defaultClassNames.hidden),
+        ...classNames,
+      }}
+      components={{
+        Root: ({ className, rootRef, ...props }) => {
+          return (
+            <div
+              data-slot="calendar"
+              ref={rootRef}
+              className={cn(className)}
+              {...props}
+            />
+          )
+        },
+        Chevron: ({ className, orientation, ...props }) => {
+          if (orientation === "left") {
+            return (
+              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
+            )
+          }
+
+          if (orientation === "right") {
+            return (
+              <ChevronRightIcon
+                className={cn("size-4", className)}
+                {...props}
+              />
+            )
+          }
+
+          return (
+            <ChevronDownIcon className={cn("size-4", className)} {...props} />
+          )
+        },
+        DayButton: CalendarDayButton,
+        WeekNumber: ({ children, ...props }) => {
+          return (
+            <td {...props}>
+              <div className="flex size-(--cell-size) items-center justify-center text-center">
+                {children}
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </BentoCard>
-  );
+            </td>
+          )
+        },
+        ...components,
+      }}
+      {...props}
+    />
+  )
 }
 
-interface BentoCardProps {
-  children: React.ReactNode;
-  height?: string;
-  rowSpan?: number;
-  colSpan?: number;
-  className?: string;
-  showHoverGradient?: boolean;
-  hideOverflow?: boolean;
-  linkTo?: string;
-}
+function CalendarDayButton({
+  className,
+  day,
+  modifiers,
+  ...props
+}: React.ComponentProps<typeof DayButton>) {
+  const defaultClassNames = getDefaultClassNames()
 
-export function BentoCard({
-  children,
-  height = "h-auto",
-  rowSpan = 8,
-  colSpan = 7,
-  className = "",
-  showHoverGradient = true,
-  hideOverflow = true,
-  linkTo,
-}: BentoCardProps) {
-  const cardContent = (
-    <div
-      className={`group relative flex flex-col rounded-2xl border border-border-primary bg-bg-primary p-6 hover:bg-indigo-100/10 dark:hover:bg-indigo-900/10 ${
-        hideOverflow && "overflow-hidden"
-      } ${height} row-span-${rowSpan} col-span-${colSpan} ${className}`}
-    >
-      {linkTo && (
-        <div className="absolute bottom-4 right-6 z-[999] flex h-12 w-12 rotate-6 items-center justify-center rounded-full bg-white opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-[-8px] group-hover:rotate-0 group-hover:opacity-100">
-          <svg
-            className="h-6 w-6 text-indigo-600"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17.25 15.25V6.75H8.75"
-            ></path>
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17 7L6.75 17.25"
-            ></path>
-          </svg>
-        </div>
+  const ref = React.useRef<HTMLButtonElement>(null)
+  React.useEffect(() => {
+    if (modifiers.focused) ref.current?.focus()
+  }, [modifiers.focused])
+
+  return (
+    <Button
+      ref={ref}
+      variant="ghost"
+      size="icon"
+      data-day={day.date.toLocaleDateString()}
+      data-selected-single={
+        modifiers.selected &&
+        !modifiers.range_start &&
+        !modifiers.range_end &&
+        !modifiers.range_middle
+      }
+      data-range-start={modifiers.range_start}
+      data-range-end={modifiers.range_end}
+      data-range-middle={modifiers.range_middle}
+      className={cn(
+        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
+        defaultClassNames.day,
+        className
       )}
-      {showHoverGradient && (
-        <div className="user-select-none pointer-events-none absolute inset-0 z-30 bg-gradient-to-tl from-indigo-400/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"></div>
-      )}
-      {children}
-    </div>
-  );
-
-  if (linkTo) {
-    return linkTo.startsWith("/") ? (
-      <Link href={linkTo} className="block">
-        {cardContent}
-      </Link>
-    ) : (
-      <a
-        href={linkTo}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block"
-      >
-        {cardContent}
-      </a>
-    );
-  }
-
-  return cardContent;
+      {...props}
+    />
+  )
 }
+
+export { Calendar, CalendarDayButton }

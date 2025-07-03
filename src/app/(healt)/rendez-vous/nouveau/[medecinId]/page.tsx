@@ -1,6 +1,7 @@
 import { getMedecinById } from "@/lib/utils/getMedecinById"
 import { ProfileCard } from "@/components/ux/ProfileCard"
 import { notFound } from "next/navigation"
+import { CalendarPlanning } from "@/components/ux/CalendarPlanning"
 
 export default async function MedecinPage({
   params,
@@ -35,6 +36,7 @@ export default async function MedecinPage({
           Disponibilités & prise de rendez-vous
         </h2>
         {/* <Calendar medecinId={medecinId} /> */}
+        <CalendarPlanning />
       </section>
     </main>
   )
