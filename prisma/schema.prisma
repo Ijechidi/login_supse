@@ -69,21 +69,37 @@ model Disponibilite {
 
 // Rendez-vous entre patient et médecin
 model RendezVous {
-  id         String   @id @default(uuid())      // Identifiant unique du rendez-vous
-  patientId  String   @map("patient_id")       // Référence au patient
-  medecinId  String   @map("medecin_id")       // Référence au médecin
-  date       DateTime                          // Date du rendez-vous
-  heure      DateTime                          // Heure du rendez-vous
-  motif      String                            // Motif du rendez-vous
-  statut     Statut   @default(en_attente)     // Statut du rendez-vous
-  historique Json?                             // Historique des modifications (optionnel)
-  meta       Json?                             // Métadonnées (optionnel)
-  createdAt  DateTime @default(now()) @map("created_at") // Date de création
+  id            String   @id @default(uuid())
+  patientId     String   @map("patient_id")
+  medecinId     String   @map("medecin_id")
+  typeId        String   @map("type_id")
 
-  patient    Patient  @relation(fields: [patientId], references: [id]) // Relation avec Patient
-  medecin    Medecin  @relation(fields: [medecinId], references: [id]) // Relation avec Medecin
+  dateDebut     DateTime
+  dateFin       DateTime?
+  motif         String
+  statut        Statut   @default(en_attente)
+  historique    Json?
+  meta          Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  type          TypeRendezVous @relation(fields: [typeId], references: [id])
+  patient       Patient        @relation(fields: [patientId], references: [id])
+  medecin       Medecin        @relation(fields: [medecinId], references: [id])
 
   @@map("rendez_vous")
+}
+
+
+// Type de rendez-vous
+model TypeRendezVous {
+  id        String   @id @default(uuid())
+  nom       String   @unique      // ex: "Consultation"
+  code      String   @unique      // ex: "consultation"
+  couleur   String?               // ex: "#00b894" (pour affichage calendrier)
+  description String?             // utile pour UI/UX ou tri avancé
+  createdAt DateTime @default(now())
+
+  rendezVous RendezVous[]
 }
 
 // Enumération des rôles utilisateurs

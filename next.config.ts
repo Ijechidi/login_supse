@@ -10,16 +10,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'via.placeholder.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
         pathname: '/**',
       },
@@ -35,42 +25,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i.imgur.com',
-        pathname: '/**',
+        hostname: 'bfadbtefltsncomkkikr.supabase.co',
+        pathname: '/storage/v1/object/public/avatars/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'cdn.jsdelivr.net',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'avatars.dicebear.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'api.dicebear.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        pathname: '/**',
-      },
-      
-    ],
-    domains: [
-      'images.unsplash.com',
     ],
   },
 };
 
 export default nextConfig;
-
-
