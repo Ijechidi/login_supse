@@ -11,6 +11,7 @@ import {
 import UserIcon from "./user/UserIcon";
 import { LogoutButton } from "./logout-button";
 import { EditProfile } from "./ux/EditProfile";
+import { userData } from "./user/userData";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -47,7 +48,7 @@ export async function AuthButton() {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           {/* <Link href="/patient/profile/edit" scroll={false} >Mon profil</Link> */}
-          <EditProfile/>
+          <EditProfile user={userData} />
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/settings">Paramètres</Link>
