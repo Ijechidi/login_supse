@@ -7,6 +7,7 @@ import AvatarUploader from "@/components/user/AvatarUploader";
 import { useCompletePatientProfileForm } from "@/hooks/useCompletePatientProfileForm";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function CompletePatientProfileForm() {
   const {
@@ -16,6 +17,15 @@ export default function CompletePatientProfileForm() {
     loading,
     success,
   } = useCompletePatientProfileForm();
+
+  const supabase = createClient()
+  const user = supabase.auth.getUser();
+if (!user) {
+   
+
+}
+
+  //  
 
   const router = useRouter();
 
