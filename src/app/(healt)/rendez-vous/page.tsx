@@ -1,15 +1,16 @@
+import { PatientRendezVous } from '@/components/rendezvous/PatientRendezVous'
 import React from 'react'
-import { CalendarPlanning } from '@/components/ux/CalendarPlanning'
+
 
 export default function page() {
   return (
     <div>
-      //affiche l enssemble des rendevous avec un lien acceder au info du rendevous selectionner (/[id]) et un lien pour cree un nouveau rendevous (/nouveau)
+      <PatientRendezVous 
+  patientId="patient-1"
+  onViewDetails={() => {}}
+  onCancel={() => {}}
+/>
 
-
-
-
-      <CalendarPlanning />
     </div>
   )
 }

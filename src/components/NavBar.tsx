@@ -1,37 +1,49 @@
-import { Heart } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
-import { ThemeSwitcher } from './theme-switcher'
-import { AuthButton } from './auth-button'
+
+import { Heart } from "lucide-react"
+import Link from "next/link"
+import { ThemeSwitcher } from "./theme-switcher"
+import { AuthButton } from "./auth-button"
+import VisitStatus from "./VisitStatus"
 
 export default function NavBar() {
   return (
-    <div>
-            <nav className="w-full border-b border-b-foreground/10 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="w-full max-w-7xl mx-auto flex justify-between items-center p-4 px-6">
-          <div className="flex gap-6 items-center">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl text-black">
-              <Heart className="w-8 h-8" />
-              CareConnect
+    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        {/* Logo & Menu */}
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-foreground">
+            <Heart className="h-6 w-6" />
+            CareConnect
+          </Link>
+          <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
+            <Link
+              href="/protected/patient/specialites"
+              className="transition-colors hover:text-foreground"
+            >
+              Spécialités
             </Link>
-            <div className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/protected/patient/specialites" className="hover:text-black transition-colors">
-                Spécialités
-              </Link>
-              <Link href="/protected/patient/medecins" className="hover:text-black transition-colors">
-                Nos médecins
-              </Link>
-              <Link href="/protected/patient/contact" className="hover:text-black transition-colors">
-                Contact
-              </Link>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <ThemeSwitcher />
-            <AuthButton />
-          </div>
+            <Link
+              href="/rendez-vous/nouveau"
+              className="transition-colors hover:text-foreground"
+            >
+              Nos médecins
+            </Link>
+            <Link
+              href="/protected/patient/contact"
+              className="transition-colors hover:text-foreground"
+            >
+              Contact
+            </Link>
+          </nav>
         </div>
-      </nav>
-    </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-4">
+        <VisitStatus/>
+          <ThemeSwitcher />
+          <AuthButton />
+        </div>
+      </div>
+    </header>
   )
 }

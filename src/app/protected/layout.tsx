@@ -6,8 +6,9 @@ import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { getAuthUser } from "@/lib/users/getUser";
+import { getAuthUser } from "@/utils/getUser";
 import { getUserInfo } from "@/lib/users/getUserInfo";
+
 
 
 export default async function ProtectedLayout({children,}:{ children: React.ReactNode;}) {

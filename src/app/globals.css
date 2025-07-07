@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font fallback utile */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 @layer base {
   :root {
-
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -30,8 +34,58 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --design-bg: 0.942 0.004 296.6;
 
-    --design-bg: 0.942 0.004 296.6; /* #EFEFF0 */
+    /* Importé du premier fichier */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Variables personnalisées pour le calendrier médical - Mode clair */
+    --calendar-background: 0 0% 100%;
+    --calendar-day-current: 210 40% 97%;
+    --calendar-day-other: 210 40% 96%;
+    --calendar-day-selected: 214 100% 92%;
+    --calendar-day-hover: 210 40% 94%;
+    --calendar-day-header: 215 25% 27%;
+    --calendar-counter: 221.2 83.2% 53.3%;
+
+    /* Créneaux */
+    --slot-available: 142 76% 96%;
+    --slot-available-border: 142 76% 73%;
+    --slot-available-hover: 142 76% 91%;
+    --slot-occupied: 210 40% 97%;
+    --slot-occupied-border: 214.3 31.8% 91.4%;
+    --slot-occupied-hover: 210 40% 94%;
+
+    /* Statuts des rendez-vous */
+    --status-confirmed: 142 76% 96%;
+    --status-confirmed-foreground: 142 84% 24%;
+    --status-confirmed-border: 142 76% 73%;
+
+    --status-pending: 48 96% 89%;
+    --status-pending-foreground: 25 95% 39%;
+    --status-pending-border: 48 96% 53%;
+
+    --status-cancelled: 0 93% 94%;
+    --status-cancelled-foreground: 0 84% 37%;
+    --status-cancelled-border: 0 93% 73%;
+
+    --status-completed: 210 40% 96%;
+    --status-completed-foreground: 215.4 16.3% 46.9%;
+    --status-completed-border: 214.3 31.8% 91.4%;
+
+    /* Types de rendez-vous */
+    --appointment-consultation: 221.2 83.2% 53.3%;
+    --appointment-followup: 142 71% 45%;
+    --appointment-emergency: 0 84.2% 60.2%;
+    --appointment-specialized: 262 83% 58%;
+    --appointment-pediatric: 32 95% 44%;
   }
 
   .dark {
@@ -59,8 +113,59 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-
     --design-bg: 0.278 0.002 296.2;
+
+    /* Importé du premier fichier */
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Variables personnalisées pour le calendrier médical - Mode sombre */
+    --calendar-background: 222.2 84% 4.9%;
+    --calendar-day-current: 217.2 32.6% 17.5%;
+    --calendar-day-other: 215 27.9% 16.9%;  /* calendar-counter: 0 0% 12% /70 */
+    --calendar-day-selected: 217.2 91.2% 59.8%; /* [#1e1e1e] */
+    --calendar-day-hover: 217.2 32.6% 20%;
+    --calendar-day-header: 210 40% 20%;
+    --calendar-counter: 0 0% 12%;
+
+
+    /* Créneaux */
+    --slot-available: 142 76% 6%;
+    --slot-available-border: 142 71% 45%;
+    --slot-available-hover: 142 76% 8%;
+    --slot-occupied: 217.2 32.6% 17.5%;
+    --slot-occupied-border: 217.2 32.6% 17.5%;
+    --slot-occupied-hover: 217.2 32.6% 20%;
+
+    /* Statuts des rendez-vous */
+    --status-confirmed: 142 76% 6%;
+    --status-confirmed-foreground: 142 71% 45%;
+    --status-confirmed-border: 142 76% 8%;
+
+    --status-pending: 48 96% 6%;
+    --status-pending-foreground: 48 96% 53%;
+    --status-pending-border: 48 96% 8%;
+
+    --status-cancelled: 0 93% 6%;
+    --status-cancelled-foreground: 0 93% 73%;
+    --status-cancelled-border: 0 93% 8%;
+
+    --status-completed: 217.2 32.6% 17.5%;
+    --status-completed-foreground: 215 20.2% 65.1%;
+    --status-completed-border: 217.2 32.6% 20%;
+
+    /* Types de rendez-vous */
+    --appointment-consultation: 217.2 91.2% 59.8%;
+    --appointment-followup: 142 71% 45%;
+    --appointment-emergency: 0 84.2% 60.2%;
+    --appointment-specialized: 262 83% 58%;
+    --appointment-pediatric: 32 95% 44%;
   }
 
   * {
@@ -73,6 +178,10 @@
 }
 
 @layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
   @keyframes fade-in-up {
     from {
       opacity: 0;

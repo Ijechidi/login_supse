@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { signUpMedecin, signUpPatient } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSignUp, SignUpMode } from "@/hooks/useSignUp";
 

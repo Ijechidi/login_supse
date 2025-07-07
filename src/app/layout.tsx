@@ -3,7 +3,8 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
-import { ReactQueryProvider } from "@/components/ReactQueryProvider";
+import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
+
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -36,11 +37,15 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NavBar />
-            {children}
+            <div className="flex flex-col min-h-screen">
+              <NavBar />
+              <main className="flex-1">{children}</main>
+              {/* Tu peux ajouter un <Footer /> ici si besoin */}
+            </div>
           </ThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>
   );
 }
+

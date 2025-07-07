@@ -23,7 +23,7 @@ export function SpecialiteHeader({ specialite, showDescription = true, className
           <div>
             <h2 className="text-xl font-bold text-foreground">{specialite.nom}</h2>
             {showDescription && specialite.description && (
-              <p className="text-sm text-muted-foreground mt-1 max-w-[250px] truncate">
+              <p className="text-sm text-muted-foreground mt-1 max-w-[200px] md:max-w-[350px] truncate">
                 {specialite.description}
               </p>
             )}

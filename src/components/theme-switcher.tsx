@@ -1,78 +1,84 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Laptop, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react"
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+import { cn } from "@/lib/utils"
 
-const ThemeSwitcher = () => {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+interface ThemeSwitcherProps {
+  className?: string
+}
 
-  // useEffect only runs on the client, so now we can safely show the UI
+export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
+  const { resolvedTheme, setTheme } = useTheme()
+  const [isDark, setIsDark] = useState(resolvedTheme === "dark")
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
-  if (!mounted) {
-    return null;
-  }
+  useEffect(() => {
+    setTheme(isDark ? "dark" : "light")
+  }, [isDark, setTheme])
 
-  const ICON_SIZE = 16;
+  if (!mounted) return null
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={"sm"}>
-          {theme === "light" ? (
-            <Sun
-              key="light"
-              size={ICON_SIZE}
-              className={"text-muted-foreground"}
-            />
-          ) : theme === "dark" ? (
-            <Moon
-              key="dark"
-              size={ICON_SIZE}
-              className={"text-muted-foreground"}
+    <div
+      className={cn(
+        "flex w-16 h-8 p-1 rounded-full cursor-pointer transition-all duration-300",
+        isDark 
+          ? "bg-zinc-950 border border-zinc-800" 
+          : "bg-white border border-zinc-200",
+        className
+      )}
+      onClick={() => setIsDark(!isDark)}
+      role="button"
+      tabIndex={0}
+    >
+      <div className="flex justify-between items-center w-full">
+        <div
+          className={cn(
+            "flex justify-center items-center w-6 h-6 rounded-full transition-transform duration-300",
+            isDark 
+              ? "transform translate-x-0 bg-zinc-800" 
+              : "transform translate-x-8 bg-gray-200"
+          )}
+        >
+          {isDark ? (
+            <Moon 
+              className="w-4 h-4 text-white" 
+              strokeWidth={1.5}
             />
           ) : (
-            <Laptop
-              key="system"
-              size={ICON_SIZE}
-              className={"text-muted-foreground"}
+            <Sun 
+              className="w-4 h-4 text-gray-700" 
+              strokeWidth={1.5}
             />
           )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-content" align="start">
-        <DropdownMenuRadioGroup
-          value={theme}
-          onValueChange={(e) => setTheme(e)}
+        </div>
+        <div
+          className={cn(
+            "flex justify-center items-center w-6 h-6 rounded-full transition-transform duration-300",
+            isDark 
+              ? "bg-transparent" 
+              : "transform -translate-x-8"
+          )}
         >
-          <DropdownMenuRadioItem className="flex gap-2" value="light">
-            <Sun size={ICON_SIZE} className="text-muted-foreground" />{" "}
-            <span>Light</span>
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem className="flex gap-2" value="dark">
-            <Moon size={ICON_SIZE} className="text-muted-foreground" />{" "}
-            <span>Dark</span>
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem className="flex gap-2" value="system">
-            <Laptop size={ICON_SIZE} className="text-muted-foreground" />{" "}
-            <span>System</span>
-          </DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
-export { ThemeSwitcher };
+          {isDark ? (
+            <Sun 
+              className="w-4 h-4 text-gray-500" 
+              strokeWidth={1.5}
+            />
+          ) : (
+            <Moon 
+              className="w-4 h-4 text-black" 
+              strokeWidth={1.5}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
