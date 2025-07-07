@@ -4,18 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { UserInfo } from "@/types/userInfo";
 
 export async function updateUserMetadata({
-  userId,
   data,
 }: {
-  userId: string;
   data: Partial<UserInfo>;
 }) {
   const supabase = await createClient();
-  const { error } = await supabase.auth.admin.updateUserById(userId, {
-    user_metadata: {
-      ...data,
-      completedProfile: true,
-    },
+  const { error } = await supabase.auth.updateUser( {
+ data:{
+  completedProfile:true
+ }
   });
   if (error) return { error: error.message };
   return { error: null };

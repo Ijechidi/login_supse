@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import AvatarUploader from "@/components/user/AvatarUploader";
 import { useCompletePatientProfileForm } from "@/hooks/useCompletePatientProfileForm";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function CompletePatientProfileForm() {
   const {
@@ -15,12 +17,26 @@ export default function CompletePatientProfileForm() {
     success,
   } = useCompletePatientProfileForm();
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push("/patient");
+      }, 2000); 
+
+      return () => clearTimeout(timer); 
+    }
+  }, [success, router]);
+
+ 
   if (success) {
     return (
-      <div className="text-green-500 font-medium text-center mt-4">
-        Profil complété avec succès !
+      <div className="text-lg font-medium text-center mt-4">
+        Profil complété avec succès ! Redirection...
       </div>
     );
+  
   }
 
   return (
