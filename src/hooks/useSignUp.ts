@@ -1,5 +1,6 @@
+import { signUpUser } from "@/utils/auth";
 import { useMutation } from "@tanstack/react-query";
-import { signUpUser } from "@/lib/auth";
+
 import { useRouter } from "next/navigation";
 
 export type SignUpMode = "PATIENT" | "MEDECIN";

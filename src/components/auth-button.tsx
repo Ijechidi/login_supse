@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserIcon from "./user/UserIcon";
 import { LogoutButton } from "./logout-button";
+import { EditProfile } from "./ux/EditProfile";
+import { userData } from "./user/userData";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -42,13 +44,15 @@ export async function AuthButton() {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 bg-popover text-popover-foreground">
-        <div className="px-3 py-1.5 text-sm font-medium">{name}</div>
+        <div className="px-3 py-1.5 gap-2 text-sm font-medium">{name}</div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/dashboard">Mon profil</Link>
+          {/* <Link href="/patient/profile/edit" scroll={false} >Mon profil</Link> */}
+          <EditProfile user={userData} />
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/settings">Paramètres</Link>
+      
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

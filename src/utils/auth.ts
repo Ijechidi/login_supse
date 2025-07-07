@@ -53,7 +53,7 @@ export async function signUpPatient({ email, password, repeatPassword }: { email
     repeatPassword,
     role: "PATIENT",
     fonction: "USER",
-    redirectPath: "/patient/welcome",
+    redirectPath: "/welcome",
   });
 }
 
@@ -64,7 +64,7 @@ export async function signUpMedecin({ email, password, repeatPassword }: { email
     repeatPassword,
     role: "ADMIN",
     fonction: "MEDECIN",
-    redirectPath: "/medecin/welcome",
+    redirectPath: "/welcome",
   });
 }
 

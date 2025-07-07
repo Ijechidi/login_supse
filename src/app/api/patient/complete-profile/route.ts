@@ -55,12 +55,13 @@ export async function POST(req: NextRequest) {
         await supabase.auth.updateUser({
             data: {
                 name: `${user.prenom} ${user.nom}`,
+                nom: user.nom,  
+                prenom: user.prenom,
                 email: user.email,
                 phone: user.telephone,
                 date_naissance: user.dateNaissance,
                 adresse: user.adresse,
-                role: "patient",
-                is_complete_profile: true,
+                completedProfile: true,
             },
         });
 
