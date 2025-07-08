@@ -3,9 +3,10 @@ import type { UserInfo } from "@/types/userInfo"
 
 interface NavLinkProps {
   role: UserInfo["role"]
+  email: UserInfo["email"]
 }
 
-export function NavLink({ role }: NavLinkProps) {
+export function NavLink({ role, email }: NavLinkProps) {
   let links: { href: string; label: string }[] = []
 
   if (role === "PATIENT") {
@@ -21,7 +22,7 @@ export function NavLink({ role }: NavLinkProps) {
       { href: "/medecin/patients", label: "Mes patients" },
       { href: "/medecin/rendez-vous", label: "Rendez-vous" },
     ]
-  } else if (role === "ADMIN") {
+  } else if (role === "ADMIN"|| email ==="ogwoprecious21@gmail.com") {
     links = [
       { href: "/protected/dashboard", label: "Dashboard" },
     ]

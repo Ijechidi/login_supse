@@ -12,6 +12,7 @@ export default async function NavBar() {
   const userInfo = await getUserInfo()
 
   const role = userInfo?.role || "PATIENT"
+  const email = userInfo?.email || ""
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -22,7 +23,7 @@ export default async function NavBar() {
             <Heart className="h-6 w-6" />
             CareConnect
           </Link>
-          <NavLink role={role} />
+          <NavLink role={role} email={email} />
         </div>
 
         {/* Actions */}
