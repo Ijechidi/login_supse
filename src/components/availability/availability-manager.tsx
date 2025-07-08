@@ -3,8 +3,18 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDisponibilites } from "@/hooks/useDisponibilites";
+"use client";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useDisponibilites } from "@/hooks/useDisponibilites";
 
 interface AvailabilityManagerProps {
+  medecinId: string;
+  selectedDate?: Date | null;
+  appointments?: any[];
+  onModifyAppointment?: (appointment: any) => void;
+  onCancelAppointment?: (appointment: any) => void;
   medecinId: string;
   selectedDate?: Date | null;
   appointments?: any[];
@@ -68,5 +78,6 @@ export function AvailabilityManager({
         <Button onClick={handleAdd} disabled={!jour || !heureDebut || !heureFin}>Ajouter</Button>
       </div>
     </div>
+  );
   );
 }
