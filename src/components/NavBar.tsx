@@ -4,8 +4,15 @@ import Link from "next/link"
 import { ThemeSwitcher } from "./theme-switcher"
 import { AuthButton } from "./auth-button"
 import VisitStatus from "./VisitStatus"
+import { getUserInfo } from "@/lib/users/getUserInfo"
+import { NavLink } from "./NavLink"
 
-export default function NavBar() {
+export default async function NavBar() {
+
+  const userInfo = await getUserInfo()
+
+  const role = userInfo?.role || "PATIENT"
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -15,26 +22,7 @@ export default function NavBar() {
             <Heart className="h-6 w-6" />
             CareConnect
           </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-            <Link
-              href="/protected/patient/specialites"
-              className="transition-colors hover:text-foreground"
-            >
-              Spécialités
-            </Link>
-            <Link
-              href="/rendez-vous/nouveau"
-              className="transition-colors hover:text-foreground"
-            >
-              Nos médecins
-            </Link>
-            <Link
-              href="/protected/patient/contact"
-              className="transition-colors hover:text-foreground"
-            >
-              Contact
-            </Link>
-          </nav>
+          <NavLink role={role} />
         </div>
 
         {/* Actions */}

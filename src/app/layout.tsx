@@ -1,9 +1,11 @@
+
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 
 const defaultUrl = process.env.VERCEL_URL
@@ -31,18 +33,20 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
         <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <div className="flex flex-col min-h-screen">
-              <NavBar />
-              <main className="flex-1">{children}</main>
-              {/* Tu peux ajouter un <Footer /> ici si besoin */}
-            </div>
-          </ThemeProvider>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div className="flex flex-col min-h-screen">
+                <NavBar />
+                <main className="flex-1">{children}</main>
+              
+              </div>
+            </ThemeProvider>
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
     </html>

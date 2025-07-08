@@ -13,11 +13,26 @@ export async function POST(req: NextRequest) {
 
     const userId = authUser.id;
     const email = authUser.email;
-    const { nom, prenom, telephone, dateNaissance, adresse, avatarUrl } = await req.json();
+    const role = authUser.user_metadata?.role || "PATIENT";
+    const avatar_url = authUser.user_metadata?.avatar_url;
+
+    const { nom, prenom, telephone, dateNaissance, adresse, avatarUrl, specialite } = await req.json();
 
     if (!userId || !nom || !prenom || !telephone || !dateNaissance || !adresse || !email) {
         return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
     }
+    if (role === "MEDECIN" && !specialite) {
+        return NextResponse.json({ error: "La spécialité est requise pour un médecin" }, { status: 400 });
+    }
+
+    // Vérifie s'il existe déjà un utilisateur avec cet email, mais un id différent
+const existing = await prisma.user.findUnique({ where: { email } });
+
+if (existing && existing.id !== userId) {
+  return NextResponse.json({
+    error: "Cet email est déjà utilisé par un autre compte.",
+  }, { status: 400 });
+}
 
     try {
         // Crée ou met à jour l'utilisateur
@@ -30,7 +45,7 @@ export async function POST(req: NextRequest) {
                 telephone,
                 dateNaissance: new Date(dateNaissance),
                 adresse,
-                avatarUrl: avatarUrl || undefined,
+                avatarUrl: avatarUrl || avatar_url || undefined,
             },
             create: {
                 id: userId,
@@ -40,22 +55,29 @@ export async function POST(req: NextRequest) {
                 telephone,
                 dateNaissance: new Date(dateNaissance),
                 adresse,
-                avatarUrl: avatarUrl || undefined,
+                avatarUrl: avatarUrl || avatar_url || undefined,
             },
         });
 
-        // Crée le profil patient seulement s'il n'existe pas (grâce à upsert)
-        await prisma.patient.upsert({
-            where: { userId }, // ⚠️ Assure-toi que userId est une clé unique dans le modèle `patient`
-            update: {}, // rien à mettre à jour ici
-            create: { userId },
-        });
+        if (role === "PATIENT") {
+            await prisma.patient.upsert({
+                where: { userId },
+                update: {},
+                create: { userId },
+            });
+        } else if (role === "MEDECIN") {
+            await prisma.medecin.upsert({
+                where: { userId },
+                update: { specialite },
+                create: { userId, specialite },
+            });
+        }
 
         // Met à jour le profil Supabase
         await supabase.auth.updateUser({
             data: {
                 name: `${user.prenom} ${user.nom}`,
-                nom: user.nom,  
+                nom: user.nom,
                 prenom: user.prenom,
                 email: user.email,
                 phone: user.telephone,

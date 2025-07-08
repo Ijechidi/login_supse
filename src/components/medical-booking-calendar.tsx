@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { CalendarCard } from "./calendar/calendar-card"
 import { TimeSlotList } from "./time-slots/time-slot-list"
 import { AppointmentTabs } from "./appointments/appointment-tabs"
@@ -12,6 +12,9 @@ import { useBookingForm } from "../hooks/use-booking-form"
 import { useAppointments } from "../hooks/use-appointments"
 import { useCalendarStore } from "../store/use-calendar-store"
 import type { RendezVousType, TypeRendezVous } from "@/types/rendezVous"
+import { useAuth } from "@/providers/AuthProvider"
+import { useDisponibilites } from "@/hooks/useDisponibilites";
+import { useRendezVous } from "@/hooks/useRendezVous";
 
 interface MedicalBookingCalendarProps {
   medecinId: string
@@ -34,7 +37,7 @@ export default function MedicalBookingCalendar({
   const [hoveredDay, setHoveredDay] = useState<string | null>(null)
   const [selectedAppointment, setSelectedAppointment] = useState<RendezVousType | null>(null)
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false)
-
+ const {user} = useAuth()
   // Store global
   const showNotification = useCalendarStore((state:any) => state.showNotification)
 
@@ -43,6 +46,34 @@ export default function MedicalBookingCalendar({
   const { currentDate, selectedDate, setSelectedDate, calendarDays, timeSlots, navigateMonth } =
     useCalendar(appointments)
   const { formData, updateField, resetForm, isFormValid } = useBookingForm()
+  const { disponibilites, loading: loadingDispos, fetchDisponibilites } = useDisponibilites(medecinId);
+  // Ajout hook rendez-vous
+  const selectedDateStr = selectedDate ? selectedDate.toISOString().slice(0, 10) : undefined;
+  const { rendezVous, loading: loadingRdv, fetchRendezVous, create } = useRendezVous(medecinId, selectedDateStr);
+
+  useEffect(() => {
+    if (selectedDateStr) fetchRendezVous();
+  }, [selectedDateStr, fetchRendezVous]);
+
+  // Mapper les disponibilités en créneaux horaires pour le jour sélectionné
+  const filteredSlots = selectedDate
+    ? disponibilites.filter(d => {
+        const dJour = new Date(d.jour).toISOString().slice(0, 10);
+        const sJour = selectedDate.toISOString().slice(0, 10);
+        return dJour === sJour;
+      }).map(d => {
+        const rdv = rendezVous.find(r => {
+          const rdvDebut = new Date(r.dateDebut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const dispoDebut = new Date(d.heureDebut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          return rdvDebut === dispoDebut;
+        });
+        return {
+          time: new Date(d.heureDebut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          available: !rdv,
+          rendezVous: rdv,
+        };
+      })
+    : [];
 
   /**
    * Gère la sélection d'un jour dans le calendrier
@@ -57,15 +88,30 @@ export default function MedicalBookingCalendar({
     [setSelectedDate],
   )
 
-  /**
-   * Gère la sélection d'un créneau horaire
-   */
-  const handleTimeSlotSelect = useCallback((timeSlot: any) => {
-    if (timeSlot.available) {
-      setSelectedTimeSlot(timeSlot.time)
-      setShowBookingForm(true)
-    }
-  }, [])
+  // Réservation réelle
+  const handleTimeSlotSelect = async (slot: any) => {
+    if (!slot.available || !selectedDate) return;
+    // TODO: récupérer patientId réel
+    const patientId = "patient-1";
+    const typeId = typesRendezVous[0]?.id || "consultation";
+    const [hours, minutes] = slot.time.split(":").map(Number);
+    const dateDebut = new Date(selectedDate);
+    dateDebut.setHours(hours, minutes, 0, 0);
+    const dateFin = new Date(dateDebut);
+    dateFin.setHours(hours + 1, minutes, 0, 0);
+    await create({
+      patientId,
+      medecinId,
+      dateDebut,
+      dateFin,
+      motif: "Consultation",
+      statut: "en_attente",
+      typeId,
+    });
+    fetchRendezVous();
+    fetchDisponibilites();
+    showNotification("Rendez-vous réservé !", "success");
+  };
 
   /**
    * Gère l'affichage des détails d'un rendez-vous
@@ -167,18 +213,42 @@ export default function MedicalBookingCalendar({
           />
         </div>
 
-        {/* Créneaux horaires */}
+        {/* s affichera si l user role = "PATIENT" */}
+
+        {user?.role.toUpperCase() === "PATIENT" && (
         <div className="max-w-md">
           <TimeSlotList
             selectedDate={selectedDate}
-            timeSlots={timeSlots}
+            timeSlots={filteredSlots}
             typesRendezVous={typesRendezVous}
             onTimeSlotSelect={handleTimeSlotSelect}
             onViewAppointmentDetails={handleViewAppointmentDetails}
           />
         </div>
-
       
+      )}
+
+        {/* ... reste inchangé ... */}
+
+
+          {user?.role.toUpperCase() === "MEDECIN" && (
+                <div className="lg:col-span-1">
+                <AppointmentTabs
+                  appointments={appointments}
+                  typesRendezVous={typesRendezVous}
+                  selectedDate={selectedDate}
+                  hoveredDay={hoveredDay}
+                  medecinId={medecinId}
+                  onModifyAppointment={handleModifyAppointment}
+                  onCancelAppointment={handleCancelAppointment}
+                />
+              </div>
+        )}
+    
+
+           
+              
+
       </div>
 
       {/* Dialog de réservation */}

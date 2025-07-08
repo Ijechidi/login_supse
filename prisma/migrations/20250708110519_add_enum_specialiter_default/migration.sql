@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "medecins" ALTER COLUMN "specialite" SET DEFAULT 'MEDECINE_GENERALE';
