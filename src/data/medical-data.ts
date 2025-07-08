@@ -1,4 +1,13 @@
-import type { User, Patient, Medecin, RendezVous, TypeRendezVous, DashboardStats, Disponibilite } from "@/types/medical"
+import type {
+  User,
+  Patient,
+  Medecin,
+  RendezVous,
+  TypeRendezVous,
+  DashboardStats,
+  Disponibilite,
+  Specialite,
+} from "@/types/medical"
 
 export const users: User[] = [
   {
@@ -121,6 +130,30 @@ export const users: User[] = [
     role: "PATIENT",
     createdAt: "2024-03-05T16:30:00Z",
   },
+  {
+    id: "11",
+    nom: "Lefebvre",
+    prenom: "Thomas",
+    email: "thomas.lefebvre@medical.com",
+    telephone: "0123456799",
+    dateNaissance: "1979-09-12",
+    adresse: "963 Rue de la République, 59000 Lille",
+    age: 45,
+    role: "MEDECIN",
+    createdAt: "2024-02-25T13:15:00Z",
+  },
+  {
+    id: "12",
+    nom: "Girard",
+    prenom: "Camille",
+    email: "camille.girard@medical.com",
+    telephone: "0123456800",
+    dateNaissance: "1983-04-28",
+    adresse: "741 Avenue Foch, 67000 Strasbourg",
+    age: 41,
+    role: "MEDECIN",
+    createdAt: "2024-03-10T10:30:00Z",
+  },
 ]
 
 export const typesRendezVous: TypeRendezVous[] = [
@@ -170,6 +203,38 @@ export const typesRendezVous: TypeRendezVous[] = [
     code: "PEDIATRIE",
     couleur: "#EC4899",
     description: "Consultation pédiatrique",
+    createdAt: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "7",
+    nom: "Gynécologie",
+    code: "GYNECO",
+    couleur: "#F97316",
+    description: "Consultation gynécologique",
+    createdAt: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "8",
+    nom: "Neurologie",
+    code: "NEURO",
+    couleur: "#06B6D4",
+    description: "Consultation neurologique",
+    createdAt: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "9",
+    nom: "Ophtalmologie",
+    code: "OPHTALMO",
+    couleur: "#84CC16",
+    description: "Consultation ophtalmologique",
+    createdAt: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "10",
+    nom: "Orthopédie",
+    code: "ORTHO",
+    couleur: "#A855F7",
+    description: "Consultation orthopédique",
     createdAt: "2024-01-01T00:00:00Z",
   },
 ]
@@ -255,13 +320,57 @@ export const disponibilites: Disponibilite[] = [
     heureDebut: "09:00",
     heureFin: "13:00",
   },
+  // Dr. Thomas Lefebvre (Pédiatrie)
+  {
+    id: "12",
+    medecinId: "11",
+    jour: "Lundi",
+    heureDebut: "08:00",
+    heureFin: "16:00",
+  },
+  {
+    id: "13",
+    medecinId: "11",
+    jour: "Mardi",
+    heureDebut: "08:00",
+    heureFin: "16:00",
+  },
+  {
+    id: "14",
+    medecinId: "11",
+    jour: "Mercredi",
+    heureDebut: "08:00",
+    heureFin: "16:00",
+  },
+  // Dr. Camille Girard (Gynécologie)
+  {
+    id: "15",
+    medecinId: "12",
+    jour: "Mardi",
+    heureDebut: "09:00",
+    heureFin: "17:00",
+  },
+  {
+    id: "16",
+    medecinId: "12",
+    jour: "Jeudi",
+    heureDebut: "09:00",
+    heureFin: "17:00",
+  },
+  {
+    id: "17",
+    medecinId: "12",
+    jour: "Vendredi",
+    heureDebut: "09:00",
+    heureFin: "17:00",
+  },
 ]
 
 export const medecins: Medecin[] = [
   {
     id: "1",
     userId: "2",
-    specialite: "Médecine générale",
+    specialite: "MEDECINE_GENERALE" as Specialite,
     description: "Médecin généraliste avec 20 ans d'expérience en médecine familiale",
     user: {
       nom: "Martin",
@@ -274,7 +383,7 @@ export const medecins: Medecin[] = [
   {
     id: "2",
     userId: "5",
-    specialite: "Cardiologie",
+    specialite: "CARDIOLOGIE" as Specialite,
     description: "Cardiologue spécialisé dans les maladies cardiovasculaires",
     user: {
       nom: "Moreau",
@@ -287,7 +396,7 @@ export const medecins: Medecin[] = [
   {
     id: "3",
     userId: "9",
-    specialite: "Dermatologie",
+    specialite: "DERMATOLOGIE" as Specialite,
     description: "Dermatologue experte en dermatologie médicale et esthétique",
     user: {
       nom: "Garcia",
@@ -296,6 +405,32 @@ export const medecins: Medecin[] = [
       telephone: "0123456797",
     },
     disponibilites: disponibilites.filter((d) => d.medecinId === "9"),
+  },
+  {
+    id: "4",
+    userId: "11",
+    specialite: "PEDIATRIE" as Specialite,
+    description: "Pédiatre spécialisé dans le suivi médical des enfants et adolescents",
+    user: {
+      nom: "Lefebvre",
+      prenom: "Thomas",
+      email: "thomas.lefebvre@medical.com",
+      telephone: "0123456799",
+    },
+    disponibilites: disponibilites.filter((d) => d.medecinId === "11"),
+  },
+  {
+    id: "5",
+    userId: "12",
+    specialite: "GYNECOLOGIE" as Specialite,
+    description: "Gynécologue spécialisée en santé féminine et obstétrique",
+    user: {
+      nom: "Girard",
+      prenom: "Camille",
+      email: "camille.girard@medical.com",
+      telephone: "0123456800",
+    },
+    disponibilites: disponibilites.filter((d) => d.medecinId === "12"),
   },
 ]
 

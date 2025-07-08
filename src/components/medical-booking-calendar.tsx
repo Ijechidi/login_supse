@@ -167,7 +167,10 @@ export default function MedicalBookingCalendar({
           />
         </div>
 
-        {/* Créneaux horaires */}
+        
+
+        
+   {/* s affichera si l user role = "PATIENT" */}
         <div className="max-w-md">
           <TimeSlotList
             selectedDate={selectedDate}
@@ -178,7 +181,19 @@ export default function MedicalBookingCalendar({
           />
         </div>
 
-      
+             {/* s affichera si l user role = "MEDECIN" */}
+                <div className="lg:col-span-1">
+                <AppointmentTabs
+                  appointments={appointments}
+                  typesRendezVous={typesRendezVous}
+                  selectedDate={selectedDate}
+                  hoveredDay={hoveredDay}
+                  medecinId={medecinId}
+                  onModifyAppointment={handleModifyAppointment}
+                  onCancelAppointment={handleCancelAppointment}
+                />
+              </div>
+
       </div>
 
       {/* Dialog de réservation */}

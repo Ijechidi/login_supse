@@ -1,4 +1,5 @@
-// PatientRendezVous.tsx
+"use client"
+
 import React, { useState } from 'react';
 import { RendezVous, Statut, PatientRendezVousProps } from './types';
 import { mockRendezVous } from './mockData';

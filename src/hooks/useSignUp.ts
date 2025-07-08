@@ -9,16 +9,16 @@ const signUpConfig = {
   PATIENT: {
     role: "PATIENT",
     fonction: "USER",
-    redirectPath: "/patient/welcome",
+    redirectPath: "/patient",
   },
   MEDECIN: {
-    role: "ADMIN",
+    role: "MEDECIN",
     fonction: "MEDECIN",
-    redirectPath: "/medecin/welcome",
+    redirectPath: "/medecin",
   },
 } as const;
 
-export function useSignUp(mode: SignUpMode = "PATIENT") {
+export function useSignUp(mode: SignUpMode ) {
   const router = useRouter();
   const mutation = useMutation({
     mutationFn: async ({ email, password, repeatPassword }: { email: string; password: string; repeatPassword: string }) => {

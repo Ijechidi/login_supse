@@ -2,6 +2,17 @@ export type Role = "ADMIN" | "MEDECIN" | "PATIENT" | "SECRETAIRE"
 
 export type Statut = "en_attente" | "confirme" | "annule" | "termine"
 
+export enum Specialite {
+  MEDECINE_GENERALE = "MEDECINE_GENERALE",
+  CARDIOLOGIE = "CARDIOLOGIE",
+  DERMATOLOGIE = "DERMATOLOGIE",
+  PEDIATRIE = "PEDIATRIE",
+  GYNECOLOGIE = "GYNECOLOGIE",
+  NEUROLOGIE = "NEUROLOGIE",
+  OPHTALMOLOGIE = "OPHTALMOLOGIE",
+  ORTHOPEDIE = "ORTHOPEDIE",
+}
+
 export type User = {
   id: string
   nom: string
@@ -27,7 +38,7 @@ export type Patient = {
 export type Medecin = {
   id: string
   userId: string
-  specialite: string
+  specialite: Specialite
   description?: string
   indisponibilites?: any
   disponibilites: Disponibilite[]

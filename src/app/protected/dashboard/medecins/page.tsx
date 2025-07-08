@@ -20,12 +20,12 @@ import {
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { Medecin } from "@/types/medical"
+import { Specialite, type Medecin } from "@/types/medical"
 
 export default function MedecinsPage() {
   const totalDisponibilites = medecins.reduce((acc, m) => acc + m.disponibilites.length, 0)
   const medecinsDisponibles = medecins.filter((m) => m.disponibilites.length > 0).length
-  const specialites = [...new Set(medecins.map((m) => m.specialite))]
+  const specialites = Object.values(Specialite)
 
   const getMedecinStats = (medecinId: string) => {
     const rdvMedecin = rendezVous.filter((rv) => rv.medecinId === medecinId)
@@ -36,14 +36,32 @@ export default function MedecinsPage() {
     }
   }
 
-  const getSpecialiteColor = (specialite: string) => {
+  const getSpecialiteColor = (specialite: Specialite) => {
     const colors = {
-      "Médecine générale": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-      Cardiologie: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-      Dermatologie: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-      Pédiatrie: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+      [Specialite.MEDECINE_GENERALE]: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      [Specialite.CARDIOLOGIE]: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+      [Specialite.DERMATOLOGIE]: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+      [Specialite.PEDIATRIE]: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+      [Specialite.GYNECOLOGIE]: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300",
+      [Specialite.NEUROLOGIE]: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
+      [Specialite.OPHTALMOLOGIE]: "bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-300",
+      [Specialite.ORTHOPEDIE]: "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-300",
     }
-    return colors[specialite as keyof typeof colors] || "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+    return colors[specialite] || "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+  }
+
+  const getSpecialiteLabel = (specialite: Specialite) => {
+    const labels = {
+      [Specialite.MEDECINE_GENERALE]: "Médecine générale",
+      [Specialite.CARDIOLOGIE]: "Cardiologie",
+      [Specialite.DERMATOLOGIE]: "Dermatologie",
+      [Specialite.PEDIATRIE]: "Pédiatrie",
+      [Specialite.GYNECOLOGIE]: "Gynécologie",
+      [Specialite.NEUROLOGIE]: "Neurologie",
+      [Specialite.OPHTALMOLOGIE]: "Ophtalmologie",
+      [Specialite.ORTHOPEDIE]: "Orthopédie",
+    }
+    return labels[specialite] || specialite
   }
 
   const columns: ColumnDef<Medecin>[] = [
@@ -69,7 +87,7 @@ export default function MedecinsPage() {
       header: "Spécialité",
       cell: ({ row }) => (
         <Badge variant="outline" className={getSpecialiteColor(row.getValue("specialite"))}>
-          {row.getValue("specialite")}
+          {getSpecialiteLabel(row.getValue("specialite"))}
         </Badge>
       ),
     },
@@ -187,7 +205,7 @@ export default function MedecinsPage() {
       key: "specialite",
       label: "Spécialité",
       options: specialites.map((spec) => ({
-        label: spec,
+        label: getSpecialiteLabel(spec),
         value: spec,
       })),
     },
@@ -304,7 +322,7 @@ export default function MedecinsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <Badge variant="outline" className={getSpecialiteColor(specialite)}>
-                                  {specialite}
+                                  {getSpecialiteLabel(specialite)}
                                 </Badge>
                               </div>
                               <div className="text-2xl font-bold">{count}</div>
