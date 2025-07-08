@@ -7,7 +7,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { User, Home, LogOut, Menu, X, Users, BarChart3, Settings, Shield } from "lucide-react"
 import NotificationSystem from "@/components/notifications/notification-system"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "../ui/sonner"
+
 
 interface AdminLayoutProps {
   children: React.ReactNode
