@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
@@ -42,7 +43,7 @@ export default function RootLayout({
               <div className="flex flex-col min-h-screen">
                 <NavBar />
                 <main className="flex-1">{children}</main>
-                {/* Tu peux ajouter un <Footer /> ici si besoin */}
+              
               </div>
             </ThemeProvider>
           </AuthProvider>

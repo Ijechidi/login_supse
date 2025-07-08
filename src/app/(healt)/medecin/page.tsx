@@ -6,10 +6,16 @@ export default async function page() {
     if(!user){
         return <div> Vous n'êtes pas connecté </div>
     }
-
+if (!user?.role || user?.role === "MEDECIN") {
+  <div> vous n ete pas medecin </div>
+}
 
     
   return (
-    <div>page medecin {user?.role}</div>
+    <div>
+
+
+
+    </div>
   )
 }
