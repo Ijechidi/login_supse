@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDisponibilites } from "@/hooks/useDisponibilites";
-"use client";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useDisponibilites } from "@/hooks/useDisponibilites";
+
 
 interface AvailabilityManagerProps {
   medecinId: string;
@@ -79,5 +75,5 @@ export function AvailabilityManager({
       </div>
     </div>
   );
-  );
+ 
 }
