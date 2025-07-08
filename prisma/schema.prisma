@@ -37,21 +37,37 @@ model Patient {
   rendezVous RendezVous[]                      // Rendez-vous du patient
 }
 
+
+//secialitee
+
+enum Specialite {
+  MEDECINE_GENERALE
+  CARDIOLOGIE
+  DERMATOLOGIE
+  PEDIATRIE
+  GYNECOLOGIE
+  NEUROLOGIE
+  OPHTALMOLOGIE
+  ORTHOPEDIE
+}
+
+
 // Profil Médecin lié à un utilisateur
 model Medecin {
-  id             String    @id @default(uuid()) // Identifiant unique du médecin
-  userId         String    @unique @map("user_id") // Référence à l'utilisateur
-  specialite     String                        // Spécialité médicale
-  description    String?                       // Description du médecin (optionnel)
-  indisponibilites Json?                       // Périodes d'indisponibilité (optionnel)
-  meta           Json?                         // Métadonnées médecin (optionnel)
+  id              String           @id @default(uuid())
+  userId          String           @unique @map("user_id")
+  specialite      Specialite       @default(MEDECINE_GENERALE)
+  description     String?
+  indisponibilites Json?
+  meta            Json?
 
-  user           User      @relation(fields: [userId], references: [id]) // Relation avec User
-  rendezVous     RendezVous[]                    // Rendez-vous du médecin
-  disponibilites Disponibilite[]                 // Disponibilités du médecin
+  user            User             @relation(fields: [userId], references: [id])
+  rendezVous      RendezVous[]
+  disponibilites  Disponibilite[]
 
   @@map("medecins")
 }
+
 
 // Disponibilités d'un médecin
 model Disponibilite {

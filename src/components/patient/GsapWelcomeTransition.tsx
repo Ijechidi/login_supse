@@ -1,8 +1,8 @@
 'use client';
 import React, { useRef, useEffect, useState } from 'react';
 import { WelcomeAnimation } from './WelcomeAnimation';
-import CompletePatientProfileForm from './CompletePatientProfileForm';
 import { gsap } from 'gsap';
+import CompleteUserProfileForm from '../user/CompleteUserProfileForm';
 
 export default function GsapWelcomeTransition() {
   const welcomeRef = useRef<HTMLDivElement>(null);
@@ -48,7 +48,7 @@ export default function GsapWelcomeTransition() {
       )}
       {showForm && (
         <div ref={formRef} className="w-full flex justify-center">
-          <CompletePatientProfileForm />
+          <CompleteUserProfileForm />
         </div>
       )}
     </>

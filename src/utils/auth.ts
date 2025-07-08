@@ -62,7 +62,7 @@ export async function signUpMedecin({ email, password, repeatPassword }: { email
     email,
     password,
     repeatPassword,
-    role: "MEDECIN",
+    role: "ADMIN",
     fonction: "MEDECIN",
     redirectPath: "/welcome",
   });

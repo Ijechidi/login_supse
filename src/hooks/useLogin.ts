@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { loginWithRole } from "@/lib/auth";
+import { loginWithRole } from "@/utils/auth";
 
 export function useLogin() {
   const router = useRouter();

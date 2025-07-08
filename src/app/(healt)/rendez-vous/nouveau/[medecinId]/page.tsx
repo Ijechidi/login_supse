@@ -3,10 +3,11 @@
 import { ProfileCard } from "@/components/ux/ProfileCard"
 import { notFound } from "next/navigation"
 import MedicalBookingCalendar from "@/components/medical-booking-calendar"
-import { getMedecinById } from "@/utils/getMedecinById"
+import { useMedecinById } from "@/hooks/useMedecinById"
 import { useAppointmentsStore } from "@/store/use-appointments-store"
-import { useEffect } from "react"
+import { useEffect, use } from "react"
 import type { TypeRendezVous, RendezVousType } from "@/types/rendezVous"
+import React from "react"
 
 // Types de rendez-vous disponibles
 const typesRendezVous: TypeRendezVous[] = [
@@ -39,10 +40,13 @@ const typesRendezVous: TypeRendezVous[] = [
 export default function MedecinPage({
   params,
 }: {
-  params: { medecinId: string }
+  params: { medecinId: string } | Promise<{ medecinId: string }>
 }) {
-  const { medecinId } = params
-  const medecin = getMedecinById(medecinId)
+  // Unwrap la Promise si besoin (Next.js 14+ / React 19+)
+  const isPromise = typeof (params as any).then === "function";
+  const resolvedParams = isPromise ? use(params as Promise<{ medecinId: string }>) : (params as { medecinId: string });
+  const medecinId = resolvedParams.medecinId;
+  const { medecin, loading } = useMedecinById(medecinId)
   const setSelectedMedecin = useAppointmentsStore((state) => state.setSelectedMedecin)
   const showNotification = useAppointmentsStore((state) => state.showNotification)
 
@@ -50,8 +54,11 @@ export default function MedecinPage({
     setSelectedMedecin(medecinId)
   }, [medecinId, setSelectedMedecin])
 
+  if (loading) {
+    return <div className="text-center py-12 text-lg">Chargement...</div>
+  }
   if (!medecin) {
-    notFound()
+    return <div>no medecin</div>
   }
 
   const handleBookAppointment = (appointment: any) => {

@@ -11,6 +11,12 @@ export default function page() {
   onCancel={() => {}}
 />
 
+
+{/* 
+
+medecin rendevous 
+
+*/}
     </div>
   )
 }
