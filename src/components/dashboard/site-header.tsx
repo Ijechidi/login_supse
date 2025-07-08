@@ -21,7 +21,7 @@ const getPageTitle = (pathname: string) => {
     case "/dashboard/reports":
       return "Rapports & Analyses"
     default:
-      return "MediCare Admin"
+      return "Careconnect Admin"
   }
 }
 

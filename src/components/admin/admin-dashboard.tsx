@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">Nouveau patient inscrit</p>
-                    <p className="text-xs text-gray-500">Jean Dupont</p>
+                    <p className="text-xs text-gray-500">Precious Ogwo</p>
                   </div>
                   <span className="text-xs text-gray-400">Il y a 4h</span>
                 </div>

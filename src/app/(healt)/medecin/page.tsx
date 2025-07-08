@@ -60,7 +60,7 @@ export default async function page() {
           <ul className="divide-y">
             <li className="py-2 flex justify-between items-center">
               <span>08/07/2025 - 10:00</span>
-              <span className="font-semibold">Jean Dupont</span>
+              <span className="font-semibold">Precious Ogwo</span>
               <Button variant="outline" size="sm">Voir</Button>
             </li>
             <li className="py-2 flex justify-between items-center">

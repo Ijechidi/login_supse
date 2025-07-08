@@ -14,7 +14,7 @@ export default function MedecinCard() {
                 width={200}
             />
             <div>
-                <h2 className="text-xl font-semibold">Dr. Jean Dupont</h2>
+                <h2 className="text-xl font-semibold">Dr. Jean Dupon</h2>
                 <p className="text-gray-600">Cardiologue</p>
                 <p className="text-gray-500">Spécialiste en cardiologie</p>
             </div>

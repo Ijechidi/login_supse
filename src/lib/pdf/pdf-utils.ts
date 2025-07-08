@@ -96,7 +96,7 @@ export const PDFHeader = (
   // Logo et titre principal
   doc.setFontSize(PDF_CONFIG.fontSize.title)
   doc.setTextColor(255, 255, 255)
-  doc.text("+ MediCare Admin", PDF_CONFIG.margin, 25)
+  doc.text("+ Careconnect Admin", PDF_CONFIG.margin, 25)
 
   // Sous-titre système
   doc.setFontSize(PDF_CONFIG.fontSize.small)
@@ -150,9 +150,9 @@ const addAdvancedFooter = (doc: jsPDF) => {
   // Informations de contact
   doc.setFontSize(PDF_CONFIG.fontSize.small)
   doc.setTextColor(...PDF_CONFIG.colors.secondary)
-  doc.text("MediCare Admin - Systeme de gestion medicale", PDF_CONFIG.margin, pageHeight - 20)
-  doc.text("Email: contact@medicare-admin.fr | Tel: +33 1 23 45 67 89", PDF_CONFIG.margin, pageHeight - 15)
-  doc.text("Web: www.medicare-admin.fr", PDF_CONFIG.margin, pageHeight - 10)
+  doc.text("Careconnect Admin - Systeme de gestion medicale", PDF_CONFIG.margin, pageHeight - 20)
+  doc.text("Email: contact@careconnect-admin.fr | Tel: +33 1 23 45 67 89", PDF_CONFIG.margin, pageHeight - 15)
+  doc.text("Web: www.careconnect-admin.fr", PDF_CONFIG.margin, pageHeight - 10)
 
   // Numéro de page avec style
   doc.setFillColor(...PDF_CONFIG.colors.primary)

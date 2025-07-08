@@ -95,7 +95,7 @@ export function MedicalSidebar(props: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
               <Link href="/protected/dashboard">
                 <HeartHandshakeIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">MediCare Admin</span>
+                <span className="text-base font-semibold">Careconnect Admin</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
