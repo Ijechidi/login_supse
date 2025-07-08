@@ -22,7 +22,7 @@ import {
   CheckCircle,
   AlertCircle,
   TrendingUp,
-  Link
+ 
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,7 +30,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import Linky from 'next/link';
+
 
 // Types basés sur le schéma Prisma
 interface User {
@@ -263,10 +263,10 @@ export default function PatientDashboard() {
               Voici un aperçu de votre suivi médical
             </p>
           </div>
-          <Linky href='/rendez-vous/nouveau' className="bg-primary flex hover:bg-primary/90 text-primary-foreground px-2 py-0 rounded-lg shadow-lg">
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg shadow-lg">
             <Plus className="w-5 h-5 mr-2" />
             Nouveau RDV
-          </Linky>
+          </Button>
         </div>
       </div>
 

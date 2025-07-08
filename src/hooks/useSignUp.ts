@@ -12,7 +12,7 @@ const signUpConfig = {
     redirectPath: "/patient/welcome",
   },
   MEDECIN: {
-    role: "MEDECIN",
+    role: "ADMIN",
     fonction: "MEDECIN",
     redirectPath: "/medecin/welcome",
   },
