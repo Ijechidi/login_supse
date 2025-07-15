@@ -28,7 +28,7 @@ export default async function NavBar() {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-        <VisitStatus/>
+      
           <ThemeSwitcher />
           <AuthButton />
         </div>

@@ -11,7 +11,7 @@ import {
 import UserIcon from "./user/UserIcon";
 import { LogoutButton } from "./logout-button";
 import { EditProfile } from "./ux/EditProfile";
-import { userData } from "./user/userData";
+import { AuthPopover } from "./AuthPopover";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -22,13 +22,9 @@ export async function AuthButton() {
 
   if (!user) {
     return (
-      <div className="flex gap-2">
-        <Button asChild size="sm" variant="outline">
-          <Link href="/auth/login">Se connecter</Link>
-        </Button>
-        <Button asChild size="sm" variant="default">
-          <Link href="/auth/sign-up">Créer un compte</Link>
-        </Button>
+      <div className="flex ">
+
+<AuthPopover/>
       </div>
     );
   }
@@ -48,7 +44,7 @@ export async function AuthButton() {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           {/* <Link href="/patient/profile/edit" scroll={false} >Mon profil</Link> */}
-          <EditProfile user={userData} />
+          <EditProfile />
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/settings">Paramètres</Link>

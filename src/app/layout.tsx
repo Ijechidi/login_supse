@@ -6,6 +6,7 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 
 const defaultUrl = process.env.VERCEL_URL
@@ -40,10 +41,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="flex flex-col min-h-screen">
+              <div className="flex  flex-col min-h-screen">
                 <NavBar />
-                <main className="flex-1">{children}</main>
-              
+                <main className="flex-1 border">{children}</main>
+               <Toaster/>
               </div>
             </ThemeProvider>
           </AuthProvider>

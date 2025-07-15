@@ -1,3 +1,4 @@
+"use client"
 import { PatientRendezVous } from '@/components/rendezvous/PatientRendezVous'
 import React from 'react'
 

@@ -15,44 +15,69 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Check, ImagePlus, X } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import AvatarUploader from "@/components/user/AvatarUploader";
 import { updateUserProfileAction } from "@/lib/users/updateUserProfileAction";
 import { Role } from "@/types/types";
 
 export interface User {
   id: string;
-  email: string;
-  nom: string;
-  prenom: string;
-  avatarUrl?: string;
-  telephone: string;
-  dateNaissance: Date;
-  adresse: string;
+  email: string | null;
+  nom: string | null;
+  prenom: string | null;
+  name?: string | null;
+  avatarUrl?: string | null;
+  role: Role | string;
+  fonction?: string | null;
+  prisma_user_id?: string | null;
+  telephone?: string | null;
+  dateNaissance?: string | null;
+  adresse?: string | null;
+  sexe?: string | null;
+  completedProfile?: boolean;
+  next_visit?: string | null;
+  last_visit?: string | null;
   age?: number;
-  role: Role;
   meta?: any;
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 interface EditProfileProps {
-  user: User;
   onProfileUpdate?: (updatedUser: Partial<User>) => void;
 }
 
-function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
+function EditProfile({ onProfileUpdate }: EditProfileProps) {
+  const { toast } = useToast();
   const id = useId();
   const [isOpen, setIsOpen] = useState(false);
+  const { user: profile, loading, fetchUser } = useUserProfile();
   const [formData, setFormData] = useState({
-    prenom: user.prenom,
-    nom: user.nom,
-    email: user.email,
-    telephone: user.telephone,
-    dateNaissance: user.dateNaissance.toISOString().split('T')[0], // Format YYYY-MM-DD
-    adresse: user.adresse,
+    prenom: '',
+    nom: '',
+    email: '',
+    telephone: '',
+    dateNaissance: '',
+    adresse: '',
   });
+
+  // Remplir le formulaire avec les données du profil dès qu'elles sont chargées
+  useEffect(() => {
+    if (!profile && !loading) fetchUser();
+    if (profile) {
+      setFormData({
+        prenom: profile.prenom || '',
+        nom: profile.nom || '',
+        email: profile.email || '',
+        telephone: profile.telephone || '',
+        dateNaissance: profile.dateNaissance ? (typeof profile.dateNaissance === 'string' ? profile.dateNaissance.split('T')[0] : new Date(profile.dateNaissance).toISOString().split('T')[0]) : '',
+        adresse: profile.adresse || '',
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile, loading]);
 
   const maxLength = 180;
   const {
@@ -62,7 +87,7 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
     maxLength: limit,
   } = useCharacterLimit({
     maxLength,
-    initialValue: `${user.prenom} ${user.nom}`,
+    initialValue: `${profile?.prenom || ''} ${profile?.nom || ''}`.trim(),
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -74,45 +99,64 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Convertir la date string en Date object
+    // Vérification de l'âge minimum
+    const age = calculateAge(formData.dateNaissance);
+    if (age === null || age < 18) {
+      toast({
+        title: "Âge minimum requis",
+        description: "Vous devez avoir au moins 18 ans pour utiliser cette application.",
+       
+      });
+      return;
+    }
+    // On garde la date au format string (YYYY-MM-DD)
     const updatedData = {
       ...formData,
-      dateNaissance: new Date(formData.dateNaissance),
+      dateNaissance: formData.dateNaissance,
     };
 
     try {
-      // Appeler l'action de mise à jour
       const formDataToSubmit = new FormData();
-      formDataToSubmit.append('userId', user.id);
+      if (!profile || !profile.id) return;
+      formDataToSubmit.append('userId', profile.id );
       Object.entries(updatedData).forEach(([key, value]) => {
-        formDataToSubmit.append(key, value instanceof Date ? value.toISOString() : value);
+        formDataToSubmit.append(key, value === null || value === undefined ? '' : String(value));
       });
 
       await updateUserProfileAction(formDataToSubmit);
-      
-      // Callback optionnel pour notifier le parent
       if (onProfileUpdate) {
         onProfileUpdate(updatedData);
       }
-      
       setIsOpen(false);
     } catch (error) {
-      console.error('Erreur lors de la mise à jour du profil:', error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour du profil. Veuillez réessayer.",    
+      });
     }
   };
 
   // Calculer l'âge
-  const calculateAge = (birthDate: Date): number => {
+  const calculateAge = (birthDate: string | Date | null | undefined): number | null => {
+    if (!birthDate) return null;
+    const dateObj = typeof birthDate === 'string' ? new Date(birthDate) : birthDate;
+    if (isNaN(dateObj.getTime())) return null;
     const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      return age - 1;
+    let age = today.getFullYear() - dateObj.getFullYear();
+    const monthDifference = today.getMonth() - dateObj.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dateObj.getDate())) {
+      age--;
     }
     return age;
   };
+
+  if (loading || !profile) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <span>Chargement du profil...</span>
+      </div>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -129,14 +173,13 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
           Modifiez vos informations de profil ici. Vous pouvez changer votre photo et vos informations personnelles.
         </DialogDescription>
         <div className="overflow-y-auto">
-          <ProfileBg defaultImage={user.avatarUrl} />
+          <ProfileBg defaultImage={profile.avatarUrl || undefined} />
           <div className="-mt-10 px-6">
             <AvatarUploader  />
           </div>
           <div className="px-6 pb-2 pt-2">
             <form className="space-y-1" onSubmit={handleSubmit}>
-              <input type="hidden" name="userId" value={user.id} />
-              
+              <input type="hidden" name="userId" value={profile.id!} />
               <div className="flex flex-col gap-4 sm:flex-row">
                 <div className="flex-1 space-y-2">
                   <Label htmlFor={`${id}-first-name`}>Prénom</Label>
@@ -163,7 +206,6 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
                   />
                 </div>
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor={`${id}-email`}>Email</Label>
                 <Input
@@ -176,7 +218,6 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
                   required
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor={`${id}-telephone`}>Téléphone</Label>
                 <Input
@@ -188,7 +229,6 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
                   type="tel"
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor={`${id}-dateNaissance`}>Date de naissance</Label>
                 <Input
@@ -197,15 +237,14 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
                   value={formData.dateNaissance}
                   onChange={(e) => handleInputChange('dateNaissance', e.target.value)}
                   type="date"
-                  required
+               
                 />
-                {formData.dateNaissance && (
+                {formData.dateNaissance && calculateAge(formData.dateNaissance) !== null && (
                   <p className="text-sm text-muted-foreground">
-                    Âge: {calculateAge(new Date(formData.dateNaissance))} ans
+                    Âge: {calculateAge(formData.dateNaissance)} ans
                   </p>
                 )}
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor={`${id}-adresse`}>Adresse</Label>
                 <Input
@@ -217,19 +256,6 @@ function EditProfile({ user, onProfileUpdate }: EditProfileProps) {
                   type="text"
                 />
               </div>
-
-              {/* Informations en lecture seule */}
-              {/* <div className="space-y-2">
-                <Label>Informations du compte</Label>
-                <div className="rounded-md border p-3 bg-muted/50">
-                  <div className="text-sm space-y-1">
-                    <p><span className="font-medium">ID:</span> {user.id}</p>
-                    <p><span className="font-medium">Rôle:</span> {user.role}</p>
-                    <p><span className="font-medium">Membre depuis:</span> {user.createdAt.toLocaleDateString('fr-FR')}</p>
-                  </div>
-                </div>
-              </div> */}
-
               <DialogFooter className="border-t border-border px-0 py-4 mt-6">
                 <DialogClose asChild>
                   <Button type="button" variant="outline">
@@ -308,13 +334,15 @@ function ProfileBg({ defaultImage }: { defaultImage?: string }) {
 
 // Composant pour afficher les informations utilisateur en lecture seule
 function UserProfile({ user }: { user: User }) {
-  const calculateAge = (birthDate: Date): number => {
+  const calculateAge = (birthDate: string | Date | null | undefined): number | null => {
+    if (!birthDate) return null;
+    const dateObj = typeof birthDate === 'string' ? new Date(birthDate) : birthDate;
+    if (isNaN(dateObj.getTime())) return null;
     const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      return age - 1;
+    let age = today.getFullYear() - dateObj.getFullYear();
+    const monthDifference = today.getMonth() - dateObj.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dateObj.getDate())) {
+      age--;
     }
     return age;
   };
@@ -342,11 +370,18 @@ function UserProfile({ user }: { user: User }) {
         </div>
         <div>
           <Label className="text-sm font-medium">Âge</Label>
-          <p className="text-sm text-muted-foreground">{calculateAge(user.dateNaissance)} ans</p>
+          <p className="text-sm text-muted-foreground">
+            {user.dateNaissance && calculateAge(user.dateNaissance) !== null ? `${calculateAge(user.dateNaissance)} ans` : 'Non renseigné'}
+          </p>
         </div>
         <div>
           <Label className="text-sm font-medium">Date de naissance</Label>
-          <p className="text-sm text-muted-foreground">{user.dateNaissance.toLocaleDateString('fr-FR')}</p>
+          <p className="text-sm text-muted-foreground">
+            {user.dateNaissance ? (() => {
+              const d = typeof user.dateNaissance === 'string' ? new Date(user.dateNaissance) : user.dateNaissance;
+              return isNaN(d.getTime()) ? 'Non renseignée' : d.toLocaleDateString('fr-FR');
+            })() : 'Non renseignée'}
+          </p>
         </div>
         <div>
           <Label className="text-sm font-medium">Adresse</Label>
@@ -358,7 +393,9 @@ function UserProfile({ user }: { user: User }) {
         </div>
         <div>
           <Label className="text-sm font-medium">Membre depuis</Label>
-          <p className="text-sm text-muted-foreground">{user.createdAt.toLocaleDateString('fr-FR')}</p>
+          <p className="text-sm text-muted-foreground">
+            {user.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR') : 'Non renseigné'}
+          </p>
         </div>
       </div>
     </div>
