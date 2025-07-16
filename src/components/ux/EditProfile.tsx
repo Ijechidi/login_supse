@@ -104,8 +104,7 @@ function EditProfile({ onProfileUpdate }: EditProfileProps) {
     if (age === null || age < 18) {
       toast({
         title: "Âge minimum requis",
-        description: "Vous devez avoir au moins 18 ans pour utiliser cette application.",
-       
+        description: "Vous devez avoir au moins 18 ans pour modifier votre profil."
       });
       return;
     }
@@ -131,7 +130,7 @@ function EditProfile({ onProfileUpdate }: EditProfileProps) {
     } catch (error) {
       toast({
         title: "Erreur",
-        description: "Erreur lors de la mise à jour du profil. Veuillez réessayer.",    
+        description: "Erreur lors de la mise à jour du profil. Veuillez réessayer."
       });
     }
   };
