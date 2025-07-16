@@ -9,23 +9,55 @@ import { motion, AnimatePresence } from "framer-motion"
 interface AddTimeSlotProps {
   onAddSlot: (heureDebut: string, heureFin: string) => void
   disabled?: boolean
+  existingSlots?: { heureDebut: Date; heureFin: Date }[]
 }
 
-export default function AddTimeSlot({ onAddSlot, disabled = false }: AddTimeSlotProps) {
+export default function AddTimeSlot({ onAddSlot, disabled = false, existingSlots = [] }: AddTimeSlotProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [heureDebut, setHeureDebut] = useState("")
   const [heureFin, setHeureFin] = useState("")
   const [errors, setErrors] = useState<{ debut?: string; fin?: string }>({})
 
-  const timeSuggestions = useMemo(
-    () => [
-      { label: "1h", debut: "09:00", fin: "10:00" },
-      { label: "2h", debut: "14:00", fin: "16:00" },
-      { label: "Matinée", debut: "08:00", fin: "12:00" },
-      { label: "Après-midi", debut: "14:00", fin: "18:00" },
-    ],
-    []
-  )
+  // Trouver la dernière heure de fin du jour (ou 08:00 si aucun slot)
+  const lastEnd = useMemo(() => {
+    if (!existingSlots.length) return "08:00"
+    const sorted = [...existingSlots].sort((a, b) => a.heureFin.getTime() - b.heureFin.getTime())
+    const last = sorted[sorted.length - 1].heureFin
+    return last.toTimeString().slice(0, 5)
+  }, [existingSlots])
+
+  // Suggestions dynamiques
+  const timeSuggestions = useMemo(() => {
+    // Créneaux déjà existants sous forme de string HH:MM
+    const slotsStr = existingSlots.map(s => ({
+      debut: s.heureDebut.toTimeString().slice(0, 5),
+      fin: s.heureFin.toTimeString().slice(0, 5)
+    }))
+    // Matinée : 08:00-10:00 et 10:00-12:00
+    const matinOccupe = slotsStr.some(s => (s.debut < "12:00" && s.fin > "08:00"))
+    // Après-midi : 14:00-16:00 et 16:00-18:00
+    const apremOccupe = slotsStr.some(s => (s.debut < "18:00" && s.fin > "14:00"))
+    return [
+      { label: "1h", debut: lastEnd, fin: addHour(lastEnd, 1), disabled: false },
+      { label: "2h", debut: lastEnd, fin: addHour(lastEnd, 2), disabled: false },
+      { label: "Matinée", slots: [
+        { debut: "08:00", fin: "10:00" },
+        { debut: "10:00", fin: "12:00" }
+      ], disabled: matinOccupe },
+      { label: "Après-midi", slots: [
+        { debut: "14:00", fin: "16:00" },
+        { debut: "16:00", fin: "18:00" }
+      ], disabled: apremOccupe },
+    ]
+  }, [lastEnd, existingSlots])
+
+  // Fonction utilitaire pour additionner des heures
+  function addHour(time: string, h: number) {
+    const [hour, min] = time.split(":").map(Number)
+    const d = new Date(0, 0, 0, hour, min)
+    d.setHours(d.getHours() + h)
+    return d.toTimeString().slice(0, 5)
+  }
 
   const validateTimes = useCallback(() => {
     const newErrors: { debut?: string; fin?: string } = {}
@@ -157,15 +189,31 @@ export default function AddTimeSlot({ onAddSlot, disabled = false }: AddTimeSlot
 
           <div className="flex flex-wrap gap-2 text-sm">
             <span className="text-muted-foreground">Suggestions :</span>
-            {timeSuggestions.map(({ label, debut, fin }) => (
-              <button
-                key={label}
-                onClick={() => applySuggestion(debut, fin)}
-                className="bg-muted px-2 py-1 rounded-md hover:bg-muted/60 text-muted-foreground transition-colors"
-              >
-                {label}
-              </button>
-            ))}
+            {timeSuggestions.map((s) =>
+              s.label === "Matinée" || s.label === "Après-midi" ? (
+                <button
+                  key={s.label}
+                  onClick={() => {
+                    if (s.disabled || !s.slots) return
+                    s.slots.forEach(slot => onAddSlot(slot.debut, slot.fin))
+                    handleCancel()
+                  }}
+                  className={`bg-muted px-2 py-1 rounded-md hover:bg-muted/60 text-muted-foreground transition-colors ${s.disabled ? 'opacity-50 pointer-events-none' : ''}`}
+                  disabled={s.disabled}
+                >
+                  {s.label}
+                </button>
+              ) : (
+                <button
+                  key={s.label}
+                  onClick={() => applySuggestion(s.debut as string, s.fin as string)}
+                  className={`bg-muted px-2 py-1 rounded-md hover:bg-muted/60 text-muted-foreground transition-colors ${s.disabled ? 'opacity-50 pointer-events-none' : ''}`}
+                  disabled={s.disabled}
+                >
+                  {s.label}
+                </button>
+              )
+            )}
           </div>
 
           <div className="flex gap-2 pt-2">

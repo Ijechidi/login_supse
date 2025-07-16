@@ -14,11 +14,18 @@ export function useDisponibilites(medecinId: string) {
   const fetchDisponibilites = useCallback(async () => {
     setLoading(true);
     const data = await getDisponibilitesByMedecin(medecinId);
-    setDisponibilites(data);
+    // Conversion des dates string en Date
+    const parsed = data.map((d: any) => ({
+      ...d,
+      heureDebut: d.heureDebut ? new Date(d.heureDebut) : null,
+      heureFin: d.heureFin ? new Date(d.heureFin) : null,
+    }));
+    setDisponibilites(parsed);
     setLoading(false);
   }, [medecinId]);
 
-  const add = useCallback(async (payload: { jour: string; heureDebut: Date; heureFin: Date; meta?: any }) => {
+  // On rend 'jour' optionnel pour coller au schéma Prisma
+  const add = useCallback(async (payload: { heureDebut: Date; heureFin: Date; jour?: string; meta?: any }) => {
     const dispo = await addDisponibilite({ medecinId, ...payload });
     setDisponibilites((prev) => [...prev, dispo]);
     return dispo;

@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar } from "@/components/ui/calendar";
 import { getUserInfo } from '@/lib/users/getUserInfo'
+import MedicalBookingCalendar from "@/components/calendar-medecin";
+import DisponibiliteSelector from "@/components/disponibilite-selector";
+import MedecinCalendar from "@/components/medecin/MedecinCalendar";
 
 
 export default async function page() {
@@ -17,7 +20,7 @@ export default async function page() {
   // fallback for specialite
   const specialite = user.function || "Médecine Générale";
   // fallback for dateNaissance
-  const dateNaissance = user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString() : "-";
+  const dateNaissance = user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString() : " ";
 
   return (
     <div className="container mx-auto py-10 space-y-8">
@@ -44,7 +47,7 @@ export default async function page() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-2">
-            <div><span className="font-semibold">Téléphone:</span> {user.telephone || '-'}</div>
+            <div><span className="font-semibold">Téléphone:</span> {user.telephone || ''}</div>
             <div><span className="font-semibold">Adresse:</span> {user.adresse || '-'}</div>
             <div><span className="font-semibold">Date de naissance:</span> {dateNaissance}</div>
           </div>
@@ -78,31 +81,11 @@ export default async function page() {
       </Card>
 
       {/* Disponibilités (statique) */}
-      <Card className="max-w-2xl mx-auto shadow-md">
-        <CardHeader>
-          <CardTitle>Disponibilités</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-6 items-start">
-            <Calendar className="border rounded-md" />
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center justify-between">
-                <span>Lundi</span>
-                <span>09:00 - 12:00</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Mercredi</span>
-                <span>14:00 - 18:00</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Vendredi</span>
-                <span>09:00 - 12:00</span>
-              </div>
-              <Button className="mt-4 w-full" variant="default">Gérer mes disponibilités</Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+{/* 
+    <DisponibiliteSelector medecinId={user.id!} /> */}
+
+      {/* Calendrier */}
+      <MedecinCalendar/>
     </div>
   );
 }

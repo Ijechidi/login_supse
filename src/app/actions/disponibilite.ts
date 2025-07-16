@@ -4,27 +4,25 @@ import { prisma } from "@/lib/prisma";
 export async function getDisponibilitesByMedecin(medecinId: string) {
   return prisma.disponibilite.findMany({
     where: { medecinId },
-    orderBy: [{ jour: "asc" }, { heureDebut: "asc" }],
+    orderBy: [{ heureDebut: "asc" }],
   });
 }
 
 export async function addDisponibilite({
   medecinId,
-  jour,
   heureDebut,
   heureFin,
   meta,
 }: {
   medecinId: string;
-  jour: string;
   heureDebut: Date;
   heureFin: Date;
   meta?: any;
 }) {
+  console.log("medecin Id : ", medecinId)
   return prisma.disponibilite.create({
     data: {
       medecinId,
-      jour,
       heureDebut,
       heureFin,
       meta,

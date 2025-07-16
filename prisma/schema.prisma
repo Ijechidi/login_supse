@@ -7,38 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Utilisateur principal du système
-model User {
-  id             String    @id @default(uuid()) // Identifiant unique
-  email          String    @unique              // Email unique
-  nom            String                        // Nom de famille
-  prenom         String                        // Prénom
-  avatarUrl      String?                       // URL de l'avatar (optionnel)
-  telephone      String                        // Numéro de téléphone
-  dateNaissance  DateTime                      // Date de naissance
-  adresse        String   
-  age            Int?
-  role           Role      @default(PATIENT)    // Rôle de l'utilisateur (PATIENT par défaut)
-  meta           Json?                         // Métadonnées additionnelles (optionnel)
-  createdAt      DateTime  @default(now()) @map("created_at") // Date de création
-
-  patient        Patient?                      // Lien vers le profil patient (optionnel)
-  medecin        Medecin?                      // Lien vers le profil médecin (optionnel)
+// Enumérations
+enum Role {
+  PATIENT
+  MEDECIN
+  ADMIN
+  SECRETAIRE
 }
 
-// Profil Patient lié à un utilisateur
-model Patient {
-  id        String   @id @default(uuid())       // Identifiant unique du patient
-  userId    String   @unique @map("user_id")
-
-  meta      Json?                              // Métadonnées patient (optionnel)
-
-  user      User     @relation(fields: [userId], references: [id]) // Relation avec User
-  rendezVous RendezVous[]                      // Rendez-vous du patient
+enum Statut {
+  en_attente
+  confirme
+  annule
+  termine
 }
-
-
-//secialitee
 
 enum Specialite {
   MEDECINE_GENERALE
@@ -51,45 +33,66 @@ enum Specialite {
   ORTHOPEDIE
 }
 
+enum TypeRendezVousEnum {
+  CONSULTATION
+  SUIVI
+  URGENCE
+  TELECONSULTATION
+}
 
-// Profil Médecin lié à un utilisateur
+//
+// Modèles principaux
+//
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  nom            String
+  prenom         String
+  avatarUrl      String?
+  telephone      String
+  dateNaissance  DateTime
+  adresse        String
+  age            Int?
+  role           Role      @default(PATIENT)
+  meta           Json?
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  patient        Patient?
+  medecin        Medecin?
+}
+
+model Patient {
+  id         String      @id @map("user_id") // Même ID que User
+  meta       Json?
+
+  user       User        @relation(fields: [id], references: [id])
+  rendezVous RendezVous[]
+
+  @@map("patients")
+}
+
 model Medecin {
-  id              String           @id @default(uuid())
-  userId          String           @unique @map("user_id")
-  specialite      Specialite       @default(MEDECINE_GENERALE)
-  description     String?
+  id               String           @id @map("user_id") // Même ID que User
+  specialite       Specialite       @default(MEDECINE_GENERALE)
+  description      String?
   indisponibilites Json?
-  meta            Json?
+  meta             Json?
 
-  user            User             @relation(fields: [userId], references: [id])
-  rendezVous      RendezVous[]
-  disponibilites  Disponibilite[]
+  user             User             @relation(fields: [id], references: [id])
+  rendezVous       RendezVous[]
+  disponibilites   Disponibilite[]
 
   @@map("medecins")
 }
 
-
-// Disponibilités d'un médecin
-model Disponibilite {
-  id         String   @id @default(uuid())      // Identifiant unique
-  medecinId  String   @map("medecin_id")       // Référence au médecin
-  jour       String                            // Jour de la semaine ou date
-  heureDebut DateTime                          // Heure de début
-  heureFin   DateTime                          // Heure de fin
-  meta       Json?                             // Métadonnées (optionnel)
-
-  medecin    Medecin  @relation(fields: [medecinId], references: [id]) // Relation avec Medecin
-
-  @@map("disponibilites")
-}
-
-// Rendez-vous entre patient et médecin
 model RendezVous {
   id            String   @id @default(uuid())
   patientId     String   @map("patient_id")
   medecinId     String   @map("medecin_id")
-  typeId        String   @map("type_id")
 
+  type          TypeRendezVousEnum
   dateDebut     DateTime
   dateFin       DateTime?
   motif         String
@@ -98,38 +101,21 @@ model RendezVous {
   meta          Json?
   createdAt     DateTime @default(now()) @map("created_at")
 
-  type          TypeRendezVous @relation(fields: [typeId], references: [id])
-  patient       Patient        @relation(fields: [patientId], references: [id])
-  medecin       Medecin        @relation(fields: [medecinId], references: [id])
+  // Relations
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  medecin       Medecin  @relation(fields: [medecinId], references: [id])
 
   @@map("rendez_vous")
 }
 
+model Disponibilite {
+  id         String    @id @default(uuid())
+  medecinId  String    @map("medecin_id")
+  heureDebut DateTime
+  heureFin   DateTime
+  meta       Json?
 
-// Type de rendez-vous
-model TypeRendezVous {
-  id        String   @id @default(uuid())
-  nom       String   @unique      // ex: "Consultation"
-  code      String   @unique      // ex: "consultation"
-  couleur   String?               // ex: "#00b894" (pour affichage calendrier)
-  description String?             // utile pour UI/UX ou tri avancé
-  createdAt DateTime @default(now())
+  medecin    Medecin   @relation(fields: [medecinId], references: [id])
 
-  rendezVous RendezVous[]
-}
-
-// Enumération des rôles utilisateurs
-enum Role {
-  PATIENT    // Utilisateur patient
-  MEDECIN    // Utilisateur médecin
-  ADMIN      // Administrateur
-  SECRETAIRE // Secrétaire
-}
-
-// Enumération des statuts de rendez-vous
-enum Statut {
-  en_attente     // Rendez-vous en attente de validation
-  confirme       // Rendez-vous confirmé
-  annule         // Rendez-vous annulé
-  termine        // Rendez-vous terminé
+  @@map("disponibilites")
 }

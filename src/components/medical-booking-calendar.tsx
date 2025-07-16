@@ -43,7 +43,7 @@ export default function MedicalBookingCalendar({
 
   // Hooks
   const { appointments, addAppointment, updateAppointment } = useAppointments()
-  const { currentDate, selectedDate, setSelectedDate, calendarDays, timeSlots, navigateMonth } =
+  const { currentDate, selectedDate, setSelectedDate, calendarDays, navigateMonth } =
     useCalendar(appointments)
   const { formData, updateField, resetForm, isFormValid } = useBookingForm()
   const { disponibilites, loading: loadingDispos, fetchDisponibilites } = useDisponibilites(medecinId);

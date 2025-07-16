@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react"
 import { CalendarCard } from "./calendar/calendar-card"
 import { TimeSlotList } from "./time-slots/time-slot-list"
+import { AvailabilityManager } from "./availability/availability-manager"
 import { AppointmentTabs } from "./appointments/appointment-tabs"
 import { AppointmentDetailModal } from "./appointments/appointment-detail-modal"
 import { BookingDialog } from "./booking/booking-dialog"
@@ -153,7 +154,7 @@ export default function MedicalBookingCalendar({
   }, [])
 
   return (
-    <div className=" w-screen mx-auto p-6">
+    <div className="w-screen mx-auto p-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Calendrier */}
         <div className="lg:col-span-1">
@@ -167,8 +168,9 @@ export default function MedicalBookingCalendar({
           />
         </div>
 
-        {/* Créneaux horaires */}
-        <div className="lg:col-span-1">
+        {/* Créneaux horaires et gestion des disponibilités */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Liste des créneaux horaires pour la date sélectionnée */}
           <TimeSlotList
             selectedDate={selectedDate}
             timeSlots={timeSlots}
@@ -176,18 +178,11 @@ export default function MedicalBookingCalendar({
             onTimeSlotSelect={handleTimeSlotSelect}
             onViewAppointmentDetails={handleViewAppointmentDetails}
           />
-        </div>
 
-        {/* Onglets : Rendez-vous et Disponibilités pour le medecin uniquement a ne pas afficher au patient */}
-        <div className="lg:col-span-1">
-          <AppointmentTabs
-            appointments={appointments}
-            typesRendezVous={typesRendezVous}
-            selectedDate={selectedDate}
-            hoveredDay={hoveredDay}
+          {/* Gestion des disponibilités du médecin */}
+          <AvailabilityManager
             medecinId={medecinId}
-            onModifyAppointment={handleModifyAppointment}
-            onCancelAppointment={handleCancelAppointment}
+            selectedDate={selectedDate}
           />
         </div>
       </div>

@@ -3,14 +3,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDisponibilites } from "@/hooks/useDisponibilites";
+import AddTimeSlot from './AddTimeSlot'
 
 
 interface AvailabilityManagerProps {
-  medecinId: string;
-  selectedDate?: Date | null;
-  appointments?: any[];
-  onModifyAppointment?: (appointment: any) => void;
-  onCancelAppointment?: (appointment: any) => void;
   medecinId: string;
   selectedDate?: Date | null;
   appointments?: any[];
@@ -67,11 +63,19 @@ export function AvailabilityManager({
           ))}
         </ul>
       )}
-      <div className="flex gap-2 mt-4">
-        <Input type="date" value={jour} onChange={e => setJour(e.target.value)} placeholder="Jour" />
-        <Input type="time" value={heureDebut} onChange={e => setHeureDebut(e.target.value)} placeholder="Début" />
-        <Input type="time" value={heureFin} onChange={e => setHeureFin(e.target.value)} placeholder="Fin" />
-        <Button onClick={handleAdd} disabled={!jour || !heureDebut || !heureFin}>Ajouter</Button>
+      <div className="mt-4">
+        <AddTimeSlot
+          onAddSlot={async (heureDebut, heureFin) => {
+            if (!selectedDate) return;
+            const jour = selectedDate.toISOString().slice(0, 10);
+            await add({
+              jour,
+              heureDebut: new Date(`${jour}T${heureDebut}`),
+              heureFin: new Date(`${jour}T${heureFin}`),
+            });
+          }}
+          disabled={!selectedDate}
+        />
       </div>
     </div>
   );

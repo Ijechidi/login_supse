@@ -25,7 +25,7 @@ export function CalendarCard({
   onDayHover,
 }: CalendarCardProps) {
   return (
-    <div className="w-full max-w-lg rounded-2xl p-6  border border-border">
+    <div className="w-full max-w-lg rounded-2xl p-4 lg:p-6  border border-border">
       <CalendarHeader currentDate={currentDate} onNavigate={onNavigate} />
       <CalendarGrid days={days} selectedDate={selectedDate} onDaySelect={onDaySelect} onDayHover={onDayHover} />
     </div>
