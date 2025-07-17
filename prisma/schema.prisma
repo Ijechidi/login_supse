@@ -109,13 +109,21 @@ model RendezVous {
 }
 
 model Disponibilite {
-  id         String    @id @default(uuid())
-  medecinId  String    @map("medecin_id")
+  id         String               @id @default(uuid())
+  medecinId  String               @map("medecin_id")
   heureDebut DateTime
   heureFin   DateTime
+  status     DisponibiliteStatus
   meta       Json?
 
-  medecin    Medecin   @relation(fields: [medecinId], references: [id])
+  medecin    Medecin              @relation(fields: [medecinId], references: [id])
 
   @@map("disponibilites")
+}
+
+
+enum DisponibiliteStatus {
+  LIBRE
+  RESERVE
+  ANNULE
 }

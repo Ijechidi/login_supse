@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { Button } from "./ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,12 +12,9 @@ import { LogoutButton } from "./logout-button";
 import { EditProfile } from "./ux/EditProfile";
 import { AuthPopover } from "./AuthPopover";
 
-export async function AuthButton() {
-  const supabase = await createClient();
+export async function AuthButton({name, avatarUrl,role, user}:{name?:string, avatarUrl?:string,role?:string, user:boolean}) {
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
 
   if (!user) {
     return (
@@ -29,8 +25,7 @@ export async function AuthButton() {
     );
   }
 
-  const name = user.user_metadata.name || undefined;
-  const avatarUrl = user.user_metadata.avatar_url;
+
 
   return (
     <DropdownMenu>
@@ -41,6 +36,8 @@ export async function AuthButton() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 bg-popover text-popover-foreground">
         <div className="px-3 py-1.5 gap-2 text-sm font-medium">{name}</div>
+        <span> {role} </span>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           {/* <Link href="/patient/profile/edit" scroll={false} >Mon profil</Link> */}

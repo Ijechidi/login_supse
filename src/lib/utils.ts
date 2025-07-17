@@ -5,6 +5,33 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Filtre les disponibilités pour une date donnée (YYYY-MM-DD)
+ * @param disponibilites Array de disponibilités (doit contenir heureDebut)
+ * @param date Date sélectionnée (ou null)
+ * @returns Array filtré
+ */
+export function filterDisponibilitesByDate(disponibilites: any[], date: Date | null) {
+  if (!date) return disponibilites;
+  return disponibilites.filter(d => {
+    const dDate = d.heureDebut instanceof Date ? d.heureDebut : new Date(d.heureDebut);
+    return dDate.toISOString().slice(0, 10) === date.toISOString().slice(0, 10);
+  });
+}
+
+
+
+/* format heure pour disponibiliter */
+
+export function formatHeure(date: Date): string {
+  const heures = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${heures}h:${minutes}`;
+}
+
+
+
+
 // This check can be removed, it is just for tutorial purposes
 export const hasEnvVars =
   process.env.NEXT_PUBLIC_SUPABASE_URL &&

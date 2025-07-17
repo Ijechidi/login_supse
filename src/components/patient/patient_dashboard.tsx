@@ -31,6 +31,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import Linky from 'next/link';
 
+
 // Types basés sur le schéma Prisma
 interface User {
   id: string;
@@ -70,7 +71,6 @@ interface RendezVous {
   id: string;
   patientId: string;
   medecinId: string;
-  typeId: string;
   dateDebut: string;
   dateFin?: string;
   motif: string;
@@ -108,7 +108,7 @@ export default function PatientDashboard() {
     id: "1",
     patientId: "patient-1",
     medecinId: "medecin-1",
-    typeId: "type-1",
+    type: "type-1",
     dateDebut: "2025-07-15T10:00:00",
     motif: "Consultation générale",
     statut: "confirme",
@@ -138,7 +138,6 @@ export default function PatientDashboard() {
       id: "2",
       patientId: "patient-1",
       medecinId: "medecin-2",
-      typeId: "type-2",
       dateDebut: "2025-07-01T14:30:00",
       motif: "Suivi post-opératoire",
       statut: "termine",
@@ -155,18 +154,13 @@ export default function PatientDashboard() {
           role: 'MEDECIN'
         }
       },
-      type: {
-        id: "type-2",
-        nom: "Suivi",
-        code: "suivi",
-        couleur: "#0984e3"
-      }
+      type: SUIVI
     },
     {
       id: "3",
       patientId: "patient-1",
       medecinId: "medecin-1",
-      typeId: "type-1",
+      type: "type-1",
       dateDebut: "2025-06-15T09:15:00",
       motif: "Contrôle de routine",
       statut: "termine",

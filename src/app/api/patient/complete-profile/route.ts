@@ -61,15 +61,15 @@ if (existing && existing.id !== userId) {
 
         if (role === "PATIENT") {
             await prisma.patient.upsert({
-                where: { userId },
+                where: { id:userId },
                 update: {},
-                create: { userId },
+                create: { id:userId },
             });
         } else if (role === "MEDECIN") {
             await prisma.medecin.upsert({
-                where: { userId },
+                where: { id:userId },
                 update: { specialite },
-                create: { userId, specialite },
+                create: { id:userId, specialite },
             });
         }
 

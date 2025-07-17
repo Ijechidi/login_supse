@@ -13,6 +13,8 @@ export default async function NavBar() {
 
   const role = userInfo?.role || "PATIENT"
   const email = userInfo?.email || ""
+  const name = userInfo?.name || "";
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -30,7 +32,7 @@ export default async function NavBar() {
         <div className="flex items-center gap-4">
       
           <ThemeSwitcher />
-          <AuthButton />
+          <AuthButton user={userInfo?.id? true : false} name={name} avatarUrl={userInfo?.avatarUrl} role={role} />
         </div>
       </div>
     </header>

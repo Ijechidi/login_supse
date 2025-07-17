@@ -11,6 +11,7 @@ import {
 import { TimeSlot } from "./time-slot"
 import type { TimeSlot as TimeSlotType } from "@/hooks/use-calendar"
 import type { TypeRendezVous } from "@/types/rendezVous"
+import { BookingModalPatient } from "./BookIngModalPatient"
 
 interface TimeSlotListProps {
   selectedDate: Date | null
@@ -18,6 +19,9 @@ interface TimeSlotListProps {
   typesRendezVous: TypeRendezVous[]
   onTimeSlotSelect: (slot: TimeSlotType) => void
   onViewAppointmentDetails?: (slot: TimeSlotType) => void
+  name?: string
+  email?: string
+  onCreateRendezVous?: (data: { motif: string; notes: string; typeRendezVous: string; date: Date | null; time: string | null }) => void
 }
 
 export function TimeSlotList({
@@ -26,6 +30,9 @@ export function TimeSlotList({
   typesRendezVous,
   onTimeSlotSelect,
   onViewAppointmentDetails,
+  name = "nom",
+  email = "email",
+  onCreateRendezVous,
 }: TimeSlotListProps) {
   return (
     <Card className="bg-card border p-2">
@@ -47,13 +54,16 @@ export function TimeSlotList({
         {selectedDate ? (
           <div className="space-y-3 max-h-96 overflow-y-auto ">
             {timeSlots.map((slot) => (
-              <TimeSlot
-                key={slot.time}
-                slot={slot}
-                typesRendezVous={typesRendezVous}
-                onSelect={onTimeSlotSelect}
-                onViewDetails={onViewAppointmentDetails}
-              />
+              <div className="flex justify-between">
+                <TimeSlot
+                  key={slot.time}
+                  slot={slot}
+                  typesRendezVous={typesRendezVous}
+                  onSelect={onTimeSlotSelect}
+                  onViewDetails={onViewAppointmentDetails}
+                />
+                <BookingModalPatient email={email} name={name} selectedDate={selectedDate} selectedTime={slot.time} onSubmit={onCreateRendezVous} />
+              </div>
             ))}
           </div>
         ) : (
@@ -65,6 +75,8 @@ export function TimeSlotList({
             </p>
           </div>
         )}
+
+
       </CardContent>
     </Card>
   )

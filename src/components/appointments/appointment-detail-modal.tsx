@@ -64,10 +64,10 @@ export function AppointmentDetailModal({
     }
   }
 
-  const getTypeConfig = (typeId: string) => {
-    const type = typesRendezVous.find((t) => t.id === typeId)
-    if (!type) return null
-    return { nom: type.nom, couleur: type.couleur, description: type.description }
+  const getTypeConfig = (type: string) => {
+    const typeObj = typesRendezVous.find((t) => t.id === type)
+    if (!typeObj) return null
+    return { nom: typeObj.nom, couleur: typeObj.couleur, description: typeObj.description }
   }
 
   const statusConfig = getStatusConfig(appointment.statut)

@@ -12,23 +12,26 @@ export interface ValidationErrors {
   motif?: string;
 }
 
-
-export type RendezVousType = {
-  id: string
-  patientId: string
-  medecinId: string
-  dateDebut: Date
-  dateFin?: Date
-  motif: string
-  statut: "en_attente" | "confirme" | "annule" | "termine"
-  historique?: any
-  meta?: any
-  createdAt: Date
+// Enum strictement conforme au schéma Prisma
+export enum TypeRendezVousEnum {
+  CONSULTATION = "CONSULTATION",
+  SUIVI = "SUIVI",
+  URGENCE = "URGENCE",
+  TELECONSULTATION = "TELECONSULTATION"
 }
 
-export type TypeRendezVous = {
-  id: string
-  nom: string
-  couleur?: string
-  description?: string
-}
+export type RendezVous = {
+  id: string;
+  patientId: string;
+  medecinId: string;
+  dateDebut: Date;
+  dateFin?: Date;
+  motif: string;
+  statut: "en_attente" | "confirme" | "annule" | "termine";
+  type: TypeRendezVousEnum;
+  historique?: any;
+  meta?: any;
+  createdAt: Date;
+};
+
+

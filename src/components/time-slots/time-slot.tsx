@@ -16,11 +16,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import type { TimeSlot as TimeSlotType } from "@/hooks/use-calendar"
-import type { TypeRendezVous } from "@/types/rendezVous"
+import { RendezVous } from "@/types/globalTypes"
 
 interface TimeSlotProps {
   slot: TimeSlotType
-  typesRendezVous: TypeRendezVous[]
+  typesRendezVous: RendezVous[]
   onSelect: (slot: TimeSlotType) => void
   onViewDetails?: (slot: TimeSlotType) => void
 }
@@ -41,8 +41,8 @@ export function TimeSlot({ slot, typesRendezVous, onSelect, onViewDetails }: Tim
     }
   }
 
-  const getTypeConfig = (typeId: string) => {
-    return typesRendezVous.find((type) => type.id === typeId)
+  const getTypeConfig = (type: string) => {
+    return typesRendezVous.find((t) => t.id === type)
   }
 
   const handleClick = () => {
@@ -122,17 +122,13 @@ export function TimeSlot({ slot, typesRendezVous, onSelect, onViewDetails }: Tim
                       <div className="flex items-center gap-1">
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: typeConfig.couleur }}
+                     
                         />
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Type : {typeConfig.nom}</p>
-                      {typeConfig.description && (
-                        <p className="text-xs text-muted-foreground">
-                          {typeConfig.description}
-                        </p>
-                      )}
+                      
+               
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

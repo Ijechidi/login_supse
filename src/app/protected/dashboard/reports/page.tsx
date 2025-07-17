@@ -65,7 +65,7 @@ export default function ReportsPage() {
   // Analyse par type de consultation
   const analyseTypes = typesRendezVous
     .map((type) => {
-      const rdvType = rendezVous.filter((rdv) => rdv.typeId === type.id)
+      const rdvType = rendezVous.filter((rdv) => rdv.type === type.id)
       return {
         ...type,
         usage: rdvType.length,

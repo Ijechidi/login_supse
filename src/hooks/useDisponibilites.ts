@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   getDisponibilitesByMedecin,
   addDisponibilite,
@@ -7,14 +7,13 @@ import {
   updateDisponibilite,
 } from "@/app/actions/disponibilite";
 
-export function useDisponibilites(medecinId: string) {
+export function useDisponibilites(medecinId: string, autoFetch: boolean = false) {
   const [disponibilites, setDisponibilites] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchDisponibilites = useCallback(async () => {
     setLoading(true);
     const data = await getDisponibilitesByMedecin(medecinId);
-    // Conversion des dates string en Date
     const parsed = data.map((d: any) => ({
       ...d,
       heureDebut: d.heureDebut ? new Date(d.heureDebut) : null,
@@ -24,7 +23,6 @@ export function useDisponibilites(medecinId: string) {
     setLoading(false);
   }, [medecinId]);
 
-  // On rend 'jour' optionnel pour coller au schéma Prisma
   const add = useCallback(async (payload: { heureDebut: Date; heureFin: Date; jour?: string; meta?: any }) => {
     const dispo = await addDisponibilite({ medecinId, ...payload });
     setDisponibilites((prev) => [...prev, dispo]);
@@ -42,6 +40,13 @@ export function useDisponibilites(medecinId: string) {
     return dispo;
   }, []);
 
+  // ✅ Auto-fetch si demandé
+  useEffect(() => {
+    if (autoFetch) {
+      fetchDisponibilites();
+    }
+  }, [fetchDisponibilites, autoFetch]);
+
   return {
     disponibilites,
     loading,
@@ -50,4 +55,4 @@ export function useDisponibilites(medecinId: string) {
     remove,
     update,
   };
-} 
+}

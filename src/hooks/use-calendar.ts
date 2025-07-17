@@ -1,22 +1,23 @@
 "use client"
 
+import { RendezVous } from "@/types/globalTypes"
 import { useState, useMemo } from "react"
-import type { RendezVousType } from "../types/rendezVous"
+
 
 export interface DayData {
   day: string
   date: Date
   isCurrentMonth: boolean
-  rendezVous: RendezVousType[]
+  rendezVous: RendezVous[]
 }
 
 export interface TimeSlot {
   time: string
   available: boolean
-  rendezVous?: RendezVousType
+  rendezVous?: RendezVous
 }
 
-export function useCalendar(existingAppointments: RendezVousType[]) {
+export function useCalendar(existingAppointments: RendezVous[]) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 

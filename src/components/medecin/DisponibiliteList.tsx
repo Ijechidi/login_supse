@@ -1,7 +1,9 @@
+"use client"
 import React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Trash2 } from "lucide-react"
+import { formatHeure } from "@/lib/utils"
 
 export interface DisponibiliteItem {
   id: string
@@ -9,7 +11,7 @@ export interface DisponibiliteItem {
   heureFin: Date
 }
 
-interface DisponibiliteListProps {
+export interface DisponibiliteListProps {
   disponibilites: DisponibiliteItem[]
   onDelete: (id: string) => void
 }
@@ -33,15 +35,9 @@ export default function DisponibiliteList({
           <Card className="flex items-center justify-between">
             <CardContent className="p-4 w-full flex items-center justify-between">
               <div className="text-sm font-medium text-foreground">
-                {d.heureDebut.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {formatHeure(d.heureDebut)}
                 <span className="mx-1">—</span>
-                {d.heureFin.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {formatHeure(d.heureFin)}
               </div>
               <Button
                 variant="destructive"

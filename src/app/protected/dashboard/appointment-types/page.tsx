@@ -12,9 +12,9 @@ export default function AppointmentTypesPage() {
   // Calculer les statistiques d'utilisation pour chaque type
   const typeStats = typesRendezVous
     .map((type) => {
-      const usage = rendezVous.filter((rdv) => rdv.typeId === type.id).length
-      const rdvConfirmes = rendezVous.filter((rdv) => rdv.typeId === type.id && rdv.statut === "confirme").length
-      const rdvTermines = rendezVous.filter((rdv) => rdv.typeId === type.id && rdv.statut === "termine").length
+      const usage = rendezVous.filter((rdv) => rdv.type === type.id).length
+      const rdvConfirmes = rendezVous.filter((rdv) => rdv.type === type.id && rdv.statut === "confirme").length
+      const rdvTermines = rendezVous.filter((rdv) => rdv.type === type.id && rdv.statut === "termine").length
 
       return {
         ...type,

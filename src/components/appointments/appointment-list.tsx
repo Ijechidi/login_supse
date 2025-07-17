@@ -70,8 +70,8 @@ export function AppointmentList({
     }
   }
 
-  const getTypeRendezVous = (typeId: string) => {
-    return typesRendezVous.find((type) => type.id === typeId)
+  const getTypeRendezVous = (type: string) => {
+    return typesRendezVous.find((t) => t.id === type)
   }
 
   return (

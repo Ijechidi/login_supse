@@ -22,6 +22,7 @@ export async function addDisponibilite({
   console.log("medecin Id : ", medecinId)
   return prisma.disponibilite.create({
     data: {
+      status: "LIBRE",
       medecinId,
       heureDebut,
       heureFin,

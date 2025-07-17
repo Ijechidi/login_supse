@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/card"
 
 import type { TimeSlot as TimeSlotType } from "@/hooks/use-calendar"
-import type { TypeRendezVous } from "@/types/rendezVous"
 import { TimeSlot } from "../time-slots/time-slot"
+import { RendezVous } from "@/types/globalTypes"
 
 interface TimeSlotListProps {
   selectedDate: Date | null
   timeSlots: TimeSlotType[]
-  typesRendezVous: TypeRendezVous[]
+  typesRendezVous: RendezVous[]
   onTimeSlotSelect: (slot: TimeSlotType) => void
   onViewAppointmentDetails?: (slot: TimeSlotType) => void
 }
