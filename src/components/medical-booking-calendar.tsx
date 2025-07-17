@@ -5,16 +5,12 @@ import { CalendarCard } from "./calendar/calendar-card"
 import { TimeSlotList } from "./time-slots/time-slot-list"
 import { Notifications } from "@/components/ui/notifications"
 import { useCalendar } from "../hooks/use-calendar"
-import { useAppointments } from "../hooks/use-appointments"
-import { useCalendarStore } from "../store/use-calendar-store"
-import { useAuth } from "@/providers/AuthProvider"
 import { useDisponibilites } from "@/hooks/useDisponibilites";
 import { useRendezVous } from "@/hooks/useRendezVous";
-import { TypeRendezVousEnum } from "@/types/rendezVous";
 import { filterDisponibilitesByDate } from "@/lib/utils";
-import { mapDisponibilitesToSlots } from "@/lib/slots";
-import { useCreateRendezVous } from "@/hooks/useCreateRendezVous";
 import { RendezVous } from "@/types/globalTypes"
+import { useUserProfile } from "@/hooks/useUserProfile"
+import TimeSlotView from "./uix/calendar/TimeSlotView"
 
 interface MedicalBookingCalendarProps {
   medecinId: string
@@ -31,75 +27,34 @@ export default function MedicalBookingCalendar({
   typesRendezVous,
   onBookAppointment,
 }: MedicalBookingCalendarProps) {
-  // États locaux
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null)
- const {user} = useAuth()
-
- const { rendezVous, fetchRendezVous, create } = useRendezVous(medecinId, selectedDateStr);
-
- const {
-  currentDate,
-  selectedDate,
-  setSelectedDate,
-  calendarDays,
-  navigateMonth,
-} = useCalendar(rendezVous)
-
-selectedDate
-useEffect(() => {
-  if (selectedDate) {
-    fetchDisponibilites();
-  }
-}, [selectedDate, fetchDisponibilites]);
-
-
-  // Store global
-  const showNotification = useCalendarStore((state:any) => state.showNotification)
-
-  // Hooks
-  const { appointments, addAppointment, updateAppointment } = useAppointments()
-
-  const { disponibilites, loading: loadingDispos } = useDisponibilites(medecinId, true);
-  
-
-
+  const { user, loading } = useUserProfile()
+  // const medecinId = user?.id || ''
+  const { disponibilites, fetchDisponibilites, add, remove } = useDisponibilites(medecinId)
+  const { rendezVous, loading: loadingRdv , fetchRendezVous, create  } = useRendezVous(medecinId);
+  // Pour le calendrier, on simule les rendez-vous à partir des disponibilités (ou on peut brancher les vrais rendez-vous si besoin)
+ 
+  const {
+    currentDate,
+    selectedDate,
+    setSelectedDate,
+    calendarDays,
+    navigateMonth,
+  } = useCalendar(rendezVous)
 
   useEffect(() => {
-    if (selectedDateStr) fetchRendezVous();
-  }, [selectedDateStr, fetchRendezVous]);
+    if (selectedDate) {
+      fetchDisponibilites();
+      fetchRendezVous();
+    }
+  }, [selectedDate, fetchDisponibilites, fetchRendezVous]);
 
-  // Mapper les disponibilités en créneaux horaires pour le jour sélectionné (corrigé pour utiliser heureDebut comme dans MedecinCalendar)
+  console.log("Disponibilités :", disponibilites);
+
+  // Filtrer les créneaux pour la date sélectionnée
   const filteredDisponibilites = filterDisponibilitesByDate(disponibilites, selectedDate);
-  const filteredSlots = selectedDate ? mapDisponibilitesToSlots(filteredDisponibilites, rendezVous) : [];
 
-
-
-
-  /**
-   * Gère la sélection d'un jour dans le calendrier
-   */
-  const handleDaySelect = useCallback(
-    (dayData: any) => {
-      if (dayData.isCurrentMonth) {
-        setSelectedDate(dayData.date)
-        setSelectedTimeSlot(null)
-      }
-    },
-    [setSelectedDate],
-  )
-
-  // Réservation réelle
-  const handleTimeSlotSelect = async (slot: any) => {
-
-  };
-
-
-  /**
-   * Gère la soumission d'un nouveau rendez-vous
-   */
-  const handleBookingSubmit = useCallback(() => {
-
-  }, [])
+  // Log pour debug
+  console.log('Disponibilités filtrées:', filteredDisponibilites);
 
 
 
@@ -114,7 +69,7 @@ useEffect(() => {
             days={calendarDays}
             selectedDate={selectedDate}
             onNavigate={navigateMonth}
-            onDaySelect={handleDaySelect}
+            onDaySelect={dayData => setSelectedDate(dayData.date)}
        
           />
         </div>
@@ -136,6 +91,13 @@ useEffect(() => {
         </div>
       
       )} */}
+<div className="flex p-8"> 
+  <h1> it juste my manual recuperation to time in calendar </h1>
+  {filteredDisponibilites?.map((slot)=>(
+    <TimeSlotView key={slot.id} slot={slot} />
+  ))}
+  
+</div>
 
 
 
