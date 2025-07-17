@@ -91,7 +91,7 @@ export default function MedicalBookingCalendar({
         </div>
       
       )} */}
-<div className="flex p-8"> 
+<div className="flex p-8 gap-4 flex-col"> 
   <h1> it juste my manual recuperation to time in calendar </h1>
   {filteredDisponibilites?.map((slot)=>(
     <TimeSlotView key={slot.id} slot={slot} />
