@@ -11,6 +11,8 @@ import { filterDisponibilitesByDate } from "@/lib/utils";
 import { RendezVous } from "@/types/globalTypes"
 import { useUserProfile } from "@/hooks/useUserProfile"
 import TimeSlotView from "./uix/calendar/TimeSlotView"
+import { SlideButton } from "./uix/tools/SlideButton"
+import TimeOption from "./uix/calendar/TimeOption"
 
 interface MedicalBookingCalendarProps {
   medecinId: string
@@ -93,8 +95,16 @@ export default function MedicalBookingCalendar({
       )} */}
 <div className="flex p-8 gap-4 flex-col"> 
   <h1> it juste my manual recuperation to time in calendar </h1>
+  <SlideButton 
+  text="Swipe to delete"
+  completedText="creating!"
+
+  onComplete={() => console.log("Action completed!")}
+  // trackWidth={250}
+  resetDelay={2000}
+/>
   {filteredDisponibilites?.map((slot)=>(
-    <TimeSlotView key={slot.id} slot={slot} />
+   <TimeOption key={slot.id} slot={slot} />
   ))}
   
 </div>
