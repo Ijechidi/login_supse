@@ -76,30 +76,14 @@ export default function MedicalBookingCalendar({
           />
         </div>
 
-        {/* s affichera si l user role = "PATIENT" */}
 
-        {/* {user?.role.toUpperCase() === "PATIENT" && (
-        <div className="max-w-md">
-          <TimeSlotList
-          onCreateRendezVous={handleBookingSubmit}
-             name={user?.nom|| user?.name|| undefined}
-             email={user?.email || undefined}
-            selectedDate={selectedDate}
-            timeSlots={filteredSlots}
-            typesRendezVous={typesRendezVous}
-            onTimeSlotSelect={handleTimeSlotSelect}
-            onViewAppointmentDetails={()=>{}}
-          />
-        </div>
-      
-      )} */}
-<div className="flex p-8 gap-4 flex-col"> 
-  <h1> it just my manual recuperation to time in calendar </h1>
-  {filteredDisponibilites?.map((slot)=>(
-   <TimeOption key={slot.id} slot={slot} />
-  ))}
-  
-</div>
+          <div className="flex p-8 gap-4 flex-col"> 
+            <h1> it just my manual recuperation to time in calendar </h1>
+            {filteredDisponibilites?.map((slot)=>(
+            <TimeOption key={slot.id} slot={slot} />
+            ))}
+            
+          </div>
 
 
 
