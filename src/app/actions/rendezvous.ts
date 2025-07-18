@@ -1,7 +1,10 @@
 "use server";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 import { TypeRendezVousEnum } from "@/types/rendezVous";
 import { Statut } from "@/types/types";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export async function getRendezVousByMedecin(medecinId: string, date?: string) {
   return prisma.rendezVous.findMany({
@@ -44,3 +47,65 @@ export async function cancelRendezVous(id: string) {
     data: { statut: "annule" },
   });
 } 
+
+
+
+
+
+const creerRendezVousSchema = z.object({
+  disponibiliteId: z.string().uuid(),
+  motif: z.string().min(3),
+  type: z.enum(["CONSULTATION", "SUIVI", "URGENCE", "TELECONSULTATION"]),
+});
+
+export async function creerRendezVousDepuisDisponibilite(formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
+  const parsed = creerRendezVousSchema.safeParse(data);
+
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.format() };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+
+  if (!authUser) {
+    return { success: false, error: "Utilisateur non authentifié." };
+  }
+
+  const patientId = authUser.id;
+
+  const { disponibiliteId, motif, type } = parsed.data;
+
+  const disponibilite = await prisma.disponibilite.findUnique({
+    where: { id: disponibiliteId },
+  });
+
+  if (!disponibilite || disponibilite.status !== "LIBRE") {
+    return {
+      success: false,
+      error: { disponibilite: "Ce créneau n’est pas disponible." },
+    };
+  }
+
+  const rendezVous = await prisma.rendezVous.create({
+    data: {
+      patientId,
+      medecinId: disponibilite.medecinId,
+      type,
+      motif,
+      dateDebut: disponibilite.heureDebut,
+      dateFin: disponibilite.heureFin,
+    },
+  });
+
+  await prisma.disponibilite.update({
+    where: { id: disponibiliteId },
+    data: { status: "RESERVE" },
+  });
+
+  revalidatePath("/rendezvous");
+  return { success: true, rendezVous };
+}

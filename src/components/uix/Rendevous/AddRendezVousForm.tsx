@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -29,62 +28,72 @@ export function AddRendezVousForm({ medecinId, patientId }: Props) {
   } = useRendezVousForm(medecinId, patientId);
 
   return (
-    <Card className="max-w-lg mx-auto mt-6">
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="dateDebut">Date et heure début</Label>
-            <Input
-              type="datetime-local"
-              id="dateDebut"
-              value={dateDebut}
-              onChange={(e) => setDateDebut(e.target.value)}
-              required
-            />
+    <section className="flex  ">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-card  h-fit w-full  shadow-md "
+      >
+        <div className="">
+          <div className="gap-4 flex flex-col">
+            <h1 className="text-title   text-xl font-semibold">Créer un rendez-vous</h1>
+            <p className="text-sm text-muted-foreground">Remplissez les détails pour planifier ce rendez-vous</p>
           </div>
 
-          <div>
-            <Label htmlFor="dateFin">Date et heure fin (optionnel)</Label>
-            <Input
-              type="datetime-local"
-              id="dateFin"
-              value={dateFin}
-              onChange={(e) => setDateFin(e.target.value)}
-            />
-          </div>
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="dateDebut" className="text-sm">Date et heure de début</Label>
+              <Input
+                type="datetime-local"
+                id="dateDebut"
+                value={dateDebut}
+                onChange={(e) => setDateDebut(e.target.value)}
+                required
+              />
+            </div>
 
-          <div>
-            <Label htmlFor="type">Type de rendez-vous</Label>
-            <Select value={type} onValueChange={(v) => setType(v as TypeRendezVousEnum)}>
-              <SelectTrigger id="type">
-                <SelectValue placeholder="Choisissez un type" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(TypeRendezVousEnum).map((val) => (
-                  <SelectItem key={val} value={val}>
-                    {val}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="dateFin" className="text-sm">Date et heure de fin (optionnel)</Label>
+              <Input
+                type="datetime-local"
+                id="dateFin"
+                value={dateFin}
+                onChange={(e) => setDateFin(e.target.value)}
+              />
+            </div>
 
-          <div>
-            <Label htmlFor="motif">Motif</Label>
-            <Textarea
-              id="motif"
-              value={motif}
-              onChange={(e) => setMotif(e.target.value)}
-              required
-              rows={3}
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="type" className="text-sm">Type de rendez-vous</Label>
+              <Select value={type} onValueChange={(v) => setType(v as TypeRendezVousEnum)}>
+                <SelectTrigger id="type">
+                  <SelectValue placeholder="Choisissez un type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(TypeRendezVousEnum).map((val) => (
+                    <SelectItem key={val} value={val}>
+                      {val}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Création..." : "Créer rendez-vous"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            <div className="space-y-2">
+              <Label htmlFor="motif" className="text-sm">Motif</Label>
+              <Textarea
+                id="motif"
+                value={motif}
+                onChange={(e) => setMotif(e.target.value)}
+                required
+                rows={3}
+              />
+            </div>
+
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? "Création..." : "Créer le rendez-vous"}
+            </Button>
+          </div>
+        </div>
+      </form>
+    </section>
   );
 }

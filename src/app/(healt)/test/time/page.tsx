@@ -5,6 +5,7 @@ import {  HoverSlideOverlay as HoverSlideOverlay1 } from '@/components/uix/calen
 import TimeOption from '@/components/uix/calendar/TimeOption'
 import { SlideButton } from '@/components/uix/tools/SlideButton3'
 import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 export default function page() {
@@ -18,10 +19,17 @@ export default function page() {
  
   <span className='w-42'> <ArrowLeft className="opacity-80 " size={20} /></span>
 </HoverSlideOverlay1>
-<HoverSlideOverlay  text="Retour" href='#' className="w-fit h-12 rounded-md border bg-background">
+<HoverSlideOverlay  text="Retour" href='/rendez-vous/new-visit/123' className="w-fit min-w-2 h-12 rounded-md border bg-background">
  
   <SlideButton/>
 </HoverSlideOverlay>
+
+<Link href="/rendez-vous/new-visit/123" scroll={false} className="text-primary font-semibold">Visite</Link>
+
+
+<Link
+          href="./new-visit/123" scroll={false}
+          className="text-primary font-semibold hover:underline" >visite</Link>
         </div>
     </div>
   )

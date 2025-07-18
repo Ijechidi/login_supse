@@ -1,5 +1,6 @@
 "use client"
 import { PatientRendezVous } from '@/components/rendezvous/PatientRendezVous'
+import Link from 'next/link'
 import React from 'react'
 
 
@@ -12,6 +13,7 @@ export default function page() {
   onCancel={() => {}}
 />
 
+<Link href="/rendez-vous/new-visit/123" className="underline text-blue-600">Modifier mon profil</Link>
 
 {/* 
 

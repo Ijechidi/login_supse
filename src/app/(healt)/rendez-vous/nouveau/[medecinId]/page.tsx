@@ -6,36 +6,15 @@ import MedicalBookingCalendar from "@/components/medical-booking-calendar"
 import { useMedecinById } from "@/hooks/useMedecinById"
 import { useAppointmentsStore } from "@/store/use-appointments-store"
 import { useEffect, use } from "react"
-import type { TypeRendezVous, RendezVousType } from "@/types/rendezVous"
+
 import React from "react"
 import { useDisponibilites } from "@/hooks/useDisponibilites"
+import { RendezVous } from "@/types/globalTypes"
+import Link from "next/link"
 
 // Types de rendez-vous disponibles
-const typesRendezVous: TypeRendezVous[] = [
-  {
-    id: "consultation",
-    nom: "Consultation",
-    description: "Consultation standard de 30 minutes",
-    couleur: "var(--appointment-consultation)",
-  },
-  {
-    id: "suivi",
-    nom: "Suivi",
-    description: "Rendez-vous de suivi de 15 minutes",
-    couleur: "var(--appointment-followup)",
-  },
-  {
-    id: "urgence",
-    nom: "Urgence",
-    description: "Consultation d'urgence de 45 minutes",
-    couleur: "var(--appointment-emergency)",
-  },
-  {
-    id: "specialise",
-    nom: "Spécialisé",
-    description: "Consultation spécialisée de 60 minutes",
-    couleur: "var(--appointment-specialized)",
-  },
+const typesRendezVous: RendezVous[] = [
+
 ]
 
 export default function MedecinPage({
@@ -81,6 +60,9 @@ export default function MedecinPage({
         <p className="text-muted-foreground">
           Choisissez une date et une heure pour votre rendez-vous avec votre {medecin.specialite}.
         </p>
+
+        <Link href="/rendez-vous/new-visit/123" className="underline text-blue-600">Modifier mon profil</Link>
+
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

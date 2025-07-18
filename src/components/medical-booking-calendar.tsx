@@ -94,15 +94,7 @@ export default function MedicalBookingCalendar({
       
       )} */}
 <div className="flex p-8 gap-4 flex-col"> 
-  <h1> it juste my manual recuperation to time in calendar </h1>
-  <SlideButton 
-  text="Swipe to delete"
-  completedText="creating!"
-
-  onComplete={() => console.log("Action completed!")}
-  // trackWidth={250}
-  resetDelay={2000}
-/>
+  <h1> it just my manual recuperation to time in calendar </h1>
   {filteredDisponibilites?.map((slot)=>(
    <TimeOption key={slot.id} slot={slot} />
   ))}

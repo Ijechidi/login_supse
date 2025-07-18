@@ -5,16 +5,7 @@ import { Statut } from "@/types/types";
 import { useRendezVous } from "./useRendezVous";
 
 
-type CreateRdvPayload = {
-  patientId: string;
-  medecinId: string;
-  dateDebut: Date;
-  dateFin?: Date;
-  motif: string;
-  statut?: Statut;
-  type: TypeRendezVousEnum;
-  meta?: any;
-};
+
 
 export function useRendezVousForm(medecinId: string, patientId: string) {
   const { create, loading } = useRendezVous(medecinId);
