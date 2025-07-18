@@ -88,22 +88,24 @@ model Medecin {
 }
 
 model RendezVous {
-  id            String   @id @default(uuid())
-  patientId     String   @map("patient_id")
-  medecinId     String   @map("medecin_id")
+  id              String       @id @default(uuid())
+  patientId       String       @map("patient_id")
+  medecinId       String       @map("medecin_id")
+  disponibiliteId String     @unique  @map("disponibilite_id") // ← clé étrangère vers Disponibilite
 
-  type          TypeRendezVousEnum
-  dateDebut     DateTime
-  dateFin       DateTime?
-  motif         String
-  statut        Statut   @default(en_attente)
-  historique    Json?
-  meta          Json?
-  createdAt     DateTime @default(now()) @map("created_at")
+  type            TypeRendezVousEnum
+  dateDebut       DateTime
+  dateFin         DateTime?
+  motif           String
+  statut          Statut       @default(en_attente)
+  historique      Json?
+  meta            Json?
+  createdAt       DateTime     @default(now()) @map("created_at")
 
   // Relations
-  patient       Patient  @relation(fields: [patientId], references: [id])
-  medecin       Medecin  @relation(fields: [medecinId], references: [id])
+  patient         Patient      @relation(fields: [patientId], references: [id])
+  medecin         Medecin      @relation(fields: [medecinId], references: [id])
+  disponibilite   Disponibilite @relation(fields: [disponibiliteId], references: [id])
 
   @@map("rendez_vous")
 }
@@ -116,7 +118,9 @@ model Disponibilite {
   status     DisponibiliteStatus
   meta       Json?
 
-  medecin    Medecin              @relation(fields: [medecinId], references: [id])
+  // Relations
+  medecin     Medecin             @relation(fields: [medecinId], references: [id])
+  rendezVous  RendezVous?        // ← relation inverse (peut être [] ou ? selon ton besoin)
 
   @@map("disponibilites")
 }

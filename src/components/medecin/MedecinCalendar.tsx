@@ -10,6 +10,7 @@ import { filterDisponibilitesByDate } from '@/lib/utils';
 import { RendezVous } from '@/types/globalTypes'
 import { useRendezVous } from '@/hooks/useRendezVous'
 import TimeSlotView from '../uix/calendar/TimeSlotView'
+import DisponibilitesOption from '../uix/calendar/DisponibilitesOption'
 
 
 export default function MedecinCalendar() {
@@ -35,6 +36,7 @@ export default function MedecinCalendar() {
   }, [selectedDate, fetchDisponibilites]);
 
   console.log("Disponibilités :", disponibilites);
+  
 
   // Filtrer les créneaux pour la date sélectionnée
   const filteredDisponibilites = filterDisponibilitesByDate(disponibilites, selectedDate);
@@ -45,8 +47,8 @@ export default function MedecinCalendar() {
   if (!user) return <div>Chargement du profil...</div>
 
   return (
-    <div className="flex flex-col  border  md:flex-row gap-4">
-      <div className="flex-1">
+    <div className="flex flex-col   w-auto md:flex-row gap-4 md:gap-12 justify-center">
+      <div className="flex-1 max-w-lg">
         <CalendarCard
           currentDate={currentDate}
           days={calendarDays}
@@ -55,7 +57,7 @@ export default function MedecinCalendar() {
           onDaySelect={dayData => setSelectedDate(dayData.date)}
         />
       </div>
-      <div className="flex border justify-center">
+      <div className="flex  justify-center">
         <div className='flex flex-col gap-2'>
           <h2 className="text-xl font-bold mb-4 text-center">Gérer mes disponibilités</h2>
           {selectedDate && (
@@ -77,14 +79,12 @@ export default function MedecinCalendar() {
               disabled={!selectedDate}
               existingSlots={filteredDisponibilites}
             />
-          )}
-          <DisponibiliteList
-            disponibilites={filteredDisponibilites}
-            onDelete={remove}
+          )}   
+          <DisponibilitesOption 
+          disponibilites={filteredDisponibilites} 
+             onDelete={remove}
           />
-        {filteredDisponibilites.map((slot) => (
-          <TimeSlotView key={slot.id} slot={slot} />
-        ))}
+ 
         </div>
       </div>
     </div>

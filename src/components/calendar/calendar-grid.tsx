@@ -34,7 +34,7 @@ export function CalendarGrid({ days, selectedDate, onDaySelect, onDayHover }: Ca
       <div className="grid grid-cols-7 gap-2">
         {days.map((dayData, index) => (
           <CalendarDay
-            key={`${dayData.date.toISOString()}-${index}`}
+            key={dayData.date.getTime()}
             dayData={dayData}
             isSelected={selectedDate?.toDateString() === dayData.date.toDateString()}
             onSelect={onDaySelect}

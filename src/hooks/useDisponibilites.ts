@@ -15,6 +15,7 @@ export function useDisponibilites(medecinId: string, autoFetch: boolean = false)
     setLoading(true);
     const data = await getDisponibilitesByMedecin(medecinId);
     const parsed = data.map((d: any) => ({
+    
       ...d,
       heureDebut: d.heureDebut ? new Date(d.heureDebut) : null,
       heureFin: d.heureFin ? new Date(d.heureFin) : null,

@@ -3,6 +3,7 @@ import TimeSlotView from './TimeSlotView'
 import { Disponibilite } from '@/types/globalTypes'
 import { SlideButton } from '../tools/SlideButton3'
 import { HoverSlideOverlay } from './HoverContent'
+import ConfirmVisit from './ConfirmVisit'
 
 
 export default function TimeOption({slot}:{slot:Disponibilite}) {
@@ -12,20 +13,8 @@ export default function TimeOption({slot}:{slot:Disponibilite}) {
     
     <TimeSlotView slot={slot} />
 
+<ConfirmVisit href={`/rendez-vous/new-visit/${slot.id}`}  />
 
-<HoverSlideOverlay  text="formulaire" href={`/rendez-vous/new-visit/${slot.id}`} className="w-fit min-w-2 px-px h-12 rounded-md border bg-background">
- 
- <SlideButton
-       text="rendez-vous"
-       completedText="visite cree"
-       loadingText="validation..."
-       resolveTo = "success"
-       onComplete={() => console.log("Action completed!")}
-       autoReset={false}
-       resetDelay={250000}
-       disabled
- />
-</HoverSlideOverlay>
 </div>
     </div>
   )

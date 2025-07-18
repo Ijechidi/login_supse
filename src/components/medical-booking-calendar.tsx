@@ -7,12 +7,13 @@ import { Notifications } from "@/components/ui/notifications"
 import { useCalendar } from "../hooks/use-calendar"
 import { useDisponibilites } from "@/hooks/useDisponibilites";
 import { useRendezVous } from "@/hooks/useRendezVous";
-import { filterDisponibilitesByDate } from "@/lib/utils";
+import { filterDisponibilitesByDate, filterRendezVousByPatientId } from "@/lib/utils";
 import { RendezVous } from "@/types/globalTypes"
 import { useUserProfile } from "@/hooks/useUserProfile"
 import TimeSlotView from "./uix/calendar/TimeSlotView"
 import { SlideButton } from "./uix/tools/SlideButton"
 import TimeOption from "./uix/calendar/TimeOption"
+import { useRendezVousWithDispo } from "@/hooks/useDisponibilitesEtRendezVous"
 
 interface MedicalBookingCalendarProps {
   medecinId: string
@@ -29,12 +30,23 @@ export default function MedicalBookingCalendar({
   typesRendezVous,
   onBookAppointment,
 }: MedicalBookingCalendarProps) {
-  const { user, loading } = useUserProfile()
-  // const medecinId = user?.id || ''
+  const { user } = useUserProfile()
+
+
+  if (!user || !user.id) {
+    return("/")
+  }
+
+  const patientId = user?.id!
+
+
+   
   const { disponibilites, fetchDisponibilites, add, remove } = useDisponibilites(medecinId)
-  const { rendezVous, loading: loadingRdv , fetchRendezVous, create  } = useRendezVous(medecinId);
-  // Pour le calendrier, on simule les rendez-vous à partir des disponibilités (ou on peut brancher les vrais rendez-vous si besoin)
- 
+  const { rendezVous, loading: loadingRdv , fetchRendezVous, create , disponibilitesAvecRendezVous  } = useRendezVous(medecinId);
+
+
+
+
   const {
     currentDate,
     selectedDate,
@@ -54,12 +66,14 @@ export default function MedicalBookingCalendar({
 
   // Filtrer les créneaux pour la date sélectionnée
   const filteredDisponibilites = filterDisponibilitesByDate(disponibilites, selectedDate);
+  const filteredDispoRdv = filterDisponibilitesByDate(disponibilitesAvecRendezVous, selectedDate);
 
   // Log pour debug
   console.log('Disponibilités filtrées:', filteredDisponibilites);
+  console.log("diporedevous :" , filteredDispoRdv)
+const patientRendezVous = filterRendezVousByPatientId(rendezVous, patientId);
 
-
-
+console.log("rendevous :", rendezVous)
 
   return (
     <div className=" w-full  mx-auto p-0">
@@ -79,7 +93,7 @@ export default function MedicalBookingCalendar({
 
           <div className="flex p-8 gap-4 flex-col"> 
             <h1> it just my manual recuperation to time in calendar </h1>
-            {filteredDisponibilites?.map((slot)=>(
+            {filteredDispoRdv?.map((slot)=>(
             <TimeOption key={slot.id} slot={slot} />
             ))}
             

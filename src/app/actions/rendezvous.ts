@@ -26,7 +26,62 @@ export async function getRendezVousByMedecin(medecinId: string, date?: string) {
   });
 }
 
+export async function getAllRendezvousByMedecinId({medecinId}:{medecinId:string}){
+    const rendezVous = await prisma.rendezVous.findMany({
+      where:{medecinId},
+      orderBy:{dateDebut:"desc"}
+    })
+
+    return rendezVous;
+}
+
+export async function getAllRendezvousByMedecinAndPatient({medecinId, patientId}:{medecinId:string, patientId:string }){
+
+  const rendezVous = await prisma.rendezVous.findMany({
+    where:{medecinId ,
+      patientId
+    },
+    orderBy:{dateDebut:"desc"}
+  })
+
+  return rendezVous;
+}
+
+
+// actions/disponibilite.ts
+
+export async function getDisponibilitesWithRendezVous(medecinId: string, date?: string) {
+  return prisma.disponibilite.findMany({
+    where: {
+      medecinId,
+      ...(date && {
+        heureDebut: {
+          gte: new Date(`${date}T00:00:00`),
+          lt: new Date(`${date}T23:59:59`),
+        },
+      }),
+    },
+    include: {
+      rendezVous: {
+        include: {
+          patient: {
+            include: { user: true },
+          },
+        },
+      },
+    },
+    orderBy: {
+      heureDebut: "asc",
+    },
+  });
+}
+
+
+
+
+
 export async function createRendezVous(data: {
+  disponibiliteId: string;
   patientId: string;
   medecinId: string;
   dateDebut: Date;
@@ -49,7 +104,10 @@ export async function cancelRendezVous(id: string) {
 } 
 
 
+/* 
 
+cree rendevous depuis disponibilite
+*/
 
 
 const creerRendezVousSchema = z.object({
@@ -92,6 +150,7 @@ export async function creerRendezVousDepuisDisponibilite(formData: FormData) {
 
   const rendezVous = await prisma.rendezVous.create({
     data: {
+      disponibiliteId,
       patientId,
       medecinId: disponibilite.medecinId,
       type,

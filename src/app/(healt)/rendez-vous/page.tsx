@@ -14,6 +14,7 @@ export default function page() {
 />
 
 <Link href="/rendez-vous/new-visit/123" className="underline text-blue-600">Modifier mon profil</Link>
+<Link href="/rendez-vous/new-visit/bf522864-3dc5-492f-b92f-d04e7a284704" className="underline text-green-600 block mt-4">Ouvrir le modal de rendez-vous</Link>
 
 {/* 
 

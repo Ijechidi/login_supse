@@ -61,19 +61,17 @@ export default function MedecinPage({
           Choisissez une date et une heure pour votre rendez-vous avec votre {medecin.specialite}.
         </p>
 
-        <Link href="/rendez-vous/new-visit/123" className="underline text-blue-600">Modifier mon profil</Link>
-
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <section className="lg:col-span-1">
+      <div className="flex flex-col gap-8">
+        <section className="lg:col-span-2">
           <h2 className="text-2xl font-semibold mb-4">Informations du médecin</h2>
-          <ProfileCard medecin={medecin} className="w-full sticky top-4" />
+          <ProfileCard medecin={medecin} className="" />
         </section>
 
 
 
-        <section className="lg:col-span-3">
+        <section className="flex flex-col">
           <h2 className="text-2xl font-semibold mb-4">
             Disponibilités & prise de rendez-vous
           </h2>

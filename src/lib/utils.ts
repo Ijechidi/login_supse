@@ -20,6 +20,14 @@ export function filterDisponibilitesByDate(disponibilites: any[], date: Date | n
 }
 
 
+/* 
+filtre des rendevous par patientId
+*/
+
+export function filterRendezVousByPatientId(rendezVous: any[], patientId: string) {
+  return rendezVous.filter((rdv) => rdv.patientId === patientId);
+}
+
 
 /* format heure pour disponibiliter */
 

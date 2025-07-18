@@ -52,3 +52,30 @@ export type RendezVous = {
   patient?: Patient; // optionnel si tu charges la relation
   medecin?: Medecin;
 };
+
+
+export type DisponibiliteAvecRendezVous = Disponibilite & {
+  rendezVous: RendezVous[];
+};
+
+const disponibilitesAvecRendezVous: DisponibiliteAvecRendezVous[] = [
+  {
+    id: "abc",
+    medecinId: "xyz",
+    heureDebut: new Date(),
+    heureFin: new Date(),
+    status: "LIBRE",
+    rendezVous: [
+      {
+        id: "rdv1",
+        patientId: "pat1",
+        medecinId: "xyz",
+        type: "CONSULTATION",
+        dateDebut: new Date(),
+        motif: "Douleur",
+        statut: "en_attente",
+        createdAt: new Date(),
+      },
+    ],
+  },
+];
