@@ -1,6 +1,0 @@
-export * from "./SpecialiteCard"
-export * from "./SpecialiteHeader"
-export * from "./MedecinGrid"
-export * from "./MedecinsRestantsInfo"
-export * from "./SpecialiteStats"
-export * from "./types"

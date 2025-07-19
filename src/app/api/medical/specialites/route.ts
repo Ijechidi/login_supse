@@ -1,6 +1,6 @@
 "use server"
 import { NextResponse } from "next/server";
-import { getSpecialitesWithMedecins } from "@/lib/medical/getSpecialitesWithMedecins";
+import { getSpecialitesWithMedecins } from "@/lib/medecin/getSpecialitesWithMedecins";
 
 export async function GET() {
   const specialites = await getSpecialitesWithMedecins();

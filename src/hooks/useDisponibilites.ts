@@ -1,46 +1,81 @@
-"use client";
-import { useState, useCallback } from "react";
-import {
-  getDisponibilitesByMedecin,
-  addDisponibilite,
-  deleteDisponibilite,
-  updateDisponibilite,
-} from "@/app/actions/disponibilite";
+'use client'
 
-export function useDisponibilites(medecinId: string) {
-  const [disponibilites, setDisponibilites] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+import { getDisponibilitesWithRendezVous } from '@/lib/actions/disponibilite';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
-  const fetchDisponibilites = useCallback(async () => {
-    setLoading(true);
-    const data = await getDisponibilitesByMedecin(medecinId);
-    setDisponibilites(data);
-    setLoading(false);
-  }, [medecinId]);
 
-  const add = useCallback(async (payload: { jour: string; heureDebut: Date; heureFin: Date; meta?: any }) => {
-    const dispo = await addDisponibilite({ medecinId, ...payload });
-    setDisponibilites((prev) => [...prev, dispo]);
-    return dispo;
-  }, [medecinId]);
+// Query Keys pour React Query
+export const queryKeys = {
+  disponibilites: (medecinId: string, date?: string) => 
+    ['disponibilites', medecinId, date] as const,
+  rendezVous: (medecinId: string, date?: string) => 
+    ['rendezVous', medecinId, date] as const,
+  disponibilitesLibres: (medecinId: string, date?: string) => 
+    ['disponibilites', 'libres', medecinId, date] as const,
+};
 
-  const remove = useCallback(async (id: string) => {
-    await deleteDisponibilite(id);
-    setDisponibilites((prev) => prev.filter((d) => d.id !== id));
-  }, []);
+export interface UseDisponibilitesOptions {
+  medecinId: string;
+  date?: string;
+  enabled?: boolean;
+  refetchInterval?: number | false;
+  staleTime?: number;
+}
 
-  const update = useCallback(async (id: string, data: Partial<{ jour: string; heureDebut: Date; heureFin: Date; meta: any }>) => {
-    const dispo = await updateDisponibilite(id, data);
-    setDisponibilites((prev) => prev.map((d) => (d.id === id ? dispo : d)));
-    return dispo;
-  }, []);
+// Hook principal avec React Query
+export function useDisponibilites({
+  medecinId,
+  date,
+  enabled = true,
+  refetchInterval = false,
+  staleTime = 5 * 60 * 1000, // 5 minutes
+}: UseDisponibilitesOptions) {
+  const query = useQuery({
+    queryKey: queryKeys.disponibilites(medecinId, date),
+    queryFn: () => getDisponibilitesWithRendezVous(medecinId, date),
+    enabled: enabled && !!medecinId,
+    refetchInterval,
+    staleTime,
+    refetchOnWindowFocus: true,
+  });
+
+  // Données calculées avec useMemo pour performance
+  const computedData = useMemo(() => {
+    const disponibilites = query.data || [];
+    
+    const rendezVous = disponibilites
+      .filter(disp => disp.rendezVous)
+      .map(disp => disp.rendezVous!)
+      .filter(Boolean);
+
+    const disponibilitesLibres = disponibilites.filter(
+      disp => disp.status === 'LIBRE' && !disp.rendezVous
+    );
+
+    const disponibilitesReservees = disponibilites.filter(
+      disp => disp.status === 'RESERVE' || disp.rendezVous
+    );
+
+    return {
+      disponibilites,
+      rendezVous,
+      disponibilitesLibres,
+      disponibilitesReservees,
+    };
+  }, [query.data]);
 
   return {
-    disponibilites,
-    loading,
-    fetchDisponibilites,
-    add,
-    remove,
-    update,
+    ...computedData,
+    loading: query.isLoading,
+    error: query.error?.message || null,
+    isRefetching: query.isRefetching,
+    refetch: query.refetch,
+    invalidate: () => {
+      const queryClient = useQueryClient();
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.disponibilites(medecinId, date)
+      });
+    },
   };
-} 
+}

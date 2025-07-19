@@ -1,37 +1,37 @@
 "use client"
 
+import { Disponibilite } from "@/types/globalTypes"
+import { RendezVous } from "@prisma/client"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { RendezVousType } from "@/types/rendezVous"
-import type { TimeSlotAvailability } from "@/types/availability"
-import { mockAppointments } from "@/data/mock-appointments"
+
 
 interface CalendarState {
   // État
-  appointments: RendezVousType[]
-  availabilities: TimeSlotAvailability[]
+  appointments: RendezVous[]
+  availabilities: Disponibilite[]
   selectedDate: Date | null
   hoveredDay: string | null
-  selectedAppointment: RendezVousType | null
+  selectedAppointment: RendezVous| null
   isBookingModalOpen: boolean
   isAppointmentDetailsOpen: boolean
   selectedTimeSlot: string | null
 
   // Actions - Rendez-vous
-  addAppointment: (appointment: Omit<RendezVousType, "id" | "createdAt">) => RendezVousType
-  updateAppointment: (id: string, updates: Partial<RendezVousType>) => void
+  addAppointment: (appointment: Omit<RendezVous, "id" | "createdAt">) => RendezVous
+  updateAppointment: (id: string, updates: Partial<RendezVous>) => void
   deleteAppointment: (id: string) => void
-  getAppointmentsByDate: (date: Date) => RendezVousType[]
+  getAppointmentsByDate: (date: Date) => RendezVous[]
 
   // Actions - Disponibilités
-  addAvailability: (availability: Omit<TimeSlotAvailability, "id" | "createdAt" | "updatedAt">) => TimeSlotAvailability
-  updateAvailability: (id: string, updates: Partial<TimeSlotAvailability>) => void
+  addAvailability: (availability: Omit<Disponibilite, "id" | "createdAt" | "updatedAt">) => Disponibilite
+  updateAvailability: (id: string, updates: Partial<Disponibilite>) => void
   removeAvailability: (id: string) => void
 
   // Actions - UI
   setSelectedDate: (date: Date | null) => void
   setHoveredDay: (day: string | null) => void
-  setSelectedAppointment: (appointment: RendezVousType | null) => void
+  setSelectedAppointment: (appointment: RendezVous| null) => void
   setIsBookingModalOpen: (isOpen: boolean) => void
   setIsAppointmentDetailsOpen: (isOpen: boolean) => void
   setSelectedTimeSlot: (timeSlot: string | null) => void
@@ -44,7 +44,7 @@ export const useCalendarStore = create<CalendarState>()(
   persist(
     (set, get) => ({
       // État initial
-      appointments: mockAppointments,
+      appointments: [],
       availabilities: [],
       selectedDate: null,
       hoveredDay: null,
@@ -55,7 +55,7 @@ export const useCalendarStore = create<CalendarState>()(
 
       // Actions - Rendez-vous
       addAppointment: (appointmentData) => {
-        const appointment: RendezVousType = {
+        const appointment: RendezVous = {
           ...appointmentData,
           id: Math.random().toString(36).substr(2, 9),
           createdAt: new Date(),
@@ -93,11 +93,9 @@ export const useCalendarStore = create<CalendarState>()(
 
       // Actions - Disponibilités
       addAvailability: (availabilityData) => {
-        const availability: TimeSlotAvailability = {
+        const availability: Disponibilite = {
           ...availabilityData,
           id: Math.random().toString(36).substr(2, 9),
-          createdAt: new Date(),
-          updatedAt: new Date(),
         }
 
         set((state) => ({

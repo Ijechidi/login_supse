@@ -1,4 +1,5 @@
-import { Role, User } from "@/types/types";
+import { Role, User } from "@/types/user";
+
 
 export const userData: User = {
     id: "usr_123456789",
@@ -10,7 +11,7 @@ export const userData: User = {
     dateNaissance: new Date("1990-03-15"),
     adresse: "123 Rue de la Paix, Lomé, Togo",
     age: 34, // Sera calculé automatiquement
-    role: Role.PATIENT,
+    role: Role.MEDECIN,
     meta: {
       preferences: {
         theme: "dark",
