@@ -1,4 +1,5 @@
-import GsapWelcomeTransition from '@/components/patient/GsapWelcomeTransition'
+
+import GsapWelcomeTransition from '@/components/welcome/GsapWelcomeTransition'
 import React from 'react'
 
 
