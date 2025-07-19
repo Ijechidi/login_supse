@@ -47,7 +47,7 @@ export default function MedecinCalendar() {
 
   return (
     <div className="flex flex-col h-full  w-auto md:flex-row gap-4 md:gap-12 justify-center">
-      <div className="flex ">
+      <div className="flex flex-1">
         <CalendarCard
           currentDate={currentDate}
           days={calendarDays}
