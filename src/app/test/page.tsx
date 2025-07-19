@@ -1,4 +1,5 @@
 import DispoWhithVisit from '@/components/hook-test/getDispoWhithVisit';
+import MedecinCalendar from '@/components/medecin/MedecinCalendar';
 import {getAllDisponibilites, getDisponibilitesWithRendezVous} from '@/lib/actions/disponibilite';
 import React from 'react'
 
@@ -8,8 +9,10 @@ export default async function page() {
     const disponibilites = await getAllDisponibilites();
     const dispoWithRendezVous = await getDisponibilitesWithRendezVous(medecinId);
   return (
-    <div className='flex h-full gap-8 flex-col justify-center items-center'>
-        
+    <div className='flex h-full gap-8 overflow-auto flex-col justify-center items-center'>
+        <div>
+            <MedecinCalendar/>
+        </div>
        {disponibilites?.map((disponibilite)=>(
         <div className='flex gap-4 flex-col'>
             <h1>{disponibilite.heureDebut.toDateString()} - {disponibilite.heureFin.toDateString()}</h1>
