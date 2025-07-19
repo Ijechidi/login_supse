@@ -28,11 +28,7 @@ export default function MedecinCalendar() {
     navigateMonth,
   } = useCalendar(rendezVous)
 
-  React.useEffect(() => {
-    if (selectedDate) {
-     
-    }
-  }, [selectedDate]);
+
 
   console.log("Disponibilités :", disponibilites);
   
