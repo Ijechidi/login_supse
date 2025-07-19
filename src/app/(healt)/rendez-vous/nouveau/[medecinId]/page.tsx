@@ -14,9 +14,8 @@ const typesRendezVous: RendezVous[] = [
 export default function MedecinPage({
   params,
 }: {
-  params: { medecinId: string } | Promise<{ medecinId: string }>
+  params: { medecinId: string };
 }) {
-
 
 
 
