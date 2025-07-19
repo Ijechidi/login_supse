@@ -30,7 +30,7 @@ export async function updateUserPrisma({
   try {
     if (role === "PATIENT") {
       await prisma.patient.updateMany({
-        where: { userId },
+        where: { id:userId },
         data: {
           meta: {
             ...data,
@@ -40,7 +40,7 @@ export async function updateUserPrisma({
       });
     } else if (role === "MEDECIN") {
       await prisma.medecin.updateMany({
-        where: { userId },
+        where: { id:userId },
         data: {
           meta: {
             ...data,
