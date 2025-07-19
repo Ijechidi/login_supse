@@ -108,6 +108,19 @@ export async function getDisponibilitesLibres(
 
 
 
+export  async function getAllDisponibilites() {
+
+
+  try {
+    const disponibilites = await prisma.disponibilite.findMany({})
+
+    return disponibilites;
+  } catch (error) {
+    console.log("erreur fetching disponibilites",error)
+  }
+}
+
+
 
 
 

@@ -15,7 +15,7 @@ export const queryKeys = {
     ['disponibilites', 'libres', medecinId, date] as const,
 };
 
-interface UseDisponibilitesOptions {
+export interface UseDisponibilitesOptions {
   medecinId: string;
   date?: string;
   enabled?: boolean;
