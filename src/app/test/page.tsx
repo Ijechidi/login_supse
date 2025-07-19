@@ -14,7 +14,7 @@ export default async function page() {
             <MedecinCalendar/>
         </div>
        {disponibilites?.map((disponibilite)=>(
-        <div className='flex gap-4 flex-col'>
+        <div key={disponibilite.id} className='flex gap-4 flex-col'>
             <h1>{disponibilite.heureDebut.toDateString()} - {disponibilite.heureFin.toDateString()}</h1>
             <h1>{disponibilite.medecinId}</h1>
         </div>

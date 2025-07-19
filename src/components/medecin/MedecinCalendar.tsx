@@ -9,6 +9,7 @@ import { filterDisponibilitesByDate } from '@/lib/utils';
 import { useRendezVous } from '@/hooks/useRendezVous'
 import { CalendarCard } from '../calendar/calendar-card'
 import DisponibilitesOption from '../ux/calendar/DisponibilitesOption'
+import AddTimeSlot from '../ux/calendar/AddTimeSlot'
 
 
 
@@ -58,27 +59,12 @@ export default function MedecinCalendar() {
       <div className="flex  justify-center">
         <div className='flex flex-col gap-2'>
           <h2 className="text-xl font-bold mb-4 text-center">Gérer mes disponibilités</h2>
-          {/* {selectedDate && (
-            // <AddTimeSlot
-            //   onAddSlot={async (heureDebut, heureFin) => {
-            //     // Construction correcte des Date ISO pour Prisma
-            //     const [hDebut, mDebut] = heureDebut.split(":").map(Number);
-            //     const [hFin, mFin] = heureFin.split(":").map(Number);
-            //     const dateDebut = new Date(selectedDate);
-            //     dateDebut.setHours(hDebut, mDebut, 0, 0);
-            //     const dateFin = new Date(selectedDate);
-            //     dateFin.setHours(hFin, mFin, 0, 0);
-            //     console.log('Création créneau:', { heureDebut: dateDebut, heureFin: dateFin });
-            //     await add({
-            //       heureDebut: dateDebut,
-            //       heureFin: dateFin,
-            //     });
-            //   }}
-            //   disabled={!selectedDate}
-            //   existingSlots={filteredDisponibilites}
-            // />
-          )}    */}
 
+<AddTimeSlot
+  medecinId={medecinId}
+  date={selectedDate}
+  existingSlots={filteredDisponibilites}
+/>
 
           <DisponibilitesOption 
             disponibilites={filteredDisponibilites} 
