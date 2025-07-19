@@ -1,6 +1,6 @@
 "use client"
 
-import { RendezVous } from "@/types/globalTypes"
+import { RendezVous } from "@prisma/client"
 import { useState, useMemo } from "react"
 
 
