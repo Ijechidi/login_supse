@@ -14,7 +14,7 @@ export default function page() {
 
 
         <div className='w-fit'>
-            <TimeOption slot={{heureDebut: new Date() , heureFin: new Date(new Date().setHours(9,0,0,0)), id:"1" , medecinId:"2", status:'LIBRE'}} />
+            <TimeOption slot={{heureDebut: new Date() , heureFin: new Date(new Date().setHours(9,0,0,0)), id:"1" , medecinId:"2", status:'LIBRE', rendezVous: null}} />
             <HoverSlideOverlay1 text="Retour" className="w-full h-12 rounded-md border bg-background">
  
   <span className='w-42'> <ArrowLeft className="opacity-80 " size={20} /></span>
@@ -24,12 +24,20 @@ export default function page() {
   <SlideButton/>
 </HoverSlideOverlay>
 
-<Link href="/rendez-vous/new-visit/123" scroll={false} className="text-primary font-semibold">Visite</Link>
+
+ <SlideButton
+       text="rendez-vous"
+       successText= "Visite confirmer"
+       loadingText="validation..."
+       resolveTo = "success"
+       onComplete={() => console.log("Action completed!")}
+       autoReset={false}
+       resetDelay={250000}
+    
+ />
 
 
-<Link
-          href="./new-visit/123" scroll={false}
-          className="text-primary font-semibold hover:underline" >visite</Link>
+          
         </div>
     </div>
   )

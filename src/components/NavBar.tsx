@@ -1,11 +1,12 @@
 
 import { Heart } from "lucide-react"
 import Link from "next/link"
-import { ThemeSwitcher } from "./theme-switcher"
-import { AuthButton } from "./auth-button"
-import VisitStatus from "./VisitStatus"
+import { ThemeSwitcher } from "./header/theme-switcher"
+
+
 import { getUserInfo } from "@/lib/users/getUserInfo"
 import { NavLink } from "./NavLink"
+import { AuthButton } from "./auth/auth-button"
 
 export default async function NavBar() {
 

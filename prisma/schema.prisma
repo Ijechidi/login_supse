@@ -16,10 +16,10 @@ enum Role {
 }
 
 enum Statut {
-  en_attente
-  confirme
-  annule
-  termine
+  EN_ATTENTE
+  CONFIRME
+  ANNULE
+  TERMINE
 }
 
 enum Specialite {
@@ -97,7 +97,7 @@ model RendezVous {
   dateDebut       DateTime
   dateFin         DateTime?
   motif           String
-  statut          Statut       @default(en_attente)
+  statut          Statut       @default(EN_ATTENTE)
   historique      Json?
   meta            Json?
   createdAt       DateTime     @default(now()) @map("created_at")

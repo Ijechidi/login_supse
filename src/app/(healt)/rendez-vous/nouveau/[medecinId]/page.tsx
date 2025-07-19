@@ -1,16 +1,12 @@
-"use client"
+
 
 import { ProfileCard } from "@/components/ux/ProfileCard"
-import { notFound } from "next/navigation"
-import MedicalBookingCalendar from "@/components/medical-booking-calendar"
-import { useMedecinById } from "@/hooks/useMedecinById"
-import { useAppointmentsStore } from "@/store/use-appointments-store"
-import { useEffect, use } from "react"
 
+import MedicalBookingCalendar from "@/components/medical-booking-calendar"
 import React from "react"
-import { useDisponibilites } from "@/hooks/useDisponibilites"
-import { RendezVous } from "@/types/globalTypes"
-import Link from "next/link"
+
+
+import { RendezVous } from "@prisma/client"
 
 // Types de rendez-vous disponibles
 const typesRendezVous: RendezVous[] = [
@@ -22,34 +18,9 @@ export default function MedecinPage({
 }: {
   params: { medecinId: string } | Promise<{ medecinId: string }>
 }) {
-  // Unwrap la Promise si besoin (Next.js 14+ / React 19+)
-  const isPromise = typeof (params as any).then === "function";
-  const resolvedParams = isPromise ? use(params as Promise<{ medecinId: string }>) : (params as { medecinId: string });
-  const medecinId = resolvedParams.medecinId;
-  const { medecin, loading } = useMedecinById(medecinId)
-  const setSelectedMedecin = useAppointmentsStore((state) => state.setSelectedMedecin)
-  const showNotification = useAppointmentsStore((state) => state.showNotification)
 
-  // const { disponibilites, fetchDisponibilites, add, remove } = useDisponibilites(medecinId)
 
-  // console.log('Disponibilités :', disponibilites);
-  useEffect(() => {
-    setSelectedMedecin(medecinId)
-  }, [medecinId, setSelectedMedecin])
 
-  if (loading) {
-    return <div className="text-center py-12 text-lg">Chargement...</div>
-  }
-  if (!medecin) {
-    return <div>no medecin</div>
-  }
-
-  const handleBookAppointment = (appointment: any) => {
-    showNotification(
-      `Rendez-vous confirmé avec Dr. ${medecin.nom} pour le ${appointment.dateDebut.toLocaleDateString()}`,
-      "success"
-    )
-  }
 
   return (
     <main className="max-w-full w-full border mx-auto lg:px-12 p-6">

@@ -1,4 +1,4 @@
-import { Patient, Statut, TypeRendezVousEnum } from "@prisma/client";
+import { Patient, RendezVous, Statut, TypeRendezVousEnum } from "@prisma/client";
 
 
 export type DisponibiliteStatus = "LIBRE" | "RESERVE" | "ANNULE";
@@ -35,47 +35,11 @@ export type User ={
 }
 
 
-export type RendezVous = {
-  id: string;
-  patientId: string;
-  medecinId: string;
 
-  type: TypeRendezVousEnum;
-  dateDebut: Date;
-  dateFin?: Date | null;
-  motif: string;
-  statut: Statut;
-  historique?: Record<string, any> | null;
-  meta?: Record<string, any> | null;
-  createdAt: Date;
-
-  patient?: Patient; // optionnel si tu charges la relation
-  medecin?: Medecin;
-};
 
 
 export type DisponibiliteAvecRendezVous = Disponibilite & {
-  rendezVous: RendezVous[];
+  rendezVous: RendezVous | null;
 };
 
-const disponibilitesAvecRendezVous: DisponibiliteAvecRendezVous[] = [
-  {
-    id: "abc",
-    medecinId: "xyz",
-    heureDebut: new Date(),
-    heureFin: new Date(),
-    status: "LIBRE",
-    rendezVous: [
-      {
-        id: "rdv1",
-        patientId: "pat1",
-        medecinId: "xyz",
-        type: "CONSULTATION",
-        dateDebut: new Date(),
-        motif: "Douleur",
-        statut: "en_attente",
-        createdAt: new Date(),
-      },
-    ],
-  },
-];
+

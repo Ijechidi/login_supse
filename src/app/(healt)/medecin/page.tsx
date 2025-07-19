@@ -1,11 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar } from "@/components/ui/calendar";
+
 import { getUserInfo } from '@/lib/users/getUserInfo'
-import MedicalBookingCalendar from "@/components/calendar-medecin";
-import DisponibiliteSelector from "@/components/disponibilite-selector";
-import MedecinCalendar from "@/components/medecin/MedecinCalendar";
+
+
 
 
 export default async function page() {
@@ -80,12 +79,8 @@ export default async function page() {
         </CardContent>
       </Card>
 
-      {/* Disponibilités (statique) */}
-{/* 
-    <DisponibiliteSelector medecinId={user.id!} /> */}
 
-      {/* Calendrier */}
-      <MedecinCalendar/>
+      {/* <MedecinCalendar/> */}
     </div>
   );
 }
