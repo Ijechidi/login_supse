@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     // Créer le rendez-vous
     const rendezVous = await prisma.rendezVous.create({
       data: {
+        disponibiliteId:"",
         patientId: patient.id,
         medecinId,
         dateDebut:new Date(date),
