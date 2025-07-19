@@ -11,20 +11,10 @@ const typesRendezVous: RendezVous[] = [
 
 ]
 
-type MedecinPageProps = {
-  params: {
-    medecinId: string;
-  };
-};
-
-export default function MedecinPage({ params }: MedecinPageProps) {
-
-
-
+export default function Page({ params }: { params: { medecinId: string } }) {
   return (
     <main className="max-w-full w-full border mx-auto lg:px-12 p-6">
-      <div>Médecin ID : {params.medecinId}</div>;
-
+      <div>Médecin ID : {params.medecinId}</div>
     </main>
   )
 }
