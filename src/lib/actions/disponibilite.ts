@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/lib/prisma";
 import { DisponibiliteWithRendezVous, RendezVousWithPatient } from "@/types/types";
+import { TypeRendezVousEnum, Statut } from "@prisma/client";
 
 
 
@@ -172,4 +173,69 @@ export async function updateDisponibilite(id: string, data: Partial<{ jour: stri
     where: { id },
     data,
   });
+} 
+
+export async function addRendezVous({
+  patientId,
+  medecinId,
+  disponibiliteId,
+  type,
+  dateDebut,
+  dateFin,
+  motif,
+  statut = Statut.EN_ATTENTE,
+  historique,
+  meta,
+}: {
+  patientId: string;
+  medecinId: string;
+  disponibiliteId: string;
+  type: TypeRendezVousEnum;
+  dateDebut: Date;
+  dateFin?: Date;
+  motif: string;
+  statut?: Statut;
+  historique?: any;
+  meta?: any;
+}) {
+  try {
+    return await prisma.rendezVous.create({
+      data: {
+        patientId,
+        medecinId,
+        disponibiliteId,
+        type,
+        dateDebut,
+        dateFin,
+        motif,
+        statut,
+        historique,
+        meta,
+      },
+    });
+  } catch (error) {
+    console.error('Erreur lors de la création du rendez-vous:', error);
+    throw new Error('Impossible de créer le rendez-vous');
+  }
+}
+
+export async function updateRendezVous(id: string, data: Partial<{ type: TypeRendezVousEnum; dateDebut: Date; dateFin?: Date; motif: string; statut: Statut; historique: any; meta: any }>) {
+  try {
+    return await prisma.rendezVous.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du rendez-vous:', error);
+    throw new Error('Impossible de mettre à jour le rendez-vous');
+  }
+}
+
+export async function deleteRendezVous(id: string) {
+  try {
+    return await prisma.rendezVous.delete({ where: { id } });
+  } catch (error) {
+    console.error('Erreur lors de la suppression du rendez-vous:', error);
+    throw new Error('Impossible de supprimer le rendez-vous');
+  }
 } 

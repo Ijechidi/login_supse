@@ -1,19 +1,83 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys, UseDisponibilitesOptions } from "./useDisponibilites";
-import { getRendezVousByMedecin } from "@/lib/actions/disponibilite";
+import { getRendezVousByMedecin, addRendezVous, updateRendezVous, deleteRendezVous } from "@/lib/actions/disponibilite";
 import { useMemo } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useRendezVous(
     medecinId: string, 
     date?: string,
     options: Partial<UseDisponibilitesOptions> = {}
   ) {
+    const queryClient = useQueryClient();
     const query = useQuery({
       queryKey: queryKeys.rendezVous(medecinId, date),
       queryFn: () => getRendezVousByMedecin(medecinId, date),
       enabled: !!medecinId && (options.enabled !== false),
       refetchInterval: options.refetchInterval || false,
       staleTime: options.staleTime || 5 * 60 * 1000,
+    });
+  
+    // Mutations optimistes
+    const createRendezVous = useMutation({
+      mutationFn: addRendezVous,
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) => [
+          ...(old || []),
+          { ...newData, id: Math.random().toString() } // id temporaire
+        ]);
+        return { previous };
+      },
+      onError: (err, newData, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+      },
+    });
+
+    const updateRendezVousMutation = useMutation({
+      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVous(id, data),
+      onMutate: async ({ id, data }) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) =>
+          (old || []).map(item => item.id === id ? { ...item, ...data } : item)
+        );
+        return { previous };
+      },
+      onError: (err, newData, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+      },
+    });
+
+    const removeRendezVous = useMutation({
+      mutationFn: deleteRendezVous,
+      onMutate: async (id: string) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) =>
+          (old || []).filter(item => item.id !== id)
+        );
+        return { previous };
+      },
+      onError: (err, id, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+      },
     });
   
     const computedData = useMemo(() => {
@@ -40,5 +104,8 @@ export function useRendezVous(
       error: query.error?.message || null,
       isRefetching: query.isRefetching,
       refetch: query.refetch,
+      createRendezVous,
+      updateRendezVous: updateRendezVousMutation,
+      removeRendezVous,
     };
   }

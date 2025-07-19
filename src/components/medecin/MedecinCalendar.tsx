@@ -15,7 +15,7 @@ import DisponibilitesOption from '../ux/calendar/DisponibilitesOption'
 export default function MedecinCalendar() {
   const { user, loading } = useUserProfile()
   const medecinId = user?.id || ''
-  const { disponibilites } = useDisponibilites({medecinId})
+  const { disponibilites, createDisponibilite ,removeDisponibilite } = useDisponibilites({medecinId})
   const { rendezVous, loading: loadingRdv } = useRendezVous(medecinId);
 
  
@@ -81,8 +81,8 @@ export default function MedecinCalendar() {
 
 
           <DisponibilitesOption 
-          disponibilites={filteredDisponibilites} 
-             onDelete={()=>{}}
+            disponibilites={filteredDisponibilites} 
+            onDelete={removeDisponibilite.mutate}
           />
  
         </div>
