@@ -11,7 +11,7 @@ export interface DisponibiliteOptionProps {
 }
 export default function DisponibilitesOption({disponibilites,onDelete}:DisponibiliteOptionProps) {
   return (
-    <div className='flex flex-col items-center gap-2'>
+    <div className='flex w-full flex-col items-center gap-2'>
 {
 disponibilites.map((slot)=>(
     <div className='flex justify-center items-center  border w-fit  rounded'>

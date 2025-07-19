@@ -47,7 +47,7 @@ export default function MedecinCalendar() {
 
   return (
     <div className="flex flex-col h-full  w-auto md:flex-row gap-4 md:gap-12 justify-center">
-      <div className="flex-1 max-w-lg">
+      <div className="flex ">
         <CalendarCard
           currentDate={currentDate}
           days={calendarDays}
@@ -57,7 +57,7 @@ export default function MedecinCalendar() {
         />
       </div>
       <div className="flex  justify-center">
-        <div className='flex flex-col gap-2'>
+        <div className='flex w-full border flex-col gap-2'>
           <h2 className="text-xl font-bold mb-4 text-center">Gérer mes disponibilités</h2>
 
 <AddTimeSlot
