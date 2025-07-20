@@ -55,7 +55,7 @@ export default function PatientCalendar({
 
   return (
     <div className=" w-full flex justify-center   mx-auto p-0">
-      <div className="flex max-w-[1000px] w-full flex-col md:flex-row gap-4">
+      <div className="flex  w-full flex-col md:flex-row gap-4">
         {/* Calendrier */}
         <div className="flex-1">
           <CalendarCard
@@ -70,7 +70,7 @@ export default function PatientCalendar({
 
 
           <div className="flex p-8 gap-4 flex-col"> 
-            <h1> it just my manual recuperation to time in calendar </h1>
+            <h1> Choisisez une heure disponible pour le rendez-vous </h1>
             {filteredDisponibilites?.map((slot)=>(
             <TimeOption key={slot.id} slot={slot} />
             ))}
