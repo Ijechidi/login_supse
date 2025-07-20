@@ -32,7 +32,7 @@ export default function MedecinCalendar() {
 
 
 
-  console.log("Disponibilités :", disponibilites);
+  console.log("Disponibilités 22 :", disponibilites);
   
 
   // Filtrer les créneaux pour la date sélectionnée
