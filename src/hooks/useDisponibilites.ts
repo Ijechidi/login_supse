@@ -1,9 +1,9 @@
 'use client'
 
-import { getDisponibilitesWithRendezVous } from '@/lib/actions/disponibilite';
+import { getDisponibilitesWithRendezVous, updateDisponibilite } from '@/lib/actions/disponibilite';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { addDisponibilite, updateDisponibilite, deleteDisponibilite } from '@/lib/actions/disponibilite';
+import { addDisponibilite, deleteDisponibilite } from '@/lib/actions/disponibilite';
 import { useMutation } from '@tanstack/react-query';
 
 
@@ -65,34 +65,37 @@ export function useDisponibilites({
     },
   });
 
-  const updateDisponibiliteMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => updateDisponibilite(id, data),
-    onMutate: async ({ id, data }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
-      const previous = queryClient.getQueryData(queryKeys.disponibilites(medecinId, date));
-      queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), (old: any[] = []) =>
-        (old || []).map(item => item.id === id ? { ...item, ...data } : item)
-      );
-      return { previous };
-    },
-    onError: (err, newData, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), context.previous);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
-    },
-  });
+  // const updateDisponibiliteMutation = useMutation({
+  //   mutationFn: ({ id, data }: { id: string; data: any }) => updateDisponibilite(id, data),
+  //   onMutate: async ({ id, data }) => {
+  //     await queryClient.cancelQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
+  //     const previous = queryClient.getQueryData(queryKeys.disponibilites(medecinId, date));
+  //     queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), (old: any[] = []) =>
+  //       (old || []).map(item => item.id === id ? { ...item, ...data } : item)
+  //     );
+  //     return { previous };
+  //   },
+  //   onError: (err, newData, context) => {
+  //     if (context?.previous) {
+  //       queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), context.previous);
+  //     }
+  //   },
+  //   onSettled: () => {
+  //     queryClient.invalidateQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
+  //   },
+  // });
 
   const removeDisponibilite = useMutation({
     mutationFn: deleteDisponibilite,
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
       const previous = queryClient.getQueryData(queryKeys.disponibilites(medecinId, date));
+
+      
       queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), (old: any[] = []) =>
         (old || []).filter(item => item.id !== id)
       );
+
       return { previous };
     },
     onError: (err, id, context) => {
@@ -143,7 +146,7 @@ export function useDisponibilites({
     },
     // Ajout des mutations CRUD
     createDisponibilite,
-    updateDisponibilite: updateDisponibiliteMutation,
+    // updateDisponibilite: updateDisponibiliteMutation,
     removeDisponibilite,
   };
 }

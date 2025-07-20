@@ -3,7 +3,7 @@ import { HoverSlideOverlay } from "./HoverContent"
 import { SlideButton } from "../../tools/SlideButton"
 
 import { Statut } from "@prisma/client"
-import { getButtonPropsByStatut, getHoverSlideOverlayPropsByStatut } from "../../rendez-vous/rendezvous.utils"
+import { getConfirmVisitPropsByStatut } from '../../rendez-vous/rendezvous.utils'
 
 
 export interface ConfirmVisitProps {
@@ -12,8 +12,8 @@ export interface ConfirmVisitProps {
   statut?: Statut
   withHover?: boolean
   onComplete?: () => void
+  id?: string // nouvel id de la disponibilité
 }
-
 
 export default function ConfirmVisit({
   className,
@@ -21,23 +21,23 @@ export default function ConfirmVisit({
   statut ,
   withHover = true,
   onComplete,
+  id,
 }: ConfirmVisitProps) {
-  const slideButtonProps = {
-    ...getButtonPropsByStatut(statut),
+  // Utilisation de la fonction unifiée
+  const { buttonProps, hoverProps, href: computedHref } = getConfirmVisitPropsByStatut(
+    statut,
     onComplete,
-  }
-
-  const hoverProps = getHoverSlideOverlayPropsByStatut(statut)
+    href || id
+  )
 
   return (
     <HoverSlideOverlay
       withHover={hoverProps.withHover}
       text={hoverProps.text}
-      href={href}
-      
+      href={computedHref}
       className={`w-fit min-w-2 px-px h-12 rounded-md border bg-background ${className}`}
     >
-      <SlideButton {...slideButtonProps} />
+      <SlideButton {...buttonProps} />
     </HoverSlideOverlay>
   )
 }

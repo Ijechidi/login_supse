@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
+import { sendMail } from '@/lib/sendMail';
 
 import { Statut, TypeRendezVousEnum } from "@prisma/client";
 
@@ -102,6 +103,62 @@ export async function cancelRendezVous(id: string) {
     data: { statut: "ANNULE" },
   });
 } 
+
+// Fonction externe pour notifier le patient par mail
+export async function notifyPatientRendezVousStatus(rendezVous: any, statut: string) {
+  if (rendezVous.patient?.user?.email) {
+    let subject = '';
+    let text = '';
+    if (statut === 'CONFIRME') {
+      subject = 'Votre rendez-vous a été confirmé';
+      text = `Bonjour ${rendezVous.patient.user.prenom},\n\nVotre rendez-vous avec le Dr. ${rendezVous.medecin.user.nom} a été confirmé.`;
+    } else if (statut === 'ANNULE') {
+      subject = 'Votre rendez-vous a été annulé';
+      text = `Bonjour ${rendezVous.patient.user.prenom},\n\nVotre rendez-vous avec le Dr. ${rendezVous.medecin.user.nom} a été annulé.`;
+    }
+    if (subject) {
+      await sendMail({
+        to: rendezVous.patient.user.email,
+        subject,
+        text,
+      });
+    }
+  }
+}
+
+export async function updateRendezVousStatus({ id, statut }: { id: string; statut: Statut }) {
+  // Met à jour le statut du rendez-vous
+  const rendezVous = await prisma.rendezVous.update({
+    where: { id },
+    data: { statut },
+    include: {
+      patient: { include: { user: true } },
+      medecin: { include: { user: true } },
+    },
+  });
+
+  // Notifie le patient par mail
+  await notifyPatientRendezVousStatus(rendezVous, statut);
+
+  // Si confirmé, ajoute le patient à la liste des patients du médecin
+  if (statut === 'CONFIRME') {
+    await prisma.patientMedecin.upsert({
+      where: {
+        patientId_medecinId: {
+          patientId: rendezVous.patientId,
+          medecinId: rendezVous.medecinId,
+        },
+      },
+      update: {},
+      create: {
+        patientId: rendezVous.patientId,
+        medecinId: rendezVous.medecinId,
+      },
+    });
+  }
+
+  return rendezVous;
+}
 
 
 /* 

@@ -1,7 +1,7 @@
 "use server";
 import { prisma } from "@/lib/prisma";
 import { DisponibiliteWithRendezVous, RendezVousWithPatient } from "@/types/types";
-import { TypeRendezVousEnum, Statut } from "@prisma/client";
+import { TypeRendezVousEnum, Statut, DisponibiliteStatus } from "@prisma/client";
 
 
 
@@ -172,12 +172,17 @@ export async function deleteDisponibilite(id: string) {
   return prisma.disponibilite.delete({ where: { id } });
 }
 
-export async function updateDisponibilite(id: string, data: Partial<{ jour: string; heureDebut: Date; heureFin: Date; meta: any }>) {
-  return prisma.disponibilite.update({
-    where: { id },
-    data,
-  });
-} 
+export async function updateDisponibilite(id: string, data: Partial<{ heureDebut: Date; heureFin: Date; status: DisponibiliteStatus; meta: any }>) {
+  try {
+    return await prisma.disponibilite.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour de la disponibilité:', error);
+    throw new Error('Impossible de mettre à jour la disponibilité');
+  }
+}
 
 export async function addRendezVous({
   patientId,
@@ -243,3 +248,5 @@ export async function deleteRendezVous(id: string) {
     throw new Error('Impossible de supprimer le rendez-vous');
   }
 } 
+
+export { updateRendezVousStatus } from './rendezvous';

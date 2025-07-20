@@ -86,7 +86,7 @@ export function CreateVisitWithDispo({
             placeholder="Décrivez brièvement le motif de votre consultation"
           />
         </div>
-
+<div>{onSuccess? "Rendez-vous créé avec succes" : "cet horraire n'est pas disponible"}</div>
         {/* Bouton */}
         <Button type="submit" disabled={isPending} className="w-full">
           {isPending ? "Création..." : "Créer le rendez-vous"}

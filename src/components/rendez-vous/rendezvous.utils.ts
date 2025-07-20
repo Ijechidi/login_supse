@@ -5,7 +5,8 @@ import { SlideButtonProps } from "../tools/SlideButton"
 type StatutCustom = Statut | "NON"
 
 export function getButtonPropsByStatut(
-  statut: StatutCustom = "NON"
+  statut: StatutCustom = "NON",
+  onAnnule?: () => void
 ): Partial<SlideButtonProps> {
   switch (statut) {
     case "NON":
@@ -18,39 +19,41 @@ export function getButtonPropsByStatut(
     case "EN_ATTENTE":
       return {
         text: "Confirmer",
-        successText: "Visite confirmer",
+        successText: "Visite confirmée",
         loadingText: "Validation...",
         disabled: false,
-        resolveTo:"success",
-      
-        
+        resolveTo: "success",
+        autoReset: true,
+
       }
     case "CONFIRME":
       return {
-        text: "Rendez-vous confirmé",
-        successText: "Visite confirmer",
-        loadingText: "Chargement...",
-        status:"success",
-        disabled: true,
+        text: "Annuler",
+        successText: "Rendez-vous annulé",
+        loadingText: "Annulation...",
+        disabled: false,
+        resolveTo: "success",
+        onComplete: onAnnule,
+        autoReset: true,
       }
     case "ANNULE":
       return {
         text: "Rendez-vous annulé",
-        successText: "Visite confirmer",
+        successText: "Visite annulée",
         loadingText: "Chargement...",
         disabled: true,
       }
     case "TERMINE":
       return {
         text: "Visite terminée",
-          successText: "Visite confirmer",
+        successText: "Visite confirmée",
         loadingText: "Chargement...",
         disabled: true,
       }
     default:
       return {
         text: "Prendre rendez-vous",
-         successText: "Visite confirmer",
+        successText: "Visite confirmée",
         loadingText: "Validation...",
         disabled: false,
       }
@@ -71,7 +74,6 @@ export function getHoverSlideOverlayPropsByStatut(
   statut?: StatutCustom,
 ): HoverSlideOverlayProps {
   switch (statut) {
-
     case "NON":
       return {
         withHover: true,
@@ -82,30 +84,45 @@ export function getHoverSlideOverlayPropsByStatut(
         withHover: false,
         text: ""
       }
-    
     case "CONFIRME":
       return {
         withHover: false,
-        text: "confirmé"
+        text: "Rendez-vous confirmé"
       }
-    
     case "ANNULE":
       return {
         withHover: true,
-        text: "reprogrammer"
+        text: "Rendez-vous annulé"
       }
-    
     case "TERMINE":
       return {
-
         withHover: false,
         text: "terminé"
       }
-    
     default:
       return {
         withHover: true,
         text: "formulaire"
       }
+  }
+}
+
+export interface ConfirmVisitUnifiedProps {
+  buttonProps: Partial<SlideButtonProps>
+  hoverProps: HoverSlideOverlayProps
+  href?: string
+}
+
+export function getConfirmVisitPropsByStatut(
+  statut: StatutCustom = "NON",
+  onAnnule?: () => void,
+  href?: string
+): ConfirmVisitUnifiedProps {
+  let buttonProps = getButtonPropsByStatut(statut, onAnnule)
+  let hoverProps = getHoverSlideOverlayPropsByStatut(statut)
+  return {
+    buttonProps,
+    hoverProps,
+    href,
   }
 }

@@ -10,6 +10,7 @@ import { useRendezVous } from '@/hooks/useRendezVous'
 import { CalendarCard } from '../calendar/calendar-card'
 import DisponibilitesOption from '../ux/calendar/DisponibilitesOption'
 import AddTimeSlot from '../ux/calendar/AddTimeSlot'
+import TimeOption from '../ux/calendar/TimeOption'
 
 
 
@@ -17,7 +18,7 @@ export default function MedecinCalendar() {
   const { user, loading } = useUserProfile()
   const medecinId = user?.id || ''
   const { disponibilites, createDisponibilite ,removeDisponibilite } = useDisponibilites({medecinId})
-  const { rendezVous, loading: loadingRdv } = useRendezVous(medecinId);
+  const { rendezVous, loading: loadingRdv, updateRendezVous } = useRendezVous(medecinId);
 
  
   const {
@@ -37,7 +38,12 @@ export default function MedecinCalendar() {
   const filteredDisponibilites = filterDisponibilitesByDate(disponibilites, selectedDate);
 
   // Log pour debug
-  console.log('Disponibilités filtrées:', filteredDisponibilites);
+  console.log('Disponibilités filtrées medecin:', filteredDisponibilites);
+
+  // Fonction pour mettre à jour le statut d'un rendez-vous
+  const handleUpdateRendezVousStatus = (rendezVousId: string, statut: string) => {
+    updateRendezVous.mutate({ id: rendezVousId, data: { statut } });
+  };
 
   if (!user) return <div>Chargement du profil...</div>
 
@@ -53,7 +59,7 @@ export default function MedecinCalendar() {
         />
       </div>
       <div className="flex  justify-center">
-        <div className='flex w-full border flex-col gap-2'>
+        <div className='flex w-full  flex-col gap-2'>
           <h2 className="text-xl font-bold mb-4 text-center">Gérer mes disponibilités</h2>
 
 <AddTimeSlot
@@ -62,10 +68,13 @@ export default function MedecinCalendar() {
   existingSlots={filteredDisponibilites}
 />
 
-          <DisponibilitesOption 
+          <DisponibilitesOption patients={[]}
             disponibilites={filteredDisponibilites} 
             onDelete={removeDisponibilite.mutate}
+            onUpdateRendezVousStatus={handleUpdateRendezVousStatus}
           />
+
+          {/* <TimeOption slot={filteredDisponibilites[0]} /> */}
  
         </div>
       </div>

@@ -23,6 +23,12 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+			
+			  design: {
+				bg: 'oklch(var(--design-bg))',
+				border: 'oklch(var(--design-border))',
+				text: 'oklch(var(--design-text))'
+			},
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

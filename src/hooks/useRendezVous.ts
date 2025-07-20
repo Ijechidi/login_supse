@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys, UseDisponibilitesOptions } from "./useDisponibilites";
-import { getRendezVousByMedecin, addRendezVous, updateRendezVous, deleteRendezVous } from "@/lib/actions/disponibilite";
+import { getRendezVousByMedecin, addRendezVous, deleteRendezVous } from "@/lib/actions/disponibilite";
 import { useMemo } from "react";
+import {updateRendezVousStatus} from '@/lib/actions/rendezvous'
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export { getRendezVousByMedecin };
 
 export function useRendezVous(
     medecinId: string, 
@@ -41,7 +44,7 @@ export function useRendezVous(
     });
 
     const updateRendezVousMutation = useMutation({
-      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVous(id, data),
+      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVousStatus({ id, statut: data.statut }),
       onMutate: async ({ id, data }) => {
         await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
         const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));

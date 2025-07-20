@@ -9,6 +9,7 @@ export default function layout({children}: layoutProps) {
     <div suppressHydrationWarning className='h-full flex flex-col w-full'>
 
         {children}
+        
     </div>
   )
 }
