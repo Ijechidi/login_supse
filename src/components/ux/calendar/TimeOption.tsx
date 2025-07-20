@@ -8,9 +8,9 @@ import ConfirmVisit from './ConfirmVisit'
 export default function TimeOption({slot}:{slot:DisponibiliteAvecRendezVous}) {
   return (
     <div>
-<div className='flex justify-center border gap-4 pr-2 rounded bg-muted/50 items-center'>
+<div className='flex justify-center w-full border gap-4 pr-2 rounded bg-muted/50 items-center'>
     
-    <TimeSlotView slot={slot} />
+    <TimeSlotView slot={slot}  />
 
 
 <ConfirmVisit   statut={slot.rendezVous?.statut} href={`/rendez-vous/new-visit/${slot.id}`}  />

@@ -6,10 +6,10 @@ import { SlideButton } from '../../tools/SlideButton';
 
 export default function TimeSlotView({ slot }: { slot: Disponibilite}) {
   return (
-    <div className='border border-l-0 p-px flex  rounded-md'>
+    <div className='border border-l-0 p-px flex flex-1 w-full rounded-md'>
       {slot?.heureDebut && slot?.heureFin && (
 
-<div className='bg-muted p-4 rounded-md'>
+<div className='bg-muted p-4 w-full rounded-md'>
 {formatHeure(slot.heureDebut)} - {formatHeure(slot.heureFin)}
 </div>
 

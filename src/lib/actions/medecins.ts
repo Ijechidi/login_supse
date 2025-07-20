@@ -18,3 +18,42 @@ export async function getAllMedecins(): Promise<Medecin[]> {
     isDisponible: true, // À adapter selon la logique métier réelle
   }));
 } 
+
+
+
+export async function getNewVisitMedecinById(medecinId:string) {
+
+   
+    try {
+        const medecin = await prisma.medecin.findUnique({
+            where:{id: medecinId },
+            include: {
+                user: true,
+                
+              },
+        })
+        return medecin
+    } catch (error) {
+        console.error('Erreur lors de la recherche du médicament:', error);
+        throw new Error('Impossible de trouver le médicament');
+    }
+}
+
+
+
+export async function getMedecinById(medecinId:string) {
+
+   
+    try {
+        const medecin = await prisma.medecin.findUnique({
+            where:{id: medecinId },
+            include: {
+                user: true,
+              },
+        })
+        return medecin
+    } catch (error) {
+        console.error('Erreur lors de la recherche du médicament:', error);
+        throw new Error('Impossible de trouver le médicament');
+    }
+}

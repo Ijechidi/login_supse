@@ -54,8 +54,8 @@ export default function PatientCalendar({
   console.log("rendevous :", rendezVous)
 
   return (
-    <div className=" w-full  mx-auto p-0">
-      <div className="flex  flex-col md:flex-row gap-4">
+    <div className=" w-full flex justify-center   mx-auto p-0">
+      <div className="flex max-w-[1000px] w-full flex-col md:flex-row gap-4">
         {/* Calendrier */}
         <div className="flex-1">
           <CalendarCard
