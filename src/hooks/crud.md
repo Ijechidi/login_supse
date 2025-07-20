@@ -76,3 +76,18 @@ removeRendezVous.mutate("ID_RENDEZVOUS");
 - Les mutations sont optimistes : l'UI se met à jour instantanément.
 - Les hooks exposent aussi les états `loading`, `error`, etc. pour gérer l'affichage.
 - cas d'erreur et à informer l'utilisateur (toast, message, etc.).
+
+
+
+
+
+use speciliter loader silencieux 
+
+const { specialites, loading, isFetching } = useSpecialites();
+if (loading) return <Loader />;
+return (
+  <>
+    {isFetching && <MiniSpinner />}
+    {/* Affichage des spécialités */}
+  </>
+);
