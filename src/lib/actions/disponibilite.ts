@@ -55,9 +55,12 @@ export async function getRendezVousByMedecin(
       where: {
         medecinId,
         ...(date && {
-          dateDebut: {
-            gte: new Date(`${date}T00:00:00`),
-            lt: new Date(`${date}T23:59:59`),
+          // On filtre par la date de la disponibilité liée
+          disponibilite: {
+            heureDebut: {
+              gte: new Date(`${date}T00:00:00`),
+              lt: new Date(`${date}T23:59:59`),
+            },
           },
         }),
       },
@@ -65,9 +68,10 @@ export async function getRendezVousByMedecin(
         patient: {
           include: { user: true },
         },
+        disponibilite: true, // On inclut la disponibilité liée
       },
       orderBy: {
-        dateDebut: "asc",
+        createdAt: "asc",
       },
     });
   } catch (error) {

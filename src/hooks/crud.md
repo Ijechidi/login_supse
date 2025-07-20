@@ -75,4 +75,4 @@ removeRendezVous.mutate("ID_RENDEZVOUS");
 **Remarques :**
 - Les mutations sont optimistes : l'UI se met à jour instantanément.
 - Les hooks exposent aussi les états `loading`, `error`, etc. pour gérer l'affichage.
-- Pense à gérer les cas d'erreur et à informer l'utilisateur (toast, message, etc.).
+- cas d'erreur et à informer l'utilisateur (toast, message, etc.).

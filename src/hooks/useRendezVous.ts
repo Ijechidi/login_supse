@@ -89,7 +89,7 @@ export function useRendezVous(
         const today = new Date().toDateString();
         return new Date(rdv.dateDebut).toDateString() === today;
       });
-  
+
       return {
         rendezVous,
         rendezVousConfirmes,

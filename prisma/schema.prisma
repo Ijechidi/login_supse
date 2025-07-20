@@ -40,9 +40,13 @@ enum TypeRendezVousEnum {
   TELECONSULTATION
 }
 
-//
+enum DisponibiliteStatus {
+  LIBRE
+  RESERVE
+  ANNULE
+}
+
 // Modèles principaux
-//
 
 model User {
   id             String    @id @default(uuid())
@@ -64,70 +68,80 @@ model User {
 }
 
 model Patient {
-  id         String      @id @map("user_id") // Même ID que User
-  meta       Json?
+  id             String             @id @map("user_id")
+  meta           Json?
 
-  user       User        @relation(fields: [id], references: [id])
-  rendezVous RendezVous[]
+  user           User               @relation(fields: [id], references: [id])
+  rendezVous     RendezVous[]
+  medecins       PatientMedecin[]   // ← Nouveaux médecins liés
 
   @@map("patients")
 }
 
 model Medecin {
-  id               String           @id @map("user_id") // Même ID que User
-  specialite       Specialite       @default(MEDECINE_GENERALE)
+  id               String             @id @map("user_id")
+  specialite       Specialite         @default(MEDECINE_GENERALE)
   description      String?
   indisponibilites Json?
   meta             Json?
 
-  user             User             @relation(fields: [id], references: [id])
+  user             User               @relation(fields: [id], references: [id])
   rendezVous       RendezVous[]
   disponibilites   Disponibilite[]
+  patients         PatientMedecin[]   // ← Nouveaux patients liés
 
   @@map("medecins")
 }
 
 model RendezVous {
-  id              String       @id @default(uuid())
-  patientId       String       @map("patient_id")
-  medecinId       String       @map("medecin_id")
-  disponibiliteId String     @unique  @map("disponibilite_id") // ← clé étrangère vers Disponibilite
-
+  id              String               @id @default(uuid())
+  patientId       String               @map("patient_id")
+  medecinId       String               @map("medecin_id")
+  disponibiliteId String               @unique @map("disponibilite_id")
   type            TypeRendezVousEnum
+  motif           String
   dateDebut       DateTime
   dateFin         DateTime?
-  motif           String
-  statut          Statut       @default(EN_ATTENTE)
+  statut          Statut               @default(EN_ATTENTE)
   historique      Json?
   meta            Json?
-  createdAt       DateTime     @default(now()) @map("created_at")
+  createdAt       DateTime             @default(now()) @map("created_at")
 
   // Relations
-  patient         Patient      @relation(fields: [patientId], references: [id])
-  medecin         Medecin      @relation(fields: [medecinId], references: [id])
-  disponibilite   Disponibilite @relation(fields: [disponibiliteId], references: [id])
+  patient         Patient              @relation(fields: [patientId], references: [id])
+  medecin         Medecin              @relation(fields: [medecinId], references: [id])
+  disponibilite   Disponibilite        @relation(fields: [disponibiliteId], references: [id])
 
   @@map("rendez_vous")
 }
 
 model Disponibilite {
-  id         String               @id @default(uuid())
-  medecinId  String               @map("medecin_id")
-  heureDebut DateTime
-  heureFin   DateTime
-  status     DisponibiliteStatus
-  meta       Json?
+  id             String               @id @default(uuid())
+  medecinId      String               @map("medecin_id")
+  heureDebut     DateTime
+  heureFin       DateTime
+  status         DisponibiliteStatus
+  meta           Json?
 
   // Relations
-  medecin     Medecin             @relation(fields: [medecinId], references: [id])
-  rendezVous  RendezVous?        // ← relation inverse (peut être [] ou ? selon ton besoin)
+  medecin        Medecin              @relation(fields: [medecinId], references: [id])
+  rendezVous     RendezVous?          // Optionnel : une seule réservation
 
   @@map("disponibilites")
 }
 
+// 🔗 Nouvelle table de liaison manuelle patient-médecin
 
-enum DisponibiliteStatus {
-  LIBRE
-  RESERVE
-  ANNULE
+model PatientMedecin {
+  patientId    String
+  medecinId    String
+  suiviDepuis  DateTime   @default(now())
+  meta         Json?
+
+  // Relations
+  patient      Patient    @relation(fields: [patientId], references: [id])
+  medecin      Medecin    @relation(fields: [medecinId], references: [id])
+
+  @@id([patientId, medecinId]) // Clé primaire composée
+  @@map("patients_medecins")
 }

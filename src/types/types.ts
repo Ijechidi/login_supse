@@ -13,9 +13,9 @@ export interface DisponibiliteWithRendezVous {
     patientId: string;
     medecinId: string;
     disponibiliteId: string;
-    type: string;
     dateDebut: Date;
     dateFin?: Date;
+    type: string;
     motif: string;
     statut: 'EN_ATTENTE' | 'CONFIRME' | 'ANNULE' | 'TERMINE';
     patient: {

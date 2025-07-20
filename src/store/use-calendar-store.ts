@@ -21,7 +21,7 @@ interface CalendarState {
   addAppointment: (appointment: Omit<RendezVous, "id" | "createdAt">) => RendezVous
   updateAppointment: (id: string, updates: Partial<RendezVous>) => void
   deleteAppointment: (id: string) => void
-  getAppointmentsByDate: (date: Date) => RendezVous[]
+
 
   // Actions - Disponibilités
   addAvailability: (availability: Omit<Disponibilite, "id" | "createdAt" | "updatedAt">) => Disponibilite
@@ -87,9 +87,6 @@ export const useCalendarStore = create<CalendarState>()(
         get().showNotification(`Rendez-vous supprimé`, "info")
       },
 
-      getAppointmentsByDate: (date) => {
-        return get().appointments.filter((appointment) => appointment.dateDebut.toDateString() === date.toDateString())
-      },
 
       // Actions - Disponibilités
       addAvailability: (availabilityData) => {

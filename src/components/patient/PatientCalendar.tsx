@@ -6,8 +6,6 @@ import { useDisponibilites } from "@/hooks/useDisponibilites";
 import { useRendezVous } from "@/hooks/useRendezVous";
 import { filterDisponibilitesByDate, filterRendezVousByPatientId } from "@/lib/utils";
 import { useUserProfile } from "@/hooks/useUserProfile"
-
-import { RendezVous } from "@prisma/client"
 import { CalendarCard } from "../calendar/calendar-card";
 import TimeOption from "../ux/calendar/TimeOption";
 import { useCalendar } from "@/hooks/use-calendar";
@@ -25,20 +23,11 @@ export default function PatientCalendar({
   medecinId,
 }: PatientCalendarProps) {
   const { user } = useUserProfile()
-
-
-  if (!user || !user.id) {
-    return("/")
-  }
-
-  const patientId = user?.id!
-
-
+  const patientId = user?.id
 
   const { disponibilites, createDisponibilite ,removeDisponibilite } = useDisponibilites({medecinId})
   const { rendezVous, loading: loadingRdv } = useRendezVous(medecinId);
 
- 
   const {
     currentDate,
     selectedDate,
@@ -47,6 +36,10 @@ export default function PatientCalendar({
     navigateMonth,
   } = useCalendar(rendezVous)
 
+  // Vérification de l'utilisateur après tous les hooks
+  if (!user || !user.id) {
+    return <div>Redirection...</div>
+  }
 
   console.log("Disponibilités :", disponibilites);
 
@@ -56,9 +49,9 @@ export default function PatientCalendar({
   // Log pour debug
   console.log('Disponibilités filtrées:', filteredDisponibilites);
 
-const patientRendezVous = filterRendezVousByPatientId(rendezVous, patientId);
+  const patientRendezVous = filterRendezVousByPatientId(rendezVous, patientId);
 
-console.log("rendevous :", rendezVous)
+  console.log("rendevous :", rendezVous)
 
   return (
     <div className=" w-full  mx-auto p-0">

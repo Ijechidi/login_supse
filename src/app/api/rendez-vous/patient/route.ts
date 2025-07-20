@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         patientId: patient.id,
         medecinId,
         dateDebut:new Date(date),
-         dateFin : new Date(date),
+        dateFin : new Date(date),
         type:type || "CONSULTATION" ,
         motif ,
       },
