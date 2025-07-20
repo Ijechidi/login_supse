@@ -4,8 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { getUserInfo } from '@/lib/users/getUserInfo'
 import MedecinCalendar from "@/components/medecin/MedecinCalendar";
-
-
+import { getRendezVousByMedecin } from '@/lib/actions/rendezvous'
+import { RendezVousList } from "@/components/medecin/RendevousList";
 
 
 export default async function page() {
@@ -54,34 +54,9 @@ export default async function page() {
             </div>
           </CardContent>
         </Card>
-        {/* Rendez-vous à venir (statique) */}
-        <Card className="max-w-2xl mx-auto shadow-md">
-          <CardHeader>
-            <CardTitle>Prochains rendez-vous</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="divide-y">
-              <li className="py-2 flex justify-between items-center">
-                <span>08/07/2025 - 10:00</span>
-                <span className="font-semibold">Precious Ogwo</span>
-                <Button variant="outline" size="sm">Voir</Button>
-              </li>
-              <li className="py-2 flex justify-between items-center">
-                <span>09/07/2025 - 14:30</span>
-                <span className="font-semibold">Marie Martin</span>
-                <Button variant="outline" size="sm">Voir</Button>
-              </li>
-              <li className="py-2 flex justify-between items-center">
-                <span>10/07/2025 - 09:00</span>
-                <span className="font-semibold">Ali Ben</span>
-                <Button variant="outline" size="sm">Voir</Button>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+        {/* Rendez-vous dynamiques via server action */}
+        <RendezVousList medecinId={user.id} />
       </div>
-
-
       <MedecinCalendar />
     </div>
   );

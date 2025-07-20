@@ -1,5 +1,7 @@
 "use client"
 import React from 'react'
+import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { useUserProfile } from '@/hooks/useUserProfile'
 import { useDisponibilites } from '@/hooks/useDisponibilites'
@@ -20,6 +22,7 @@ export default function MedecinCalendar() {
   const medecinId = user?.id || ''
   const { disponibilites, createDisponibilite ,removeDisponibilite } = useDisponibilites({medecinId})
   const { rendezVous, loading: loadingRdv, updateRendezVous } = useRendezVous(medecinId);
+  const queryClient = useQueryClient();
 
  
   const {
@@ -42,8 +45,22 @@ export default function MedecinCalendar() {
   console.log('Disponibilités filtrées medecin:', filteredDisponibilites);
 
   // Fonction pour mettre à jour le statut d'un rendez-vous
-  const handleUpdateRendezVousStatus = (rendezVousId: string, statut: Statut) => {
-    updateRendezVous.mutate({ id: rendezVousId, data: { statut } });
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const handleUpdateRendezVousStatus = async (rendezVousId: string, statut: Statut) => {
+    setLoadingId(rendezVousId);
+    try {
+      const res = await fetch('/api/rendez-vous/status', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: rendezVousId, statut }),
+      });
+      if (!res.ok) throw new Error('Erreur serveur');
+      await queryClient.invalidateQueries();
+    } catch (e) {
+      // Optionnel : afficher une notification d'erreur
+    } finally {
+      setLoadingId(null);
+    }
   };
 
   if (!user) return <div>Chargement du profil...</div>
@@ -69,7 +86,7 @@ export default function MedecinCalendar() {
   existingSlots={filteredDisponibilites}
 />
 
-          <DisponibilitesOption patients={[]}
+          <DisponibilitesOption 
             disponibilites={filteredDisponibilites} 
             onDelete={removeDisponibilite.mutate}
             onUpdateRendezVousStatus={handleUpdateRendezVousStatus}

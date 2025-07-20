@@ -6,11 +6,15 @@ import { getPatientsByMedecinId } from '@/lib/actions/medecins'
 interface VisitPatientProps {
   medecinId: string
   onAddPatient?: (patientId: string) => void
+  disponibiliteId?: string
 }
 
-export default function VisitPatient({ medecinId, onAddPatient }: VisitPatientProps) {
+export default function VisitPatient({ medecinId, onAddPatient, disponibiliteId }: VisitPatientProps) {
   const [patients, setPatients] = useState<UserInfo[]>([])
   const [selected, setSelected] = useState<string>("")
+
+
+  console.log(" id :", disponibiliteId ,  medecinId)
 
   useEffect(() => {
     async function fetchPatients() {
@@ -29,7 +33,10 @@ export default function VisitPatient({ medecinId, onAddPatient }: VisitPatientPr
 
   return (
     <div className='border flex items-center justify-center p-2 rounded gap-2'>
+
       <AvatarUserSelect
+      disponibiliteId={disponibiliteId}
+      medecinId={medecinId}
         inputPlaceholder='Rechercher un patient...'
         users={patients}
         value={selected}

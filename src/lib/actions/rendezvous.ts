@@ -126,7 +126,50 @@ export async function notifyPatientRendezVousStatus(rendezVous: any, statut: str
   }
 }
 
+
+
+
+export async function createMedecinRendevous({  patientId,
+  medecinId, disponibiliteId , type, motif }:{
+  patientId: string;
+  medecinId: string;
+  disponibiliteId: string;
+  type: TypeRendezVousEnum;
+  motif: string;
+
+  }) {
+   try {
+
+    // Récupérer la disponibilité
+    const disponibilite = await prisma.disponibilite.findUnique({
+      where: { id: disponibiliteId },
+    });
+    if (!disponibilite) {
+      throw new Error("Disponibilité introuvable");
+    }
+    
+     const rendevous = await prisma.rendezVous.create({
+       data: {
+         patientId,
+         medecinId,
+         disponibiliteId,
+         type,
+         motif,
+         dateDebut: disponibilite.heureDebut,
+         dateFin:disponibilite.heureFin,
+       },
+     })
+     console.log("rendevous cree :", rendevous)
+     return rendevous;
+   } catch (error) {
+    console.error("Erreur lors de la création du rendez-vous:", error);
+    throw error;
+   }
+}
+
 export async function updateRendezVousStatus({ id, statut }: { id: string; statut: Statut }) {
+  // Log des données reçues
+  console.log('updateRendezVousStatus called with:', { id, statut });
   // Met à jour le statut du rendez-vous
   const rendezVous = await prisma.rendezVous.update({
     where: { id },
@@ -136,6 +179,7 @@ export async function updateRendezVousStatus({ id, statut }: { id: string; statu
       medecin: { include: { user: true } },
     },
   });
+  console.log('RendezVous updated:', rendezVous);
 
   // Notifie le patient par mail
   await notifyPatientRendezVousStatus(rendezVous, statut);
@@ -227,4 +271,61 @@ export default async function createRendezVous(data:{disponibiliteId: string; pa
     console.error("Erreur lors de la création du rendez-vous:", error);
     return { success: false, error: "Impossible de créer le rendez-vous." };
   }
+}
+
+
+export async function getMedecinRdv(medecinId: string) {
+  return prisma.rendezVous.findMany({
+    where: { medecinId },
+    include: {
+      patient: { include: { user: true } },
+      medecin: { include: { user: true } },
+    },
+    orderBy: { dateDebut: 'asc' },
+  });
+}
+
+// Rendez-vous à venir du patient (statut EN_ATTENTE ou CONFIRME, dateDebut >= aujourd'hui)
+export async function getPatientRendezVous(patientId: string) {
+  const now = new Date();
+  return prisma.rendezVous.findMany({
+    where: {
+      patientId,
+      dateDebut: { gte: now },
+      statut: { in: ['EN_ATTENTE', 'CONFIRME'] },
+    },
+    include: {
+      medecin: { include: { user: true } },
+    },
+    orderBy: { dateDebut: 'asc' },
+  });
+}
+
+// Anciennes visites du patient (statut TERMINE ou dateDebut < aujourd'hui)
+export async function getPatientAnciennesVisites(patientId: string) {
+  const now = new Date();
+  return prisma.rendezVous.findMany({
+    where: {
+      patientId,
+      OR: [
+        { statut: 'TERMINE' },
+        { dateDebut: { lt: now } },
+      ],
+    },
+    include: {
+      medecin: { include: { user: true } },
+    },
+    orderBy: { dateDebut: 'desc' },
+  });
+}
+
+// Médecins référents du patient (table de liaison patientMedecin)
+export async function getPatientMedecins(patientId: string) {
+  const relations = await prisma.patientMedecin.findMany({
+    where: { patientId },
+    include: {
+      medecin: { include: { user: true } },
+    },
+  });
+  return relations.map(rel => rel.medecin);
 }

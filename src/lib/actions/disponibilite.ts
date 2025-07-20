@@ -184,6 +184,11 @@ export async function updateDisponibilite(id: string, data: Partial<{ heureDebut
   }
 }
 
+
+
+
+
+
 export async function addRendezVous({
   patientId,
   medecinId,
