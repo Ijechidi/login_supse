@@ -57,3 +57,14 @@ export async function getMedecinById(medecinId:string) {
         throw new Error('Impossible de trouver le médicament');
     }
 }
+
+export async function getPatientsByMedecinId(medecinId: string) {
+  return prisma.patientMedecin.findMany({
+    where: { medecinId },
+    include: {
+      patient: {
+        include: { user: true },
+      },
+    },
+  });
+}

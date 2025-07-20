@@ -47,6 +47,20 @@ export function useDisponibilites({
   // Mutations
   const createDisponibilite = useMutation({
     mutationFn: addDisponibilite,
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
+      const previous = queryClient.getQueryData(queryKeys.disponibilites(medecinId, date));
+      queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), (old: any[] = []) => [
+        ...(old || []),
+        { ...newData, id: Math.random().toString() }
+      ]);
+      return { previous };
+    },
+    onError: (err, newData, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), context.previous);
+      }
+    },
     onSettled: (data, error) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
       if (error) {
@@ -59,6 +73,19 @@ export function useDisponibilites({
 
   const updateDisponibiliteMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateDisponibilite(id, data),
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
+      const previous = queryClient.getQueryData(queryKeys.disponibilites(medecinId, date));
+      queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), (old: any[] = []) =>
+        (old || []).map(item => item.id === id ? { ...item, ...data } : item)
+      );
+      return { previous };
+    },
+    onError: (err, newData, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), context.previous);
+      }
+    },
     onSettled: (data, error) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
       if (error) {
@@ -71,6 +98,19 @@ export function useDisponibilites({
 
   const removeDisponibilite = useMutation({
     mutationFn: deleteDisponibilite,
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
+      const previous = queryClient.getQueryData(queryKeys.disponibilites(medecinId, date));
+      queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), (old: any[] = []) =>
+        (old || []).filter(item => item.id !== id)
+      );
+      return { previous };
+    },
+    onError: (err, id, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKeys.disponibilites(medecinId, date), context.previous);
+      }
+    },
     onSettled: (data, error) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.disponibilites(medecinId, date) });
       if (error) {

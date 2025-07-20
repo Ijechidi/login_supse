@@ -33,12 +33,13 @@ disponibilites.map((slot)=>(
               : 'Patient inconnu'}</span>
           </div>
         )}
-        <VisitPatient patients={[]} />
+        <VisitPatient medecinId={slot.medecinId} />
         <Button
           className=''
           variant="destructive"
           size="icon"
           onClick={() => onDelete(slot.id)}
+          disabled={!!slot.rendezVous}
         >
           <Trash2 className="h-4 w-4" />
           <span className="sr-only">Supprimer</span>

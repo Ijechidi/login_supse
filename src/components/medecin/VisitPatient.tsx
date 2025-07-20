@@ -1,14 +1,43 @@
 import { User } from 'lucide-react'
-import React from 'react'
-import AvatarUserSelect from '../user/AvatarSelect'
+import React, { useEffect, useState } from 'react'
+import AvatarUserSelect, { UserInfo } from '../user/AvatarSelect'
+import { getPatientsByMedecinId } from '@/lib/actions/medecins'
 
-export default function VisitPatient({patients}:{patients:[]}) {
+interface VisitPatientProps {
+  medecinId: string
+  onAddPatient?: (patientId: string) => void
+}
+
+export default function VisitPatient({ medecinId, onAddPatient }: VisitPatientProps) {
+  const [patients, setPatients] = useState<UserInfo[]>([])
+  const [selected, setSelected] = useState<string>("")
+
+  useEffect(() => {
+    async function fetchPatients() {
+      const res = await getPatientsByMedecinId(medecinId)
+      const users: UserInfo[] = res.map((pm: any) => ({
+        id: pm.patient.id,
+        name: pm.patient.user.prenom + ' ' + pm.patient.user.nom,
+        email: pm.patient.user.email,
+        avatar_url: pm.patient.user.avatarUrl,
+        specialite: undefined,
+      }))
+      setPatients(users)
+    }
+    if (medecinId) fetchPatients()
+  }, [medecinId])
+
   return (
-    <div className='border flex items-center justify-center p-2 rounded'>
-
-      
-
-    <AvatarUserSelect inputPlaceholder='Rechercher un patient...' users={patients} />
+    <div className='border flex items-center justify-center p-2 rounded gap-2'>
+      <AvatarUserSelect
+        inputPlaceholder='Rechercher un patient...'
+        users={patients}
+        value={selected}
+        onChange={(id) => {
+          setSelected(id)
+          if (id) onAddPatient?.(id)
+        }}
+      />
     </div>
   )
 }

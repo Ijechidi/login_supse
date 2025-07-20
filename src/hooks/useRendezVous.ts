@@ -24,7 +24,21 @@ export function useRendezVous(
   
     // Mutations optimistes
     const createRendezVous = useMutation({
-      mutationFn: addRendezVous, // Appelle la fonction serveur qui modifie la base
+      mutationFn: addRendezVous,
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) => [
+          ...(old || []),
+          { ...newData, id: Math.random().toString() } // id temporaire
+        ]);
+        return { previous };
+      },
+      onError: (err, newData, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
       onSettled: (data, error) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
         if (error) {
@@ -36,7 +50,20 @@ export function useRendezVous(
     });
 
     const updateRendezVousMutation = useMutation({
-      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVousStatus({ id, statut: data.statut }), // Appelle la fonction serveur
+      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVousStatus({ id, statut: data.statut }),
+      onMutate: async ({ id, data }) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) =>
+          (old || []).map(item => item.id === id ? { ...item, ...data } : item)
+        );
+        return { previous };
+      },
+      onError: (err, newData, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
       onSettled: (data, error) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
         if (error) {
@@ -48,7 +75,20 @@ export function useRendezVous(
     });
 
     const removeRendezVous = useMutation({
-      mutationFn: deleteRendezVous, // Appelle la fonction serveur
+      mutationFn: deleteRendezVous,
+      onMutate: async (id: string) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) =>
+          (old || []).filter(item => item.id !== id)
+        );
+        return { previous };
+      },
+      onError: (err, id, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
       onSettled: (data, error) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
         if (error) {
