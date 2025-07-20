@@ -7,12 +7,13 @@ import Link from 'next/link'
 import ConfirmVisit from './ConfirmVisit'
 import VisitPatient from '@/components/medecin/VisitPatient'
 import { getButtonPropsByStatut, getHoverSlideOverlayPropsByStatut } from '../../rendez-vous/rendezvous.utils'
+import { Statut } from '@prisma/client'
 
 export interface DisponibiliteOptionProps {
   disponibilites: DisponibiliteWithRendezVous[]
   patients:[]
   onDelete: (id: string) => void
-  onUpdateRendezVousStatus: (rendezVousId: string, statut: string) => void
+  onUpdateRendezVousStatus: (rendezVousId: string, statut: Statut) => void
 }
 export default function DisponibilitesOption({disponibilites,onDelete, patients, onUpdateRendezVousStatus}:DisponibiliteOptionProps) {
   return (

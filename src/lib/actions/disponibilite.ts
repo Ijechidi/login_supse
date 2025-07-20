@@ -249,4 +249,4 @@ export async function deleteRendezVous(id: string) {
   }
 } 
 
-export { updateRendezVousStatus } from './rendezvous';
+

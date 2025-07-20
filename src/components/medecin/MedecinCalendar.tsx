@@ -11,6 +11,7 @@ import { CalendarCard } from '../calendar/calendar-card'
 import DisponibilitesOption from '../ux/calendar/DisponibilitesOption'
 import AddTimeSlot from '../ux/calendar/AddTimeSlot'
 import TimeOption from '../ux/calendar/TimeOption'
+import { Statut } from '@prisma/client'
 
 
 
@@ -41,7 +42,7 @@ export default function MedecinCalendar() {
   console.log('Disponibilités filtrées medecin:', filteredDisponibilites);
 
   // Fonction pour mettre à jour le statut d'un rendez-vous
-  const handleUpdateRendezVousStatus = (rendezVousId: string, statut: string) => {
+  const handleUpdateRendezVousStatus = (rendezVousId: string, statut: Statut) => {
     updateRendezVous.mutate({ id: rendezVousId, data: { statut } });
   };
 
