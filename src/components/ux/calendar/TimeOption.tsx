@@ -21,7 +21,7 @@ export default function TimeOption({slot, patientId}:{slot:DisponibiliteAvecRend
 <PatientConfirmVisit   statut={slot.rendezVous?.statut} href={`/rendez-vous/new-visit/${slot.id}`}  />
 ):(
   <HoverSlideOverlay text='Formulaire' href={`/rendez-vous/new-visit/${slot.id}`}>
-      <SlideButton text="prendre rendez-vous" />
+      <SlideButton text="prendre rendez-vous" disabled />
   </HoverSlideOverlay>
 )
 
