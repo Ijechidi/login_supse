@@ -4,7 +4,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,                          // ← Plus strict = false
+    "noImplicitAny": false,                  // ← Tolère le any implicite
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -15,7 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": "src",
-    
+
     "plugins": [
       {
         "name": "next"

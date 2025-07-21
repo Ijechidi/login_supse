@@ -1,12 +1,10 @@
 import { cn } from "@/lib/utils"
 
-import { SpecialiteHeader } from "@/components/specialite-card/SpecialiteHeader"
-import { MedecinGrid } from "@/components/specialite-card/MedecinGrid"
-import { MedecinsRestantsInfo } from "@/components/specialite-card/MedecinsRestantsInfo"
-import { SpecialiteStats } from "@/components/specialite-card/SpecialiteStats"
-import { Specialite } from "@/components/specialite-card/types"
+
 import { Stethoscope } from "lucide-react"
 import CustomAccordion from "./CustomAccordion"
+import { Specialite } from "@/components/ux/specialite-card/types"
+import { MedecinGrid, MedecinsRestantsInfo, SpecialiteHeader, SpecialiteStats } from "./specialite-card"
 
 interface Props {
   specialite: Specialite

@@ -9,7 +9,7 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0.00.1% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -34,7 +34,11 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --design-bg: 0.942 0.004 296.6;
+    
+     /* design */
+     --design-bg: 0.942 0.004 296.6; /* #EFEFF0 */
+     --design-border: 0.8 0.005 296.6;
+     --design-text: 0.2 0.01 296.6;
 
     /* Importé du premier fichier */
     --sidebar-background: 0 0% 98%;
@@ -114,6 +118,12 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
     --design-bg: 0.278 0.002 296.2;
+
+
+        /* design dark */
+        --design-bg: 0.278 0.002 296.2; /* #212124 */
+        --design-border: 0.4 0.005 296.2;
+        --design-text: 0.96 0.01 296.2;
 
     /* Importé du premier fichier */
     --sidebar-background: 240 5.9% 10%;
@@ -226,4 +236,13 @@ body {
   .animate-fade-in-right {
     animation: fade-in-right 0.8s ease-out forwards;
   }
+}
+
+
+.scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

@@ -22,7 +22,7 @@ export function ProfileCard({ medecin, className }: ProfileCardProps) {
   const cardContent = (
     <div
       className={cn(
-        "flex flex-col text-start gap-4 p-4 rounded-lg",
+        "flex  flex-col text-start gap-4 p-4 rounded-lg",
         "bg-gradient-to-b from-muted dark:from-muted/50 to-muted dark:to-muted/10",
         "hover:from-muted/60 hover:to-muted/20",
         !medecin.isDisponible && "grayscale opacity-50 cursor-not-allowed"
@@ -62,7 +62,7 @@ export function ProfileCard({ medecin, className }: ProfileCardProps) {
   return (
     <div
       className={cn(
-        "w-[320px] rounded-lg border border-t ring-4 ring-accent/50 hover:ring-accent transition-all duration-300",
+        "w-[320px] min-w-[300px] rounded-lg border border-t ring-4 ring-accent/50 hover:ring-accent transition-all duration-300",
         !medecin.isDisponible && "pointer-events-none",
         className
       )}

@@ -1,22 +1,24 @@
 "use client"
 
+import { RendezVousWithPatient } from "@/types/types"
+import { RendezVous } from "@prisma/client"
 import { useState, useMemo } from "react"
-import type { RendezVousType } from "../types/rendezVous"
+
 
 export interface DayData {
   day: string
   date: Date
   isCurrentMonth: boolean
-  rendezVous: RendezVousType[]
+  rendezVous: RendezVousWithPatient[]
 }
 
 export interface TimeSlot {
   time: string
   available: boolean
-  rendezVous?: RendezVousType
+  rendezVous?: RendezVousWithPatient
 }
 
-export function useCalendar(existingAppointments: RendezVousType[]) {
+export function useCalendar(existingAppointments: RendezVousWithPatient[]) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 

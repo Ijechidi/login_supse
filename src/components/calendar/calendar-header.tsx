@@ -1,7 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ThemeSwitcher } from "@/components/theme-switcher"
+import { ThemeSwitcher } from "../header/theme-switcher"
+
 
 
 interface CalendarHeaderProps {
@@ -29,7 +30,7 @@ const monthNames = [
  */
 export function CalendarHeader({ currentDate, onNavigate }: CalendarHeaderProps) {
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center  justify-between mb-6">
       <div className="text-4xl font-bold tracking-wider text-foreground">
         {monthNames[currentDate.getMonth()].substring(0, 2).toUpperCase()}{" "}
         <span className="opacity-50">{currentDate.getFullYear()}</span>
