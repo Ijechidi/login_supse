@@ -21,7 +21,7 @@ export default function PatientConfirmVisit({
   className,
   href,
   statut ,
-  withHover = true,
+  withHover = false,
   onComplete,
 }: ConfirmVisitProps) {
   const slideButtonProps = {
