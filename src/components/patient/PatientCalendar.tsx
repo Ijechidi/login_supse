@@ -54,10 +54,10 @@ export default function PatientCalendar({
   console.log("rendevous :", rendezVous)
 
   return (
-    <div className=" w-full flex justify-center   mx-auto p-0">
-      <div className="flex  w-full flex-col md:flex-row gap-4">
+    <div className=" w-full flex justify-center  h-[630px]  overflow-hidden  mx-auto p-0">
+      <div className="flex  w-full flex-col md:flex-row gap-8">
         {/* Calendrier */}
-        <div className="flex-1">
+        <div className="flex-1 pt-12">
           <CalendarCard
             currentDate={currentDate}
             days={calendarDays}
@@ -69,11 +69,13 @@ export default function PatientCalendar({
         </div>
 
 
-          <div className="flex p-8 gap-4 flex-col"> 
+          <div className="p-4 flex  gap-8 flex-col"> 
             <h1> Choisisez une heure disponible pour le rendez-vous </h1>
-            {filteredDisponibilites?.map((slot)=>(
-            <TimeOption key={slot.id} slot={slot} />
-            ))}
+            <div className="flex flex-col py-2 border-y gap-4 overflow-y-scroll scrollbar-hidden" >
+              {filteredDisponibilites?.map((slot)=>(
+              <TimeOption key={slot.id} slot={slot} />
+              ))}
+            </div>
             
           </div>
 

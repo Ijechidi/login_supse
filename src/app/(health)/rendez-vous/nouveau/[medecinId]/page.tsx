@@ -38,7 +38,7 @@ export default async function MedecinPage({
   }
 
   return (
-    <main className="max-w-6xl w-full  mx-auto lg:px-12 p-6">
+    <main className="max-w-6xl w-full flex flex-col gap-y-14  mx-auto lg:px-12 p-6">
 
       <section className="mb-8 flex flex-col items-center">
         <h1 className="text-3xl font-semibold mb-4">
@@ -50,10 +50,10 @@ export default async function MedecinPage({
 
       </section>
 
-      <div className="flex flex-col gap-8">
-        <section className=" flex flex-col md:flex-row justify-between  ">
+      <div className="flex flex-col gap-y-20">
+        <section className=" flex flex-col md:flex-row justify-center  ">
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Informations du médecin</h2>
+          
             <MedecinCard medecin={medecin.user} specialite={medecin.specialite} className="" />
           </div>
           <div>
@@ -64,7 +64,7 @@ export default async function MedecinPage({
 
 
         <section className="flex flex-col">
-          <h2 className="text-2xl font-semibold mb-4">
+          <h2 className="text-2xl text-center font-semibold mb-4">
             Disponibilités & prise de rendez-vous
           </h2>
           <PatientCalendar
