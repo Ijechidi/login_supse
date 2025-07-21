@@ -86,13 +86,15 @@ export default function PatientFilterList({ patients }: PatientFilterListProps) 
                     <Mail className="h-4 w-4" />
                     <span>{user.email || 'N/A'}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    <span>{user.telephone || 'N/A'}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    <span className="truncate">{user.adresse || 'N/A'}</span>
+                  <div className='flex md:flex-col gap-2 justify-center items-center '>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        <span>{user.telephone || 'N/A'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <span className="truncate">{user.adresse || 'N/A'}</span>
+                      </div>
                   </div>
                 </div>
 
@@ -111,12 +113,7 @@ export default function PatientFilterList({ patients }: PatientFilterListProps) 
 
             {/* Boutons d'action */}
             <div className="flex items-center gap-2 self-start lg:self-center">
-              <button
-                className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
-                title="Voir le profil du patient"
-              >
-                <Eye className="h-5 w-5" />
-              </button>
+     
               <button
                 className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                 title="Voir les documents du patient"
