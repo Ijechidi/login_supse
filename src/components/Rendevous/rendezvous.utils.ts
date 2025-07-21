@@ -4,16 +4,17 @@ import { SlideButtonProps } from "../tools/SlideButton"
 
 type StatutCustom = Statut | "NON"
 
-export function getButtonPropsByStatut(
+
+export function getPatientButtonPropsByStatut(
   statut: StatutCustom = "NON"
 ): Partial<SlideButtonProps> {
   switch (statut) {
     case "NON":
       return {
-        text: "Prendre rendez-vous",
-        successText: "Visite créée",
+        text: "prennez rendez-vous",
+        successText: "Visite créee",
         loadingText: "Validation...",
-        disabled: false,
+        disabled: true,
       }
     case "EN_ATTENTE":
       return {
@@ -27,9 +28,9 @@ export function getButtonPropsByStatut(
       }
     case "CONFIRME":
       return {
-        text: "Rendez-vous confirmé",
+        text: "Confirmer",
         successText: "Visite confirmer",
-        loadingText: "Chargement...",
+        loadingText: "Annulation...",
         status:"success",
         disabled: true,
       }
@@ -37,8 +38,11 @@ export function getButtonPropsByStatut(
       return {
         text: "Rendez-vous annulé",
         successText: "Visite confirmer",
+        errorText: "Rendez-vous annulé",
         loadingText: "Chargement...",
         disabled: true,
+        status:"error"
+      
       }
     case "TERMINE":
       return {
@@ -49,10 +53,67 @@ export function getButtonPropsByStatut(
       }
     default:
       return {
-        text: "Prendre rendez-vous",
+        text: "Prennez rendez-vous",
          successText: "Visite confirmer",
         loadingText: "Validation...",
+        disabled: true,
+      }
+  }
+}
+
+
+export function getButtonPropsByStatut(
+  statut: StatutCustom = "NON"
+): Partial<SlideButtonProps> {
+  switch (statut) {
+    case "NON":
+      return {
+        text: "pas de rendez-vous",
+        successText: "Visite créée",
+        loadingText: "Validation...",
+        disabled: true,
+      }
+    case "EN_ATTENTE":
+      return {
+        text: "Confirmer",
+        successText: "Visite confirmer",
+        loadingText: "Validation...",
         disabled: false,
+        resolveTo:"success",
+      
+        
+      }
+    case "CONFIRME":
+      return {
+        text: "Confirmer",
+        successText: "Visite confirmer",
+        loadingText: "Annulation...",
+        status:"success",
+        disabled: true,
+      }
+    case "ANNULE":
+      return {
+        text: "Rendez-vous annulé",
+        successText: "Visite confirmer",
+        errorText: "Rendez-vous annulé",
+        loadingText: "Chargement...",
+        disabled: true,
+        status:"error"
+      
+      }
+    case "TERMINE":
+      return {
+        text: "Visite terminée",
+          successText: "Visite confirmer",
+        loadingText: "Chargement...",
+        disabled: true,
+      }
+    default:
+      return {
+        text: "Pas encore de rendevous",
+         successText: "Visite confirmer",
+        loadingText: "Validation...",
+        disabled: true,
       }
   }
 }
@@ -75,7 +136,7 @@ export function getHoverSlideOverlayPropsByStatut(
     case "NON":
       return {
         withHover: true,
-        text: "formulaire"
+        text: "pas de rendez-vous"
       }
     case "EN_ATTENTE":
       return {
@@ -91,20 +152,64 @@ export function getHoverSlideOverlayPropsByStatut(
     
     case "ANNULE":
       return {
-        withHover: true,
+        withHover: false,
         text: "reprogrammer"
       }
     
     case "TERMINE":
       return {
 
-        withHover: false,
+        withHover: true,
         text: "terminé"
       }
     
     default:
       return {
+        withHover: false,
+        text: "formulaire"
+      }
+  }
+}
+
+/* Patient */
+export function getPatientHoverSlideOverlayPropsByStatut(
+  statut?: StatutCustom,
+): HoverSlideOverlayProps {
+  switch (statut) {
+
+    case "NON":
+      return {
         withHover: true,
+        text: "Formulaire"
+      }
+    case "EN_ATTENTE":
+      return {
+        withHover: false,
+        text: "En Attente"
+      }
+    
+    case "CONFIRME":
+      return {
+        withHover: false,
+        text: "rendez-vous confirmer"
+      }
+    
+    case "ANNULE":
+      return {
+        withHover: true,
+        text: "Anuller"
+      }
+    
+    case "TERMINE":
+      return {
+
+        withHover: true,
+        text: "terminé"
+      }
+    
+    default:
+      return {
+        withHover: false,
         text: "formulaire"
       }
   }

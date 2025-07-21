@@ -3,12 +3,12 @@ import TimeSlotView from './TimeSlotView'
 import { DisponibiliteWithRendezVous } from '@/types/types'
 import { Button } from '@/components/ui/button'
 import {  Trash2, User } from 'lucide-react'
-import Link from 'next/link'
 import ConfirmVisit from './ConfirmVisit'
-import VisitPatient from '@/components/medecin/VisitPatient'
-import { getButtonPropsByStatut, getHoverSlideOverlayPropsByStatut } from '../../rendez-vous/rendezvous.utils'
+
+import { getHoverSlideOverlayPropsByStatut } from '../../rendez-vous/rendezvous.utils'
 import { Statut } from '@prisma/client'
 import PatientAdd from '@/components/medecin/PatientAdd'
+
 
 export interface DisponibiliteOptionProps {
   disponibilites: DisponibiliteWithRendezVous[]
@@ -18,14 +18,14 @@ export interface DisponibiliteOptionProps {
 
 export default function DisponibilitesOption({disponibilites,onDelete, onUpdateRendezVousStatus}:DisponibiliteOptionProps) {
   return (
-    <div className='flex w-full flex-col items-center  gap-4  rounded  '>
+    <div className='flex w-full flex-col items-center  h-[475px] p-2  border overflow-y-scroll scrollbar-hidden  gap-4  rounded  '>
 {
 
 
 disponibilites.map((slot)=>(
 
   
-    <div className='flex justify-center items-center bg-muted/50 pr-2 border w-full rounded'>
+    <div className='flex justify-between items-center bg-muted/50 pr-2 border w-full rounded'>
     <TimeSlotView key={slot.id} slot={slot}  /> 
 
     <div className='flex gap-3 mx-4 items-center'>
@@ -62,6 +62,7 @@ disponibilites.map((slot)=>(
           }}
           withHover={getHoverSlideOverlayPropsByStatut(slot.rendezVous?.statut).withHover}
         />
+
       </div>
     </div>
   ))

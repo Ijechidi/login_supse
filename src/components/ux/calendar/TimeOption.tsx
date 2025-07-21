@@ -3,6 +3,7 @@ import TimeSlotView from './TimeSlotView'
 import { DisponibiliteAvecRendezVous } from '@/types/globalTypes'
 
 import ConfirmVisit from './ConfirmVisit'
+import PatientConfirmVisit from './PatientConfirmVisit'
 
 
 export default function TimeOption({slot}:{slot:DisponibiliteAvecRendezVous}) {
@@ -13,10 +14,9 @@ export default function TimeOption({slot}:{slot:DisponibiliteAvecRendezVous}) {
     <TimeSlotView slot={slot}  />
 
 
-<ConfirmVisit   statut={slot.rendezVous?.statut} href={`/rendez-vous/new-visit/${slot.id}`}  />
+<PatientConfirmVisit   statut={slot.rendezVous?.statut} href={`/rendez-vous/new-visit/${slot.id}`}  />
 
 
-{slot.rendezVous?.statut}
 </div>
     </div>
   )

@@ -3,7 +3,7 @@ import { HoverSlideOverlay } from "./HoverContent"
 
 
 import { Statut } from "@prisma/client"
-import { getButtonPropsByStatut, getHoverSlideOverlayPropsByStatut } from "@/components/Rendevous/rendezvous.utils"
+import { getPatientButtonPropsByStatut, getPatientHoverSlideOverlayPropsByStatut } from "@/components/Rendevous/rendezvous.utils"
 import { SlideButton } from "@/components/tools/SlideButton"
 
 
@@ -17,7 +17,7 @@ export interface ConfirmVisitProps {
 }
 
 
-export default function ConfirmVisit({
+export default function PatientConfirmVisit({
   className,
   href,
   statut ,
@@ -25,11 +25,11 @@ export default function ConfirmVisit({
   onComplete,
 }: ConfirmVisitProps) {
   const slideButtonProps = {
-    ...getButtonPropsByStatut(statut),
+    ...getPatientButtonPropsByStatut(statut),
     onComplete,
   }
 
-  const hoverProps = getHoverSlideOverlayPropsByStatut(statut)
+  const hoverProps = getPatientHoverSlideOverlayPropsByStatut(statut)
 
   return (
     <HoverSlideOverlay

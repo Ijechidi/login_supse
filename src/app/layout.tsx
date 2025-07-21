@@ -43,7 +43,7 @@ export default function RootLayout({
             >
               <div className="flex  flex-col min-h-screen">
                 <NavBar />
-                <main className="flex-1 border">{children}</main>
+                <main className=" ">{children}</main>
                <Toaster/>
               </div>
             </ThemeProvider>

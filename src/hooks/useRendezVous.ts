@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { queryKeys, UseDisponibilitesOptions } from "./useDisponibilites";
 import { getRendezVousByMedecin, addRendezVous, deleteRendezVous } from "@/lib/actions/disponibilite";
 import { useMemo } from "react";
-import {updateRendezVousStatus} from '@/lib/actions/rendezvous'
+import {updateRendezVous, updateRendezVousStatus} from '@/lib/actions/rendezvous'
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from '@/hooks/use-toast';
 
@@ -50,15 +50,25 @@ export function useRendezVous(
     });
 
     const updateRendezVousMutation = useMutation({
-      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVousStatus({ id, statut: data.statut }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
-        toast({ title: 'Succès', description: "Rendez-vous mis à jour." });
+      mutationFn: ({ id, data }: { id: string; data: any }) => updateRendezVous(id, data),
+      onMutate: async ({ id, data }) => {
+        await queryClient.cancelQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
+        const previous = queryClient.getQueryData(queryKeys.rendezVous(medecinId, date));
+        queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), (old: any[] = []) =>
+          (old || []).map(item => item.id === id ? { ...item, ...data } : item)
+        );
+        return { previous };
       },
-      onError: () => {
-        toast({ title: 'Erreur', description: "Erreur lors de la mise à jour du rendez-vous.", variant: 'destructive' });
+      onError: (err, newData, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKeys.rendezVous(medecinId, date), context.previous);
+        }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.rendezVous(medecinId, date) });
       },
     });
+
 
     const removeRendezVous = useMutation({
       mutationFn: deleteRendezVous,

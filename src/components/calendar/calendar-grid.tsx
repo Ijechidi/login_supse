@@ -17,7 +17,7 @@ const daysOfWeek = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"]
  */
 export function CalendarGrid({ days, selectedDate, onDaySelect, onDayHover }: CalendarGridProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       {/* En-têtes des jours */}
       <div className="grid grid-cols-7 gap-2">
         {daysOfWeek.map((day) => (

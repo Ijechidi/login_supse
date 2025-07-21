@@ -58,6 +58,7 @@ export function MedecinCard({ medecin, className, specialite }: MedecinCardProps
   )
 
   return (
+  
     <div
       className={cn(
         "w-[320px] min-w-[300px] rounded-lg border border-t ring-4 ring-accent/50 hover:ring-accent transition-all duration-300",

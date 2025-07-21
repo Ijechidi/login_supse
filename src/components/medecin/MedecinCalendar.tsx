@@ -1,7 +1,6 @@
 "use client"
 import React from 'react'
-import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+
 
 import { useUserProfile } from '@/hooks/useUserProfile'
 import { useDisponibilites } from '@/hooks/useDisponibilites'
@@ -12,8 +11,9 @@ import { useRendezVous } from '@/hooks/useRendezVous'
 import { CalendarCard } from '../calendar/calendar-card'
 import DisponibilitesOption from '../ux/calendar/DisponibilitesOption'
 import AddTimeSlot from '../ux/calendar/AddTimeSlot'
-import TimeOption from '../ux/calendar/TimeOption'
+
 import { Statut } from '@prisma/client'
+
 
 
 
@@ -22,7 +22,7 @@ export default function MedecinCalendar() {
   const medecinId = user?.id || ''
   const { disponibilites, createDisponibilite ,removeDisponibilite } = useDisponibilites({medecinId})
   const { rendezVous, loading: loadingRdv, updateRendezVous } = useRendezVous(medecinId);
-  const queryClient = useQueryClient();
+
 
  
   const {
@@ -45,29 +45,15 @@ export default function MedecinCalendar() {
   console.log('Disponibilités filtrées medecin:', filteredDisponibilites);
 
   // Fonction pour mettre à jour le statut d'un rendez-vous
-  const [loadingId, setLoadingId] = useState<string | null>(null);
-  const handleUpdateRendezVousStatus = async (rendezVousId: string, statut: Statut) => {
-    setLoadingId(rendezVousId);
-    try {
-      const res = await fetch('/api/rendez-vous/status', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: rendezVousId, statut }),
-      });
-      if (!res.ok) throw new Error('Erreur serveur');
-      await queryClient.invalidateQueries();
-    } catch (e) {
-      // Optionnel : afficher une notification d'erreur
-    } finally {
-      setLoadingId(null);
-    }
+  const handleUpdateRendezVousStatus = (rendezVousId: string, statut: Statut) => {
+    console.log("Mutation appelée avec :", rendezVousId, statut);
+    updateRendezVous.mutate({ id: rendezVousId, data: { statut } });
   };
-
   if (!user) return <div>Chargement du profil...</div>
 
   return (
-    <div className="flex flex-col h-full  w-auto md:flex-row gap-4 md:gap-12 justify-center">
-      <div className="flex flex-1">
+    <div className="flex flex-col   w-auto md:flex-row gap-4 md:gap-12 justify-center md:justify-between">
+      <div className="flex ">
         <CalendarCard
           currentDate={currentDate}
           days={calendarDays}
@@ -92,7 +78,6 @@ export default function MedecinCalendar() {
             onUpdateRendezVousStatus={handleUpdateRendezVousStatus}
           />
 
-          {/* <TimeOption slot={filteredDisponibilites[0]} /> */}
  
         </div>
       </div>

@@ -2,16 +2,17 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { getMedecinRdv } from '@/lib/actions/rendezvous'
+import { UserIcon } from '../ux/UserIcon'
 
 export async function RendezVousList({ medecinId }: { medecinId: string }) {
   const rendezVous = await getMedecinRdv(medecinId)
 
   return (
-    <Card className="max-w-2xl h-60 scroll-m-0 overflow-y-auto mx-auto shadow-md border border-muted/30">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold text-primary">Prochains rendez-vous</CardTitle>
+    <Card className=" md:max-w-[420px]   max-w-full w-full  shadow-md border-4 border-muted/30">
+      <CardHeader className='py-2 '>
+        <CardTitle className="text-lg  font-semibold text-primary">Historique de rendez-vous</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 h-80 md:h-64 scrollbar-hidden overflow-y-auto  ">
         {rendezVous.length === 0 && (
           <p className="text-sm text-muted-foreground">Aucun rendez-vous pour le moment.</p>
         )}
@@ -20,7 +21,7 @@ export async function RendezVousList({ medecinId }: { medecinId: string }) {
           {rendezVous.map(rdv => (
             <li
               key={rdv.id}
-              className="p-4 rounded-lg border border-muted/20 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-muted/10 hover:bg-muted transition"
+              className="p-4 rounded-lg border border-muted/20 hover:border-muted flex flex-col sm:flex-row sm:items-center sm:justify-between bg-muted/10  transition"
             >
               <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">
@@ -29,6 +30,7 @@ export async function RendezVousList({ medecinId }: { medecinId: string }) {
                     timeStyle: 'short',
                   })}
                 </p>
+                <UserIcon avatarUrl={rdv.patient?.user?.avatarUrl} />
                 <p className="font-medium">
                   {rdv.patient?.user?.prenom} {rdv.patient?.user?.nom}
                 </p>
