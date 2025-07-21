@@ -16,7 +16,7 @@ export default function TimeOption({slot, patientId}:{slot:DisponibiliteAvecRend
 
 
 
-{ slot.rendezVous.patientId === patientId ?(
+{ slot.rendezVous.patientId === patientId ? (
 
 <PatientConfirmVisit   statut={slot.rendezVous?.statut} href={`/rendez-vous/new-visit/${slot.id}`}  />
 ):(
