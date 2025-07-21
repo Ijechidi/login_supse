@@ -18,7 +18,7 @@ export interface DisponibiliteOptionProps {
 
 export default function DisponibilitesOption({disponibilites,onDelete, onUpdateRendezVousStatus}:DisponibiliteOptionProps) {
   return (
-    <div className='flex w-full flex-col items-center  h-[475px] p-2  border overflow-y-scroll scrollbar-hidden  gap-4  rounded  '>
+    <div className='flex w-full flex-col items-center  h-[475px] p-2 md:min-w-[380px]  border overflow-y-scroll scrollbar-hidden  gap-4  rounded  '>
 {
 
 

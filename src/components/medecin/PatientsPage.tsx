@@ -9,7 +9,8 @@ const PatientsPage = async ({ medecinId }) => {
   const patientsData = await getPatientsByMedecinId(medecinId);
   const initialPatients = patientsData.map(pm => ({
     ...pm.patient.user,
-    suiviDepuis: pm.suiviDepuis,
+    dateNaissance: pm.patient.user.dateNaissance ? new Date(pm.patient.user.dateNaissance).toISOString() : undefined,
+    suiviDepuis: pm.suiviDepuis ? new Date(pm.suiviDepuis).toISOString() : undefined,
   }));
   
   // Statistiques calculées côté serveur
