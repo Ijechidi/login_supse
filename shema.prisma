@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enumérations
+enum Role {
+  PATIENT
+  MEDECIN
+  ADMIN
+  SECRETAIRE
+}
+
+enum Statut {
+  EN_ATTENTE
+  CONFIRME
+  ANNULE
+  TERMINE
+}
+
+enum Specialite {
+  MEDECINE_GENERALE
+  CARDIOLOGIE
+  DERMATOLOGIE
+  PEDIATRIE
+  GYNECOLOGIE
+  NEUROLOGIE
+  OPHTALMOLOGIE
+  ORTHOPEDIE
+}
+
+enum TypeRendezVousEnum {
+  CONSULTATION
+  SUIVI
+  URGENCE
+  TELECONSULTATION
+}
+
+enum DisponibiliteStatus {
+  LIBRE
+  RESERVE
+  ANNULE
+}
+
+// Modèles principaux
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  nom            String
+  prenom         String
+  avatarUrl      String?
+  telephone      String
+  dateNaissance  DateTime
+  adresse        String
+  age            Int?
+  role           Role      @default(PATIENT)
+  meta           Json?
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  patient        Patient?
+  medecin        Medecin?
+}
+
+model Patient {
+  id             String             @id @map("user_id")
+  meta           Json?
+
+  user           User               @relation(fields: [id], references: [id])
+  rendezVous     RendezVous[]
+  medecins       PatientMedecin[]   // ← Nouveaux médecins liés
+
+  @@map("patients")
+}
+
+model Medecin {
+  id               String             @id @map("user_id")
+  specialite       Specialite         @default(MEDECINE_GENERALE)
+  description      String?
+  indisponibilites Json?
+  meta             Json?
+
+  user             User               @relation(fields: [id], references: [id])
+  rendezVous       RendezVous[]
+  disponibilites   Disponibilite[]
+  patients         PatientMedecin[]   // ← Nouveaux patients liés
+
+  @@map("medecins")
+}
+
+model RendezVous {
+  id              String               @id @default(uuid())
+  patientId       String               @map("patient_id")
+  medecinId       String               @map("medecin_id")
+  disponibiliteId String               @unique @map("disponibilite_id")
+  type            TypeRendezVousEnum
+  motif           String
+  dateDebut       DateTime
+  dateFin         DateTime?
+  statut          Statut               @default(EN_ATTENTE)
+  historique      Json?
+  meta            Json?
+  createdAt       DateTime             @default(now()) @map("created_at")
+
+  // Relations
+  patient         Patient              @relation(fields: [patientId], references: [id])
+  medecin         Medecin              @relation(fields: [medecinId], references: [id])
+  disponibilite   Disponibilite        @relation(fields: [disponibiliteId], references: [id])
+
+  @@map("rendez_vous")
+}
+
+model Disponibilite {
+  id             String               @id @default(uuid())
+  medecinId      String               @map("medecin_id")
+  heureDebut     DateTime
+  heureFin       DateTime
+  status         DisponibiliteStatus
+  meta           Json?
+
+  // Relations
+  medecin        Medecin              @relation(fields: [medecinId], references: [id])
+  rendezVous     RendezVous?          // Optionnel : une seule réservation
+
+  @@map("disponibilites")
+}
+
+// 🔗 Nouvelle table de liaison manuelle patient-médecin
+
+model PatientMedecin {
+  patientId    String
+  medecinId    String
+  suiviDepuis  DateTime   @default(now())
+  meta         Json?
+
+  // Relations
+  patient      Patient    @relation(fields: [patientId], references: [id])
+  medecin      Medecin    @relation(fields: [medecinId], references: [id])
+
+  @@id([patientId, medecinId]) // Clé primaire composée
+  @@map("patients_medecins")
+}

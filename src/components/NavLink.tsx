@@ -14,7 +14,7 @@ export function NavLink({ role, email }: NavLinkProps) {
       { href: "/rendez-vous/", label: "rendez-vous" },
       { href: "/rendez-vous/nouveau", label: "Nos médecins" },
       { href: "/patient", label: "profile" },
-      { href: "/contact", label: "Contact" },
+      { href: "protected/patient/contact", label: "Contact" },
     ]
   } else if (role === "MEDECIN") {
     links = [
