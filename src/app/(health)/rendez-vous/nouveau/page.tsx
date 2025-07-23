@@ -39,12 +39,6 @@ console.log("specialites :",specialites)
             ))}
           </div>
         }
-
-        <div>
-          <pre>
-            {JSON.stringify(specialites, null, 2)}
-          </pre>
-        </div>
       </div>
     </div>
   )

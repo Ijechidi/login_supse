@@ -1,16 +1,16 @@
-"use server"
+"use client";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-export async function LogoutButton() {
-
+export function LogoutButton() {
+  const router = useRouter();
 
   const logout = async () => {
-    const supabase = await createClient();
+    const supabase = createClient();
     await supabase.auth.signOut();
-
+    router.push("/auth/login");
   };
 
   return <Button className="w-full" onClick={logout}>Logout</Button>;
