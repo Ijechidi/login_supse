@@ -14,9 +14,9 @@ interface PatientAddProps {
 }
 
 export default function PatientAdd({ medecinId, onAddPatient, disponibiliteId , patientId}: PatientAddProps) {
-  const { patients} = usePatientsByMedecin(medecinId)
+  const { users} = usePatientsByMedecin(medecinId)
   const [selected, setSelected] = useState<string>("")
-  const patient = patients.find((p) => p.id === patientId)
+  const patient = users.find((p) => p.id === patientId)
 
 
   if (patient) {
@@ -35,7 +35,7 @@ return(
       disponibiliteId={disponibiliteId}
       medecinId={medecinId}
         inputPlaceholder='Rechercher un patient...'
-        users={patients}
+        users={users}
         value={selected}
         onChange={(id) => {
           setSelected(id)

@@ -27,7 +27,7 @@ export default async function Page() {
           </CardHeader>
           <CardContent>
             <Link href="/rendez-vous/nouveau">
-              <Button size="lg" className="w-full">Créer un rendez-vous</Button>
+              <Button size="lg" className="w-full">Prendre rendez-vous</Button>
             </Link>
           </CardContent>
         </Card>
