@@ -32,6 +32,10 @@ export default async function page() {
         </div>
 
         <DispoWhithVisit/>
+
+        <div>
+            
+        </div>
     </div>
   )
 }

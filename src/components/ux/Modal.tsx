@@ -17,16 +17,16 @@ export default function Modal({ id, children }: ModalProps) {
   };
 
   return (
-    <div className="border bg-background rounded-xl p-6 shadow-xl w-[500px] max-w-full">
+    <div className=" flex flex-col px-4 py-8 border bg-background rounded-xl gap-8  shadow-xl w-[500px] md:w-full max-w-4xl">
 
       {/* Contenu injecté */}
-      <div className="mb-4">{children}</div>
+      <div className="flex justify-center items-center mt-4">{children}</div>
 
-      <div className="border rounded flex w-fit p-px">
-        <Button className="border rounded" onClick={handleClose}>
+    
+        <Button className="border w-fit flex mx-12 rounded" onClick={handleClose}>
           Fermer
         </Button>
-      </div>
+
     </div>
   );
 }

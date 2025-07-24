@@ -14,17 +14,8 @@ export function MedecinProfileCard({ user }: MedecinProfileCardProps) {
     : " ";
 
   return (
-    <Card className="md:max-w-2xl max-w-[380px] mx-auto shadow-lg relative overflow-hidden">
-      {/* Conteneur pour le fond hexagone avec overflow hidden */}
-      <div className="absolute inset-0 overflow-hidden">
-        <HexagonBackground 
-          className="h-full"
-          hexagonSize={50}  // Taille réduite pour s'adapter à la carte
-          hexagonMargin={1}  // Marge réduite
-        />
-      </div>
-      
-      {/* Contenu de la carte par-dessus le fond */}
+    <Card className="w-full border mx-auto shadow-lg relative overflow-hidden">
+
       <div className="relative z-10">
   <CardHeader className="flex flex-row items-center gap-4 pb-3">
     <Avatar className="h-20 w-20 border-2 border-primary/50 shadow-md">

@@ -6,6 +6,26 @@ import { sendMail } from '@/lib/sendMail';
 import { Statut, TypeRendezVousEnum } from "@prisma/client";
 
 
+export async function getRendezvousById(visitId:string) {
+    try {
+      const rendezVous = await prisma.rendezVous.findUnique({
+        where:{id:visitId},
+        include: {
+          patient: { include: { user: true } },
+          medecin: { include: { user: true } },
+        },
+      })
+
+      return rendezVous
+    } catch (error) {
+      
+      console.error('Erreur lors de la recherche du rendez-vous:', error);
+      throw new Error('Impossible de trouver le rendez-vous');
+      
+    }
+}
+
+
 
 export async function getRendezVousByMedecin(medecinId: string, date?: string) {
   return prisma.rendezVous.findMany({
@@ -218,6 +238,9 @@ export async function updateRendezVousStatus({ id, statut }: { id: string; statu
 }
 
 
+
+
+
 /* 
 
 cree rendevous depuis disponibilite
@@ -341,4 +364,20 @@ export async function getPatientMedecins(patientId: string) {
     },
   });
   return relations.map(rel => rel.medecin);
+}
+
+export async function getNextRendezVousForMedecin(medecinId: string) {
+  const now = new Date();
+  return prisma.rendezVous.findFirst({
+    where: {
+      medecinId,
+      dateDebut: { gte: now },
+      statut: { in: ['EN_ATTENTE', 'CONFIRME'] },
+    },
+    include: {
+      patient: { include: { user: true } },
+      medecin: { include: { user: true } },
+    },
+    orderBy: { dateDebut: 'asc' },
+  });
 }

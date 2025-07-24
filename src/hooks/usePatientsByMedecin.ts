@@ -11,7 +11,7 @@ export function usePatientsByMedecin(medecinId?: string) {
   } = useQuery({
     queryKey: ['patientsByMedecin', medecinId],
     queryFn: async () => {
-      if (!medecinId) return []
+      if (!medecinId) return { users: [], patients: [] }
       const res = await getPatientsByMedecinId(medecinId)
       const users: UserInfo[] = res.map((pm: any) => ({
         id: pm.patient.id,
@@ -20,13 +20,14 @@ export function usePatientsByMedecin(medecinId?: string) {
         avatar_url: pm.patient.user.avatarUrl,
         specialite: undefined,
       }))
-      return users
+      return { users, patients: res }
     },
     enabled: !!medecinId,
   })
 
   return {
-    patients: data ?? [],
+    users: data?.users ?? [],
+    patients: data?.patients ?? [],
     isLoading,
     isError,
     refetch,

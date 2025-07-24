@@ -21,6 +21,8 @@ export async function getAllMedecins(): Promise<Medecin[]> {
 
 
 
+
+
 export async function getNewVisitMedecinById(medecinId:string) {
 
    
@@ -63,8 +65,11 @@ export async function getPatientsByMedecinId(medecinId: string) {
     where: { medecinId },
     include: {
       patient: {
-        include: { user: true },
+        include: { user: true, 
+                  rendezVous:true,
+        },       
       },
+
     },
   });
 }
